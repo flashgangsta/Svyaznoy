@@ -5,15 +5,17 @@ package com.svyaznoy.modules {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.text.TextField;
+	
 	/**
 	 * ...
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
 	 */
+	
 	public class Answer extends MovieClip {
 		
-		private var label:TextField;
 		private var thumb:DisplayObject;
-		private var hit:MovieClip;
+		protected var label:TextField;
+		protected var hit:MovieClip;
 		
 		/**
 		 * 
@@ -28,7 +30,6 @@ package com.svyaznoy.modules {
 				thumb.visible = false;
 			}
 			
-			
 			hit.visible = true;
 			hit.alpha = 0;
 			ButtonManager.addButton( this, hit, onClick );
@@ -39,7 +40,7 @@ package com.svyaznoy.modules {
 		 * 
 		 */
 		
-		public function onClick( target:MovieClip ):void {
+		protected function onClick( target:MovieClip ):void {
 			thumb.visible = !thumb.visible;
 			dispatchEvent( new Event( Event.CHANGE, true ) );
 		}
@@ -68,6 +69,14 @@ package com.svyaznoy.modules {
 			if ( !thumb || thumb.visible === value ) return;
 			thumb.visible = value;
 			dispatchEvent( new Event( Event.CHANGE, true ) );
+		}
+		
+		/**
+		 * 
+		 */
+		
+		internal function dispose():void {
+			
 		}
 		
 	}
