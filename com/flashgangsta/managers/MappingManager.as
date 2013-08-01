@@ -3,7 +3,7 @@
  * Manager for quick and easy to scale and align objects.
  *
  * @author		Sergei Krivtsov
- * @version		1.00.11		18/03/2013
+ * @version		1.00.12		30/07/2013
  * 
  */
 
@@ -115,9 +115,26 @@ package com.flashgangsta.managers {
 			}
 		}
 		
+		/**
+		 * 
+		 * @param	target
+		 * @param	method
+		 */
+		
 		public static function roundObjectSides( target:DisplayObject, method:Function ):void {
 			target.width = method( target.width );
 			target.height = method( target.height );
+		}
+		
+		/**
+		 * 
+		 * @param	target
+		 * @param	targetCoordinateSpace
+		 * @return
+		 */
+		
+		public static function getBottom( target:DisplayObject, targetCoordinateSpace:DisplayObject ):int {
+			return Math.ceil( target.getBounds( targetCoordinateSpace ).bottom );
 		}
 		
 	}

@@ -3,7 +3,7 @@
  * Manager for quick and easy assignment of event handlers for the buttons.
  *
  * @author		Sergei Krivtsov
- * @version		1.00.89 (11.02.2013)
+ * @version		1.00.94 (27.07.2013)
  * @e-mail		flashgangsta@gmail.com
  *
  *
@@ -70,6 +70,7 @@ package com.flashgangsta.managers {
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	import flash.events.Event;
+	import flash.text.TextField;
 	import flash.ui.Mouse;
 	
 	public class ButtonManager {
@@ -91,6 +92,9 @@ package com.flashgangsta.managers {
 		public static const STATE_PRESSED:String = "pressed";
 		public static const STATE_OVER:String = "over";
 		public static const STATE_OUT:String = "out";
+		
+		/// Шаг в кадрах при 
+		public static var EASED_MOTION_STEP:int = 5;
 		
 		// constructor
 		
@@ -129,7 +133,7 @@ package com.flashgangsta.managers {
 				ButtonManager.removeMouseChildrens( target.label_txt );
 			}
 			
-			target.eventObject.isEasedButton = false;
+			//target.eventObject.isEasedButton = false;
 			
 			target.eventObject.overHandler = over;
 			target.eventObject.outHandler = out;
@@ -145,13 +149,29 @@ package com.flashgangsta.managers {
 			target.eventObject.addEventListener( MouseEvent.MOUSE_UP, isRelease );
 			
 			currentState = ButtonManager.STATE_NORMAL;
-
 		}
 		
-		public static function addEesedButton( target:MovieClip, hit:MovieClip = null, release:Function = null, releaseoutside:Function = null, press:Function = null, over:Function = null, out:Function = null, useHandCursor:Boolean = true ):void {
+		/**
+		 * 
+		 * @param	target
+		 * @param	hit
+		 * @param	release
+		 * @param	releaseoutside
+		 * @param	press
+		 * @param	over
+		 * @param	out
+		 * @param	useHandCursor
+		 */
+		
+		public static function addEasedButton( target:MovieClip, hit:MovieClip = null, release:Function = null, releaseoutside:Function = null, press:Function = null, over:Function = null, out:Function = null, useHandCursor:Boolean = true ):void {
 			target.isEasedButton = true;
 			addButton( target, hit, release, releaseoutside, press, over, out, useHandCursor );
 		}
+		
+		/**
+		 * 
+		 * @param	...buttons
+		 */
 		
 		public static function removeButton( ...buttons ):void {
 			
@@ -190,7 +210,7 @@ package com.flashgangsta.managers {
 				if( !button ) throw new Error( "ButtonManager.addButtonGroup() error: Button #" + i + " = null." );
 				button.groupID = ButtonManager.buttonGroupID;
 				if( eased ) {
-					ButtonManager.addEesedButton( buttons[ i ], null, release, releaseoutside, press, over, out, useHandCursor );
+					ButtonManager.addEasedButton( buttons[ i ], null, release, releaseoutside, press, over, out, useHandCursor );
 				} else {
 					ButtonManager.addButton( buttons[ i ], null, release, releaseoutside, press, over, out, useHandCursor );
 				}
@@ -449,10 +469,19 @@ package com.flashgangsta.managers {
 			target.buttonMode = true;
 		}
 		
+		/**
+		 * 
+		 * @param	target
+		 */
+		
 		public static function removeMouseChildrens( target:Object ):void  {
-			target.mouseChildren = false;
+			if ( target is TextField ) {
+				target.mouseWheelEnabled = false;
+			} else {
+				target.mouseChildren = false;
+				target.buttonMode = false;
+			}
 			target.mouseEnabled = false;
-			target.buttonMode = false;
 		}
 		
 		
@@ -613,15 +642,19 @@ package com.flashgangsta.managers {
 			}
 		}
 		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
 		private static function gotoOverState( event:Event ):void {
 			var scope:MovieClip = event.currentTarget.eventObject;
 			if( scope.button.currentFrame !== scope.button.totalFrames - 1 ) {
-				
 				if( scope.isEasedButton ) {
-					if( scope.button.currentFrame !== scope.button.totalFrames - 2 ) {
-						scope.button.gotoAndStop( scope.button.currentFrame + 2 );
+					if( scope.button.currentFrame + EASED_MOTION_STEP < scope.button.totalFrames ) {
+						scope.button.gotoAndStop( scope.button.currentFrame + EASED_MOTION_STEP );
 					} else {
-						scope.button.nextFrame();
+						scope.button.gotoAndStop( scope.button.totalFrames - 1 );
 					}
 				} else {
 					scope.button.nextFrame();

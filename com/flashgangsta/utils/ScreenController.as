@@ -1,5 +1,4 @@
 package com.flashgangsta.utils {
-	import com.flashgangsta.ui.TouchScreenScroll;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -8,6 +7,7 @@ package com.flashgangsta.utils {
 	/**
 	 * ...
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
+	 * @version 0.01
 	 */
 	
 	/**
@@ -20,22 +20,40 @@ package com.flashgangsta.utils {
 		private var currentScreen:Sprite;
 		private var history:Vector.<Class> = new Vector.<Class>();
 		private var instncesList:Dictionary = new Dictionary();
+		private var _width:int;
+		private var _height:int;
+		
 		
 		/**
 		 * 
 		 */
 		
 		public function ScreenController() {
-			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			super.scaleX = super.scaleY = 1;
 		}
 		
 		/**
 		 * 
-		 * @param	event
 		 */
 		
-		private function onAddedToStage( event:Event ):void {
-			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+		override public function get width():Number {
+			return _width;
+		}
+		
+		override public function set width( value:Number ):void {
+			_width = value;
+		}
+		
+		/**
+		 * 
+		 */
+		
+		override public function get height():Number {
+			return _height;
+		}
+		
+		override public function set height( value:Number ):void {
+			_height = value;
 		}
 		
 		/**
@@ -47,7 +65,7 @@ package com.flashgangsta.utils {
 		public function addScreen( screenClass:Class, createNewInstance:Boolean = false ):DisplayObject {
 			removeScreen();
 			
-			if ( !createNewInstance && instncesList.hasOwnProperty( screenClass ) ) {
+			if ( !createNewInstance && instncesList[ screenClass ] ) {
 				currentScreen = instncesList[ screenClass ];
 			} else {
 				currentScreen = new screenClass();
@@ -74,6 +92,15 @@ package com.flashgangsta.utils {
 		 * @return
 		 */
 		
+		public function getCurrentScreenInstance():DisplayObject {
+			return currentScreen;
+		}
+		
+		/**
+		 * 
+		 * @return
+		 */
+		
 		public function getCurrentScreenClass():Class {
 			return history[ history.length - 1 ];
 		}
@@ -83,7 +110,6 @@ package com.flashgangsta.utils {
 		 */
 		
 		private function removeScreen():void {
-			trace( "removeScreen", currentScreen );
 			if ( !currentScreen ) return;
 			removeChild( currentScreen );
 		}

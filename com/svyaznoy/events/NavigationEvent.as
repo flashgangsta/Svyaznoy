@@ -1,4 +1,5 @@
 package com.svyaznoy.events {
+	import com.svyaznoy.ThermsOfMotivation;
 	import flash.events.Event;
 	
 	/**
@@ -7,8 +8,6 @@ package com.svyaznoy.events {
 	 */
 	public class NavigationEvent extends Event {
 		
-		/// Главная
-		static public const NAVIGATE_TO_INDEX:String = "navigate_to_index";
 		/// Выезды
 		static public const NAVIGATE_TO_DEPARTURES:String = "navigate_to_departures";
 		/// Новости
@@ -21,6 +20,10 @@ package com.svyaznoy.events {
 		static public const NAVIGATE_TO_RESULTS:String = "navigate_to_results";
 		/// О связном
 		static public const NAVIGATE_TO_ABOUT:String = "navigate_to_about";
+		/// Радио
+		static public const NAVIGATE_TO_RADIO:String = "navigateToRadio";
+		/// Условия мотивации
+		static public const NAVIGATE_TO_THERMS_OF_MOTIVATION:String = "navigate_to_therms_of_motivation";
 		
 		
 		/**

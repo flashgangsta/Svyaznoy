@@ -1,8 +1,10 @@
 package com.svyaznoy {
 	import com.flashgangsta.events.MediaControllerEvent;
+	import com.flashgangsta.events.MediaPlayingProgressEvent;
 	import com.flashgangsta.media.controls.PlayPauseButton;
 	import com.flashgangsta.media.controls.Seeker;
 	import flash.display.Sprite;
+	import flash.events.ProgressEvent;
 	
 	/**
 	 * ...
@@ -19,6 +21,45 @@ package com.svyaznoy {
 			
 			addEventListener( MediaControllerEvent.PLAYING_COMPLETE, onPlayingComplete );
 			addEventListener( MediaControllerEvent.PLAYING_STARTED, onPlayingStarted );
+			addEventListener( MediaControllerEvent.PLAYING_PAUSED, onPlayingPaused );
+			addEventListener( ProgressEvent.PROGRESS, onLoadProgress );
+			addEventListener( MediaPlayingProgressEvent.PROGRESS, onPlayingProgress );
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function disable():void {
+			mouseEnabled = mouseChildren = false;
+			seeker.alpha = playPauseButton.alpha = .5;
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function enable():void {
+				mouseEnabled = mouseChildren = true;
+			seeker.alpha = playPauseButton.alpha = 1;
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onPlayingProgress( event:MediaPlayingProgressEvent ):void {
+			seeker.setPlayingProgress( event.currentTime, event.duration );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onLoadProgress( event:ProgressEvent ):void {
+			seeker.setProgress( event.bytesLoaded, event.bytesTotal );
 		}
 		
 		/**
@@ -36,6 +77,16 @@ package com.svyaznoy {
 		 */
 		
 		private function onPlayingComplete( event:MediaControllerEvent ):void {
+			playPauseButton.setState( PlayPauseButton.STATE_PLAY );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onPlayingPaused( event:MediaControllerEvent ):void {
+			trace( "onPlayingPaused" );
 			playPauseButton.setState( PlayPauseButton.STATE_PLAY );
 		}
 		

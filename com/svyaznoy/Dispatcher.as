@@ -8,10 +8,19 @@ package com.svyaznoy {
 		
 		static public var instance:Dispatcher;
 		
+		/**
+		 * 
+		 */
+		
 		public function Dispatcher() {
 			if ( !instance ) instance = this;
 			else throw new Error( "Dispatcher has singletone, use Dispatcher.getInstance() method" );
 		}
+		
+		/**
+		 * 
+		 * @return
+		 */
 		
 		static public function getInstance():Dispatcher {
 			if ( !instance ) instance = new Dispatcher();

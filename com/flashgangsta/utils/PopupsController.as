@@ -1,20 +1,25 @@
 package com.flashgangsta.utils {
 	import caurina.transitions.Tweener;
+	import com.flashgangsta.events.PopupsControllerEvent;
 	import com.flashgangsta.managers.MappingManager;
 	import flash.display.DisplayObject;
 	import flash.display.Graphics;
+	import flash.display.InteractiveObject;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
 	
 	/**
 	 * ...
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
-	 * @version 0.01
+	 * @version 0.02
 	 */
 	
-	public class PopupsController {
+	public class PopupsController extends EventDispatcher {
+		
+		static public var instance:PopupsController;
 		
 		private var stage:Stage;
 		private var blockRectColor:uint;
@@ -25,7 +30,23 @@ package com.flashgangsta.utils {
 		private var popupMotionIn:Object = { alpha: 1, time: .5, transition: "easeOutExpo" };
 		private var popupMotionOut:Object = { alpha: 0, time: .1, transition: "easeInCubic" };
 		private var popup:DisplayObject;
+		private var isLocked:Boolean = false;
 		
+		
+		public function PopupsController() {
+			if ( !instance ) instance = this;
+			else throw new Error( "PopupController has singletone, use PopupControlle.getInstance()" );
+		}
+		
+		/**
+		 * 
+		 * @return
+		 */
+		
+		static public function getInstance():PopupsController {
+			if ( !instance ) instance = new PopupsController();
+			return instance;
+		}
 		
 		/**
 		 * 
@@ -34,9 +55,7 @@ package com.flashgangsta.utils {
 		 * @param	blockRectAlpha
 		 */
 		
-		public function PopupsController( stage:Stage, blockRectColor:uint = 0, blockRectAlpha:Number = .65 ) {
-			this.blockRectAlpha = blockRectAlpha;
-			this.blockRectColor = blockRectColor;
+		public function init( stage:Stage, blockRectColor:uint = 0, blockRectAlpha:Number = .65 ):void {
 			this.stage = stage;
 			
 			blockRect.alpha = 0;
@@ -44,7 +63,8 @@ package com.flashgangsta.utils {
 			blockRect.mouseEnabled = false;
 			blockRect.addEventListener( MouseEvent.CLICK, onBlockRectClicked );
 			
-			drawBlockRect();
+			setBlockRect( blockRectColor, blockRectAlpha );
+			
 			
 			stage.addEventListener( Event.RESIZE, onStageResize );
 			
@@ -56,15 +76,29 @@ package com.flashgangsta.utils {
 		
 		/**
 		 * 
+		 * @param	blockRectColor
+		 * @param	blockRectAlpha
+		 */
+		
+		public function setBlockRect( blockRectColor:uint = 0, blockRectAlpha:Number = .65 ):void {
+			this.blockRectAlpha = blockRectAlpha;
+			this.blockRectColor = blockRectColor;
+			drawBlockRect();
+		}
+		
+		/**
+		 * 
 		 * @param	popup
 		 * @param	isModal
 		 */
 		
-		public function showPopup( popup:DisplayObject, isModal:Boolean = false ):void {
+		public function showPopup( popup:DisplayObject, isModal:Boolean = false ):DisplayObject {
 			if ( isModal ) {
 				stage.addChild( blockRect );
 				if ( blockRect.alpha < 1 ) {
 					Tweener.addTween( blockRect, blockRectMotionIn );
+				} else {
+					onBlockRectMotionComplete();
 				}
 			}
 			
@@ -76,6 +110,8 @@ package com.flashgangsta.utils {
 			stage.addChild( popup );
 			
 			Tweener.addTween( popup, popupMotionIn );
+			
+			return popup;
 		}
 		
 		/**
@@ -83,6 +119,8 @@ package com.flashgangsta.utils {
 		 */
 		
 		public function hidePopup():void {
+			var event:PopupsControllerEvent = new PopupsControllerEvent( PopupsControllerEvent.CLOSING );
+			
 			if ( blockRect.parent ) {
 				stage.removeChild( blockRect );
 				blockRect.alpha = 0;
@@ -91,6 +129,54 @@ package com.flashgangsta.utils {
 			}
 			
 			Tweener.addTween( popup, popupMotionOut );
+			
+			popup.dispatchEvent( event );
+			dispatchEvent( event );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		public function getCurrentPopup():DisplayObject {
+			return popup;
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function lock():void {
+			if ( popup is InteractiveObject ) { 
+				InteractiveObject( popup ).mouseEnabled = false;
+			}
+			
+			if ( popup is Sprite ) {
+				Sprite( popup ).mouseChildren = false;
+			}
+			
+			blockRect.mouseChildren = blockRect.mouseEnabled = false;
+			
+			isLocked = true;
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function unlock():void {
+			if ( popup is InteractiveObject ) { 
+				InteractiveObject( popup ).mouseEnabled = true;
+			}
+			
+			if ( popup is Sprite ) {
+				Sprite( popup ).mouseChildren = true;
+			}
+			
+			blockRect.mouseChildren = blockRect.mouseEnabled = true;
+			
+			isLocked = false;
 		}
 		
 		/**
@@ -123,6 +209,7 @@ package com.flashgangsta.utils {
 		
 		private function drawBlockRect():void {
 			var graphics:Graphics = blockRect.graphics;
+			graphics.clear();
 			
 			graphics.beginFill( blockRectColor, blockRectAlpha );
 			graphics.drawRect( 0, 0, stage.stageWidth, stage.stageHeight );
@@ -145,7 +232,8 @@ package com.flashgangsta.utils {
 		
 		private function onBlockRectMotionComplete():void {
 			if ( blockRect.alpha === 1 ) {
-				blockRect.mouseChildren = blockRect.mouseEnabled = true;
+				blockRect.alpha = 1;
+				if( !isLocked ) blockRect.mouseChildren = blockRect.mouseEnabled = true;
 			}
 		}
 		
@@ -155,8 +243,11 @@ package com.flashgangsta.utils {
 		 */
 		
 		private function onPopupMotionOutComplete( popup:DisplayObject ):void {
-			trace( popup, "removed from stage" );
+			var event:PopupsControllerEvent = new PopupsControllerEvent( PopupsControllerEvent.CLOSED );
+			event.popup = popup;
 			stage.removeChild( popup );
+			popup.dispatchEvent( event );
+			dispatchEvent( event );
 		}
 		
 	}

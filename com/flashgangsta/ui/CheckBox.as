@@ -4,12 +4,11 @@ package com.flashgangsta.ui {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	import flash.net.drm.VoucherAccessInfo;
 	
 	/**
 	 * ...
 	 * @author Sergey Krivtsov
-	 * @version 1.00.07
+	 * @version 1.00.08
 	 */
 	
 	
@@ -19,31 +18,24 @@ package com.flashgangsta.ui {
 	 */
 	[Event(name="change", type="flash.events.Event")] 
 	
-	public class CheckBox extends EventDispatcher {
+	public class CheckBox extends MovieClip {
 		
-		private var instance:MovieClip;
-		private var ico:Sprite;
-		private var box:MovieClip;
+		private var icon:Sprite;
+		private var hit:Sprite;
 		private var _id:String;
 		
 		/**
 		 * Constructor
-		 * @param	instance ссылка на объект который будет слушать наведения мыши
-		 * @param	ico ссылка на галочку CheckBox'a
-		 * @param	box ссылка на клип CheckBox'a который будет реагировать на мышь, по умолчанию берётся значение параметра instance
 		 */
 		
-		public function CheckBox( instance:MovieClip, ico:Sprite, box:MovieClip = null ) {
-			this.instance = instance;
-			this.ico = ico;
-			this.box = box ? box : instance;
+		public function CheckBox() {
+			icon = getChildByName( "icon_mc" ) as Sprite;
+			hit = getChildByName( "hit_mc" ) as Sprite;
 			
-			ico.mouseEnabled = false;
-			ico.mouseChildren = false;
+			icon.mouseEnabled = false;
+			icon.mouseChildren = false;
 			
-			ButtonManager.addButton( this.box, instance, onClick );
-			addEventListener( Event.REMOVED_FROM_STAGE, removed );
-			
+			ButtonManager.addButton( this, null, onClick );
 		}
 		
 		/**
@@ -53,10 +45,8 @@ package com.flashgangsta.ui {
 		
 		private function removed( event:Event ):void {
 			removeEventListener( Event.REMOVED_FROM_STAGE, removed );
-			ButtonManager.removeButton( box );
-			instance = null;
-			ico = null;
-			box = null;
+			ButtonManager.removeButton( this );
+			icon = null;
 		}
 		
 		/**
@@ -64,7 +54,7 @@ package com.flashgangsta.ui {
 		 */
 		
 		public function set selected( value:Boolean ):void {
-			ico.visible = value;
+			icon.visible = value;
 		}
 		
 		/**
@@ -72,69 +62,26 @@ package com.flashgangsta.ui {
 		 */
 		
 		public function get selected():Boolean {
-			return ico.visible;
-		}
-		
-		/**
-		 * Меняет состояние включенности чекбокса
-		 */
-		
-		public function set enabled( value:Boolean ):void {
-			mouseEnabled = value;
-			mouseChildren = value;
-			instance.alpha = value ? 1 : .5;
+			return icon.visible;
 		}
 		
 		/**
 		 * Возвращает состояние включенности чекбокса
 		 */
 		
-		public function get enabled():Boolean {
-			return mouseChildren;
+		override public function get enabled():Boolean {
+			return super.enabled;
 		}
 		
 		/**
-		 * Specifies whether this object receives mouse messages. The default value is true,
-		 * which means that by default any InteractiveObject instance that is on the display list
-		 * receives mouse events.
+		 * Меняет состояние включенности чекбокса
 		 */
 		
-		public function set mouseEnabled( value:Boolean ):void {
-			instance.mouseEnabled = value;
-		}
-		
-		/**
-		 * Return whether this object receives mouse messages. The default value is true,
-		 * which means that by default any InteractiveObject instance that is on the display list
-		 * receives mouse events.
-		 */
-		
-		public function get mouseEnabled():Boolean {
-			return instance.mouseEnabled;
-		}
-		
-		/**
-		 * Determines whether or not the children of the object are mouse enabled. 
-		 */
-		
-		public function set mouseChildren( value:Boolean ):void {
-			instance.mouseChildren = value;
-		}
-		
-		/**
-		 * Return whether or not the children of the object are mouse enabled. 
-		 */
-		
-		public function get mouseChildren():Boolean {
-			return instance.mouseChildren;
-		}
-		
-		/**
-		 * Возвращает имя объекта
-		 */
-		
-		public function get name():String {
-			return instance.name;
+		override public function set enabled( value:Boolean ):void {
+			super.enabled = value;
+			mouseEnabled = value;
+			mouseChildren = value;
+			alpha = value ? 1 : .5;
 		}
 		
 		/**
@@ -159,7 +106,6 @@ package com.flashgangsta.ui {
 		 */
 		
 		private function onClick( target:MovieClip ):void {
-			ButtonManager.setButtonState( instance, ButtonManager.STATE_NORMAL );
 			selected = !selected;
 			dispatchEvent( new Event( Event.CHANGE ) );
 		}

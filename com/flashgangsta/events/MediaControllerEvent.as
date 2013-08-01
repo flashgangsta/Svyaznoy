@@ -12,10 +12,12 @@ package com.flashgangsta.events {
 		static public const PLAY_OR_PAUSE_CLICKED:String = "playOrPauseClicked";
 		static public const PLAYING_COMPLETE:String = "playingComplete";
 		static public const PLAYING_STARTED:String = "playingStarted";
+		static public const PLAYING_PAUSED:String = "playingPaused";
+		static public const UNMUTE_CLICKED:String = "unmuteClicked";
+		static public const MUTE_CLICKED:String = "muteClicked";
 		
 		public function MediaControllerEvent( type:String, bubbles:Boolean = false, cancelable:Boolean = false ) { 
 			super( type, bubbles, cancelable );
-			
 		} 
 		
 		public override function clone():Event { 

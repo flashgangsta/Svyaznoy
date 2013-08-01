@@ -1,5 +1,7 @@
 package com.flashgangsta.media.video {
 	import com.flashgangsta.events.MediaControllerEvent;
+	import com.flashgangsta.events.MediaPlayingProgressEvent;
+	import com.flashgangsta.events.MediaSeekEvent;
 	import com.flashgangsta.events.YoutubePlayerEvent;
 	import com.flashgangsta.managers.MappingManager;
 	import com.svyaznoy.PlayerControllBar;
@@ -10,7 +12,13 @@ package com.flashgangsta.media.video {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.ProgressEvent;
+	import flash.events.TimerEvent;
 	import flash.net.URLRequest;
+	import flash.system.ApplicationDomain;
+	import flash.system.LoaderContext;
+	import flash.system.SecurityDomain;
+	import flash.utils.Timer;
 	
 	/**
 	 * ...
@@ -29,6 +37,7 @@ package com.flashgangsta.media.video {
 		static private const LOGO_WIDTH_DIFFERENCE:int = LOGO_WIDTH_MAX - LOGO_WIDTH_MIN;
 		static private const LOGO_HEIGHT_DIFFERENCE:int = LOGO_HEIGHT_MAX - LOGO_HEIGHT_MIN;
 		
+		private var showTraces:Boolean = false;
 		
 		private var player:YoutubePlayerInstance;
 		private var loader:Loader = new Loader();
@@ -36,6 +45,10 @@ package com.flashgangsta.media.video {
 		private var mouseListenerRect:Sprite = new Sprite();
 		private var logo:Shape = new Shape();
 		private var controllBar:PlayerControllBar;
+		private var preloaderTimer:Timer = new Timer( 300 );
+		private var playingTimer:Timer = new Timer( 500 );
+		private var seekToAfterDetectionDuration:Number = 0;
+		private var videoID:String;
 		
 		/**
 		 * 
@@ -44,8 +57,9 @@ package com.flashgangsta.media.video {
 		public function YoutubePlayer() {
 			background = getChildAt( 0 ) as Shape;
 			loader.contentLoaderInfo.addEventListener( Event.INIT, onPlayerInit );
-			loader.load( new URLRequest( PLAYER_URL ) );
+			loader.load( new URLRequest( PLAYER_URL ), new LoaderContext( true ) );
 			
+			mouseListenerRect.visible = false;
 			mouseListenerRect.addEventListener( MouseEvent.CLICK, onVideoClicked );
 			
 			logo.graphics.beginFill( 0 );
@@ -59,6 +73,28 @@ package com.flashgangsta.media.video {
 			
 			controllBar = getChildByName( "controllBar_mc" ) as PlayerControllBar;
 			controllBar.addEventListener( MediaControllerEvent.PLAY_OR_PAUSE_CLICKED, onPlayOrPauseClicked );
+			controllBar.addEventListener( MediaSeekEvent.SEEK, onSeekerChanged );
+			controllBar.addEventListener( MediaControllerEvent.MUTE_CLICKED, onMuteButtonClicked );
+			controllBar.addEventListener( MediaControllerEvent.UNMUTE_CLICKED, onMuteButtonClicked );
+			
+			controllBar.disable();
+			
+			preloaderTimer.addEventListener( TimerEvent.TIMER, onPreloaderTimer );
+			playingTimer.addEventListener( TimerEvent.TIMER, onPlayingTimer );
+			
+			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+		}
+		
+		/**
+		 * 
+		 * @param	id
+		 */
+		
+		public function setVideo( id:String ):void {
+			videoID = id;
+			if ( player ) {
+				player.cueVideoById( videoID );
+			}
 		}
 		
 		/**
@@ -102,6 +138,74 @@ package com.flashgangsta.media.video {
 			setLogoRectSize();
 			
 			if ( player ) player.setSize( width, height );
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function dispose():void {
+			if ( player ) {
+				if( player.hasEventListener( YoutubePlayerEvent.ON_READY ) ) {
+					player.removeEventListener( YoutubePlayerEvent.ON_READY, onPlayerReady );
+				}
+				
+				if( player.hasEventListener( YoutubePlayerEvent.ON_ERROR ) ) {
+					player.removeEventListener( YoutubePlayerEvent.ON_ERROR, onPlayerError );
+				}
+				
+				if( player.hasEventListener( YoutubePlayerEvent.ON_STATE_CHANGE ) ) {
+					player.removeEventListener( YoutubePlayerEvent.ON_STATE_CHANGE, onPlayerStateChange );
+				}
+				
+				if( player.hasEventListener( YoutubePlayerEvent.ON_PLAYBACK_QUALITY_CHANGE ) ) {
+					player.removeEventListener( YoutubePlayerEvent.ON_PLAYBACK_QUALITY_CHANGE, onVideoPlaybackQualityChange );
+				}
+				player.stopVideo();
+				player.destroy();
+				player = null;
+			}
+			
+			if ( loader ) {
+				loader.contentLoaderInfo.removeEventListener( Event.INIT, onPlayerInit );
+				loader.unloadAndStop();
+			}
+			
+			if ( preloaderTimer && preloaderTimer.running ) {
+				preloaderTimer.stop();
+			}
+			
+			if ( playingTimer && playingTimer.running ) {
+				playingTimer.stop();
+			}
+			
+			if( controllBar.hasEventListener( MediaControllerEvent.PLAY_OR_PAUSE_CLICKED ) ) {
+				controllBar.removeEventListener( MediaControllerEvent.PLAY_OR_PAUSE_CLICKED, onPlayOrPauseClicked );
+			}
+			
+			if( controllBar.hasEventListener( MediaSeekEvent.SEEK ) ) {
+				controllBar.removeEventListener( MediaSeekEvent.SEEK, onSeekerChanged );
+			}
+			
+			if( controllBar.hasEventListener( MediaControllerEvent.MUTE_CLICKED ) ) {
+				controllBar.removeEventListener( MediaControllerEvent.MUTE_CLICKED, onMuteButtonClicked );
+			}
+			
+			if( controllBar.hasEventListener( MediaControllerEvent.UNMUTE_CLICKED ) ) {
+				controllBar.removeEventListener( MediaControllerEvent.UNMUTE_CLICKED, onMuteButtonClicked );
+			}
+			
+			if ( hasEventListener( Event.ADDED_TO_STAGE ) ) {
+				removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			}
+			
+			if ( hasEventListener( Event.REMOVED_FROM_STAGE ) ) {
+				removeEventListener( Event.REMOVED_FROM_STAGE, onRemovedFromStage );
+			}
+			
+			loader = null;
+			playingTimer = null;
+			preloaderTimer = null;
 		}
 		
 		/**
@@ -157,7 +261,7 @@ package com.flashgangsta.media.video {
 		
 		private function onPlayerReady( event:Event ):void {
 			// Event.data contains the event parameter, which is the Player API ID 
-			trace( "Player is ready" );
+			if( showTraces ) trace( "Player is ready" );
 			
 			/*Once this event has been dispatched by the player, we can use
 			cueVideoById, loadVideoById, cueVideoByUrl and loadVideoByUrl
@@ -168,10 +272,12 @@ package com.flashgangsta.media.video {
 			addChild( logo );
 			
 			player.setSize( background.width, background.height );
-			player.cueVideoById( "4VK0DQhCIuU" /*"fKN6P6xzbPc"*/ );
 			
-			//player.cueVideoByUrl( "http://www.youtube.com/v/Uon2WYPfdgc" );
+			if ( videoID ) {
+				player.cueVideoById( videoID );
+			}
 			
+			addChild( controllBar );
 		}
 		
 		/**
@@ -182,7 +288,7 @@ package com.flashgangsta.media.video {
 		private function onPlayerError( event:Event ):void {
 			// Event.data contains the event parameter, which is the error code
 			var error:String = Object( event ).data;
-			trace( "player error:", error );
+			if( showTraces ) trace( "player error:", error );
 		}
 		
 		/**
@@ -193,15 +299,38 @@ package com.flashgangsta.media.video {
 		private function onPlayerStateChange( event:Event ):void {
 			// Event.data contains the event parameter, which is the new player state
 			var state:int = Object( event ).data;
-			trace( "player state:", state );
+			if( showTraces ) trace( "player state:", state );
 			
 			switch( state ) {
+				case YoutubePlayerInstance.STATE_READY:
+					controllBar.enable();
+					break;
 				case YoutubePlayerInstance.STATE_PLAYING:
-					addChildAt( mouseListenerRect, getChildIndex( player.getPlayer() ) + 1 );
+					if ( seekToAfterDetectionDuration ) {
+						player.seekTo( player.getDuration() * seekToAfterDetectionDuration, true );
+						seekToAfterDetectionDuration = 0;
+					}
+					
+					if ( !mouseListenerRect.visible ) {
+						mouseListenerRect.visible = true;
+						addChildAt( mouseListenerRect, getChildIndex( player.getPlayer() ) + 1 );
+					}
+					
 					controllBar.dispatchEvent( new MediaControllerEvent( MediaControllerEvent.PLAYING_STARTED ) );
+					
+					if ( !preloaderTimer.running ) {
+						preloaderTimer.start();
+					}
+					
+					playingTimer.start();
 					break;
 				case YoutubePlayerInstance.STATE_PLAYING_COMPLETED:
 					controllBar.dispatchEvent( new MediaControllerEvent( MediaControllerEvent.PLAYING_COMPLETE ) );
+					playingTimer.stop();
+					break;
+				case YoutubePlayerInstance.STATE_PAUSED:
+					controllBar.dispatchEvent( new MediaControllerEvent( MediaControllerEvent.PLAYING_PAUSED ) );
+					playingTimer.stop();
 					break;
 			}
 		}
@@ -214,7 +343,7 @@ package com.flashgangsta.media.video {
 		private function onVideoPlaybackQualityChange( event:Event ):void {
 			// Event.data contains the event parameter, which is the new video quality
 			var quality:String = Object( event ).data;
-			trace( "video quality:", quality );
+			if( showTraces ) trace( "video quality:", quality );
 		}
 		
 		/**
@@ -232,7 +361,6 @@ package com.flashgangsta.media.video {
 		 */
 		
 		private function onPlayOrPauseClicked( event:MediaControllerEvent ):void {
-			trace( "youtubePlayer" );
 			event.stopImmediatePropagation();
 			togglePlaying();
 		}
@@ -255,7 +383,91 @@ package com.flashgangsta.media.video {
 			}
 		}
 		
+		/**
+		 * 
+		 * @param	event
+		 */
 		
+		private function onPreloaderTimer( event:TimerEvent ):void {
+			var progress:Number = player.getVideoBytesLoaded() / player.getVideoBytesTotal();
+			var progressEvent:ProgressEvent = new ProgressEvent( ProgressEvent.PROGRESS );
+			progressEvent.bytesLoaded = player.getVideoBytesLoaded();
+			progressEvent.bytesTotal = player.getVideoBytesTotal();
+			controllBar.dispatchEvent( progressEvent );
+			if ( progress === 1 ) preloaderTimer.stop();
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onPlayingTimer( event:TimerEvent ):void {
+			var mediaPlayingProgressEvent:MediaPlayingProgressEvent = new MediaPlayingProgressEvent( MediaPlayingProgressEvent.PROGRESS );
+			mediaPlayingProgressEvent.currentTime = player.getCurrentTime();
+			mediaPlayingProgressEvent.duration = player.getDuration();
+			controllBar.dispatchEvent( mediaPlayingProgressEvent );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onSeekerChanged( event:MediaSeekEvent ):void {
+			var seekPrecent:Number = player.getDuration() * event.seekPrecent;
+			
+			if ( !player.getDuration() ) {
+				seekToAfterDetectionDuration = event.seekPrecent;
+				player.playVideo();
+			}
+			player.seekTo( seekPrecent, true );
+			
+			event.stopImmediatePropagation();
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onMuteButtonClicked( event:MediaControllerEvent ):void {
+			event.stopImmediatePropagation();
+			if ( player.isMuted() ) {
+				player.unMute();
+			} else {
+				player.mute();
+			}
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onAddedToStage( event:Event ):void {
+			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage);
+			if ( !hasEventListener( Event.REMOVED_FROM_STAGE ) ) {
+				addEventListener( Event.REMOVED_FROM_STAGE, onRemovedFromStage );
+			}
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onRemovedFromStage( event:Event ):void {
+			removeEventListener( Event.REMOVED_FROM_STAGE, onRemovedFromStage );
+			if ( !hasEventListener( Event.ADDED_TO_STAGE ) ) {
+				addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			}
+			if ( player ) {
+				if ( player.isPlaying() ) {
+					player.pauseVideo();
+				}
+			}
+		}
 		
 	}
 

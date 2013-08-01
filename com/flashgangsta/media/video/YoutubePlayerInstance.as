@@ -3,6 +3,7 @@ package com.flashgangsta.media.video {
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	
 	/**
@@ -77,7 +78,7 @@ package com.flashgangsta.media.video {
 		/// идет буферизация
 		static public const STATE_BUFFERING:int = 3;
 		/// видео размечено и готово к воспроизведению
-		static public const STATE_READY:int = 4;
+		static public const STATE_READY:int = 5;
 		
 		/// выдается, когда запрошенное видео не найдено. Это происходит, если видео было удалено (по любой причине) или было помечено как личное.
 		static public const ERROR_VIDEO_NOT_FOUND:int = 100;
@@ -119,16 +120,7 @@ package com.flashgangsta.media.video {
 		 */
 		
 		override public function addEventListener( type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false ):void {
-			switch( type ) {
-				case YoutubePlayerEvent.ON_READY:
-				case YoutubePlayerEvent.ON_ERROR:
-				case YoutubePlayerEvent.ON_STATE_CHANGE:
-				case YoutubePlayerEvent.ON_PLAYBACK_QUALITY_CHANGE:
-					player.addEventListener( type, listener, useCapture, priority, useWeakReference );
-					break;
-				default :
-					super.addEventListener(type, listener, useCapture, priority, useWeakReference);
-			}
+			getEventDispatcher( type ).addEventListener( type, listener, useCapture );
 		}
 		
 		/**
@@ -139,16 +131,38 @@ package com.flashgangsta.media.video {
 		 */
 		
 		override public function removeEventListener( type:String, listener:Function, useCapture:Boolean = false ):void {
-			switch( type ) {
+			getEventDispatcher( type ).removeEventListener( type, listener, useCapture );
+		}
+		
+		/**
+		 * 
+		 * @param	type
+		 * @return
+		 */
+		
+		override public function hasEventListener( type:String ):Boolean {
+			return getEventDispatcher( type ).hasEventListener( type );
+		}
+		
+		/**
+		 * 
+		 * @param	eventType
+		 * @return
+		 */
+		
+		private function getEventDispatcher( eventType:String ):EventDispatcher {
+			var result:EventDispatcher;
+			switch( eventType ) {
 				case YoutubePlayerEvent.ON_READY:
 				case YoutubePlayerEvent.ON_ERROR:
 				case YoutubePlayerEvent.ON_STATE_CHANGE:
 				case YoutubePlayerEvent.ON_PLAYBACK_QUALITY_CHANGE:
-					player.removeEventListener( type, listener, useCapture );
+					result = player as EventDispatcher;
 					break;
 				default :
-					super.removeEventListener( type, listener, useCapture );
+					result = super;
 			}
+			return result;
 		}
 		
 		/**
@@ -224,7 +238,11 @@ package com.flashgangsta.media.video {
 		 */
 		
 		public function stopVideo():void {
-			player.stopVideo();
+			try {
+				player.stopVideo();
+			} catch ( error:Error ) {
+				
+			}
 		}
 		
 		/**
@@ -245,6 +263,24 @@ package com.flashgangsta.media.video {
 		
 		public function clearVideo():void {
 			player.clearVideo();
+		}
+		
+		/**
+		 * Возвращает состояние воспроизведения видео
+		 * @return
+		 */
+		
+		public function isPlaying():Boolean {
+			return player ? getPlayerState() === STATE_PLAYING : false;
+		}
+	
+		/**
+		 * Возвращает состояние паузы видео
+		 * @return
+		 */
+		
+		public function isPaused():Boolean {
+			return player ? getPlayerState() === STATE_PAUSED : false;
 		}
 		
 		/**							*
@@ -512,6 +548,20 @@ package com.flashgangsta.media.video {
 		 */
 		
 		public function destroy():void {
+			try {
+				player.destroy();
+			} catch ( e:Error ) {
+				player.addEventListener( YoutubePlayerInstance.STATE_READY, callDestroyAfterReady );
+			}
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function callDestroyAfterReady( event:Event ):void {
+			player.removeEventListener( YoutubePlayerInstance.STATE_READY, callDestroyAfterReady );
 			player.destroy();
 		}
 	}
