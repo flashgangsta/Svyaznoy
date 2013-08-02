@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<map2010>
+		<item id="5" country="russia"/>
+		<item id="6" country="norway"/>
+		<item id="7" country="marokko"/>
+	</map2010>
+	<map2011>
+		<item id="8" country="russia"/>
+		<item id="9" country="norway"/>
+		<item id="10" country="marokko"/>
+	</map2011>
+	<map2012>
+		<item id="11" country="russia"/>
+		<item id="12" country="norway"/>
+		<item id="13" country="marokko"/>
+	</map2012>
+	<map2013>
+		<item id="14" country="russia"/>
+		<item id="15" country="norway"/>
+		<item id="16" country="marokko"/>
+		<item id="17" country="mexico"/>
+		<item id="18" country="india"/>
+		<item id="19" country="kenya"/>
+		<item id="20" country="peru"/>
+		<item id="21" country="australia"/>
+	</map2013>
+</data>

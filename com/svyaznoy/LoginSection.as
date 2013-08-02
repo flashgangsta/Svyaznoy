@@ -53,6 +53,14 @@ package com.svyaznoy {
 			provider.addEventListener( ProviderEvent.ON_LOGGED_IN, onLoggedIn );
 		}
 		
+		public function emulateComplete():void {
+			//TODO: REMOVE THIS FUNCTION
+			if ( provider.hasEventListener( ProviderEvent.ON_LOGGED_IN ) ) {
+				provider.removeEventListener( ProviderEvent.ON_LOGGED_IN, onLoggedIn );
+			}
+			gotoApplication();
+		}
+		
 		/**
 		 * 
 		 * @param	event

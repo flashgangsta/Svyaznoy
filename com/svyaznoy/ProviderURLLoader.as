@@ -15,7 +15,7 @@ package com.svyaznoy {
 		private var _completeHandler:Function;
 		private var _errorHandler:Function;
 		private var isOpened:Boolean = false;
-		private var showTraces:Boolean = true;
+		private var showTraces:Boolean = false;
 		
 		/**
 		 * 

@@ -298,7 +298,7 @@ package com.svyaznoy {
 		 * 
 		 */
 		
-		public function getDepartures( year:String, fields:String = "galleries.photos,videos" ):void {
+		public function getDepartures( year:String, fields:String = "galleries,videos" ):void {
 			var loader:ProviderURLLoader = new ProviderURLLoader();
 			var request:URLRequest = new URLRequest( API_ADRESS + METHOD_GET_DEPARTURES );
 			var params:URLVariables = new URLVariables();
