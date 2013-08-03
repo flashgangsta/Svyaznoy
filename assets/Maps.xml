@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <data>
 	<map2010>
-		<item id="5" country="russia"/>
-		<item id="6" country="norway"/>
-		<item id="7" country="marokko"/>
+		<item id="1" country="russia"/>
+		<item id="2" country="russia"/>
+		<item id="3" country="russia"/>
+		<item id="4" country="russia"/>
+		<item id="5" country="france"/>
 	</map2010>
 	<map2011>
+		<item id="6" country="russia"/>
+		<item id="7" country="russia"/>
 		<item id="8" country="russia"/>
-		<item id="9" country="norway"/>
-		<item id="10" country="marokko"/>
+		<item id="9" country="cuba"/>
+		<item id="100" country="ukraine"/>
 	</map2011>
 	<map2012>
+		<item id="10" country="russia"/>
 		<item id="11" country="russia"/>
-		<item id="12" country="norway"/>
-		<item id="13" country="marokko"/>
+		<item id="12" country="russia"/>
+		<item id="13" country="italy"/>
 	</map2012>
 	<map2013>
 		<item id="14" country="russia"/>

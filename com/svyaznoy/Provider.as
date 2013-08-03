@@ -303,7 +303,7 @@ package com.svyaznoy {
 			var request:URLRequest = new URLRequest( API_ADRESS + METHOD_GET_DEPARTURES );
 			var params:URLVariables = new URLVariables();
 			
-			params[ "load[]" ] = fields.split( "," ).join( "&load[]=" );
+			params[ "load" ] = fields;
 			params[ "filter[]" ] = "year:" + year;
 			
 			request.method = URLRequestMethod.GET;

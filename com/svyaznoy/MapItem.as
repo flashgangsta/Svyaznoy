@@ -78,6 +78,23 @@ package com.svyaznoy {
 		}
 		
 		/**
+		 * СТрана инициатора вызова метода, нужно для определения необходимости анимации страны (если страны у объектов одинаковы, анимация не нужна)
+		 * @param	dispatcherCountry
+		 */
+		
+		public function resetToDefaultState( dispatcherCountry:DisplayObject ):void {
+			onRollOut( null, false, dispatcherCountry === country );
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function getCountry():DisplayObject {
+			return country;
+		}
+		
+		/**
 		 * 
 		 * @param	event
 		 */
@@ -92,18 +109,20 @@ package com.svyaznoy {
 		/**
 		 * 
 		 * @param	event
+		 * @param	dispatchIt нужно ли диспетчить событие
+		 * @param	counryAnimationNeeded нужна ли анимация страны 
 		 */
 		
-		private function onRollOut( event:MouseEvent = null ):void {
+		private function onRollOut( event:MouseEvent = null, dispatchIt:Boolean = true, counryAnimationNeeded:Boolean = false ):void {
 			if ( hasEventListener( MouseEvent.MOUSE_OUT ) ) {
 				removeEventListener( MouseEvent.MOUSE_OUT, onRollOut );
 			}
 			if ( !hasEventListener( MouseEvent.MOUSE_OVER ) ) {
 				addEventListener( MouseEvent.MOUSE_OVER, onRollOver );
 			}
-			if( country ) Tweener.addTween( country, countryOutParameters );
+			if( country && !counryAnimationNeeded ) Tweener.addTween( country, countryOutParameters );
 			Tweener.addTween( shapes, shapesOutParameters );
-			dispatchEvent( new MapEvent( MapEvent.COUNTRY_MOUSE_OUT, true ) );
+			if( dispatchIt ) dispatchEvent( new MapEvent( MapEvent.COUNTRY_MOUSE_OUT, true ) );
 		}
 		
 		/**
