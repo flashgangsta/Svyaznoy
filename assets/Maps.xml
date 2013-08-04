@@ -11,23 +11,23 @@
 		<item id="6" country="russia"/>
 		<item id="7" country="russia"/>
 		<item id="8" country="russia"/>
-		<item id="9" country="cuba"/>
-		<item id="100" country="ukraine"/>
+		<item id="9" country="ukraine"/>
+		<item id="10" country="cuba"/>
 	</map2011>
 	<map2012>
-		<item id="10" country="russia"/>
 		<item id="11" country="russia"/>
 		<item id="12" country="russia"/>
-		<item id="13" country="italy"/>
+		<item id="13" country="russia"/>
+		<item id="14" country="italy"/>
 	</map2012>
 	<map2013>
-		<item id="14" country="russia"/>
-		<item id="15" country="norway"/>
-		<item id="16" country="marokko"/>
-		<item id="17" country="mexico"/>
-		<item id="18" country="india"/>
-		<item id="19" country="kenya"/>
-		<item id="20" country="peru"/>
-		<item id="21" country="australia"/>
+		<item id="15" country="russia"/>
+		<item id="16" country="norway"/>
+		<item id="17" country="marokko"/>
+		<item id="18" country="mexico"/>
+		<item id="19" country="india"/>
+		<item id="20" country="kenya"/>
+		<item id="21" country="peru"/>
+		<item id="22" country="australia"/>
 	</map2013>
 </data>

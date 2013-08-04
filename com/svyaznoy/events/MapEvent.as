@@ -9,6 +9,8 @@ package com.svyaznoy.events {
 		
 		static public const COUNTRY_MOUSE_OVER:String = "coutryMouseOver";
 		static public const COUNTRY_MOUSE_OUT:String = "coutryMouseOut";
+		static public const DARK_OUT_BEGIN:String = "darkOutBegin";
+		static public const DARK_IN_BEGIN:String = "darkInBegin";
 		
 		public function MapEvent( type:String, bubbles:Boolean = false, cancelable:Boolean = false ) { 
 			super( type, bubbles, cancelable );

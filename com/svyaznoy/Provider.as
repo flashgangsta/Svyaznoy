@@ -13,6 +13,19 @@ package com.svyaznoy {
 	 * ...
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
 	 */
+	
+	[Event(name="onAbout", 					type="com.svyaznoy.events.ProviderEvent")]
+	[Event(name="onDepartures", 			type="com.svyaznoy.events.ProviderEvent")]
+	[Event(name="onEmployeeConfirmed", 		type="com.svyaznoy.events.ProviderEvent")]
+	[Event(name="onEmployeeSet", 			type="com.svyaznoy.events.ProviderEvent")]
+	[Event(name="onIntroData", 				type="com.svyaznoy.events.ProviderEvent")]
+	[Event(name="onLegend", 				type="com.svyaznoy.events.ProviderEvent")]
+	[Event(name="onLoadStart", 				type="com.svyaznoy.events.ProviderEvent")]
+	[Event(name="onLoggedIn", 				type="com.svyaznoy.events.ProviderEvent")]
+	[Event(name="onNewsDetail", 			type="com.svyaznoy.events.ProviderEvent")]
+	[Event(name="onNewsList", 				type="com.svyaznoy.events.ProviderEvent")]
+	[Event(name="onThermsOfMotivation", 	type="com.svyaznoy.events.ProviderEvent")]
+	
 	public class Provider extends EventDispatcher {
 		
 		private const SERVER_ADRESS:String = "http://es.svyaznoy.ru/";
@@ -27,7 +40,6 @@ package com.svyaznoy {
 		private const METHOD_GET_NEWS:String =		 							"content/news";
 		private const METHOD_GET_PAGE:String =		 							"content/pages";
 		private const METHOD_GET_DEPARTURES:String =		 					"departures";
-		
 		
 		static public var instance:Provider;
 		
@@ -295,16 +307,30 @@ package com.svyaznoy {
 		}
 		
 		/**
-		 * 
+		 * Список выездов объккт содержит параметры:
+			 * 	"id": "1",
+                "title": "Россия (Санкт-Петербург)",
+                "year": "2010",
+                "start": null,
+                "galleries": [],
+                "videos": [],
+                "full_title": "Россия (Санкт-Петербург) — 2010",
+                "image_with_path": ""
+				
+		 * @param	year пустой параметр вернет все года
+		 * @param	fields	интересующие поля :
+			 * videos списки видео,
+			 * galleries списки фотогалерей
+			 * galleries.photos списки фотографий
 		 */
 		
-		public function getDepartures( year:String, fields:String = "galleries,videos" ):void {
+		public function getDepartures( year:String = null, fields:String = "galleries,videos,galleries.photos" ):void {
 			var loader:ProviderURLLoader = new ProviderURLLoader();
 			var request:URLRequest = new URLRequest( API_ADRESS + METHOD_GET_DEPARTURES );
 			var params:URLVariables = new URLVariables();
 			
 			params[ "load" ] = fields;
-			params[ "filter[]" ] = "year:" + year;
+			if ( year ) params[ "filter[]" ] = "year:" + year;
 			
 			request.method = URLRequestMethod.GET;
 			request.data = params;
