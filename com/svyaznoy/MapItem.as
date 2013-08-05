@@ -93,10 +93,10 @@ package com.svyaznoy {
 				videosButton.addEventListener( MouseEvent.CLICK, onVideosClicked );
 			}
 			
-			trace( ">>>", data.start );
-			
 			if( !data.start ) {
 				addEventListener( MouseEvent.MOUSE_OVER, onRollOver );
+			} else {
+				
 			}
 		}
 		
@@ -106,6 +106,7 @@ package com.svyaznoy {
 		 */
 		
 		public function resetToDefaultState( dispatcherCountry:DisplayObject ):void {
+			if ( data.start ) return;
 			onRollOut( null, false, dispatcherCountry === country );
 		}
 		

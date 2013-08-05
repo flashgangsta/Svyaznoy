@@ -73,6 +73,7 @@ package com.svyaznoy {
 			if ( previewsTable ) {
 				previewsTable.dispose();
 				removeChild( previewsTable );
+				previewsTable = null;
 			}
 		}
 		
