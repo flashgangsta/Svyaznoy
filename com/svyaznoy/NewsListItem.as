@@ -45,6 +45,7 @@ package com.svyaznoy {
 			moreButton.addEventListener( MouseEvent.CLICK, onMoreClicked );
 			
 			header.addEventListener( DynamicItemEvent.SIZE_CHANGED, onImageSizeSet );
+			header.setTitleHasButton().addEventListener( MouseEvent.CLICK, onMoreClicked );
 		}
 		
 		/**

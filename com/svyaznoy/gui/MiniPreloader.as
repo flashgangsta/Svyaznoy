@@ -1,5 +1,7 @@
 package com.svyaznoy.gui {
+	import com.flashgangsta.managers.MappingManager;
 	import flash.display.DisplayObject;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.TimerEvent;
 	import flash.text.TextField;
@@ -15,7 +17,7 @@ package com.svyaznoy.gui {
 		static public const ROTATION_STEP:Number = 2;
 		static public const DOTS_DELAY:int = 300;
 		
-		private var icon:Sprite;
+		private var animation:MovieClip;
 		private var label:TextField;
 		private var timer:Timer = new Timer( 20 );
 		private var messageText:String;
@@ -29,15 +31,22 @@ package com.svyaznoy.gui {
 		 */
 		
 		public function MiniPreloader( message:String = "Загрузка" ) {
-			icon = getChildByName( "icon_mc" ) as Sprite;
+			animation = getChildByName( "animation_mc" ) as MovieClip;
 			label = getChildByName( "label_txt" ) as TextField;
 			background = getChildAt( 0 );
 			messageText = message;
 			
-			label.text = messageText + "...";
 			label.autoSize = TextFieldAutoSize.LEFT;
 			
-			background.width = label.x + label.width + icon.getBounds( this ).x;
+			label.text = messageText + "...";
+			
+			
+			var baseObject:DisplayObject = animation.width > label.width ? animation : label;
+			
+			background.width = baseObject.x * 2 + baseObject.width;
+			
+			animation.x = MappingManager.getCentricPoint( background.width, animation.width );
+			label.x = MappingManager.getCentricPoint( background.width, label.width );
 			
 			timer.addEventListener( TimerEvent.TIMER, onTimer );
 			timer.start();
@@ -50,6 +59,7 @@ package com.svyaznoy.gui {
 		public function stop():void {
 			timer.removeEventListener( TimerEvent.TIMER, onTimer );
 			timer.stop();
+			animation.stop();
 		}
 		
 		/**
@@ -58,7 +68,6 @@ package com.svyaznoy.gui {
 		 */
 		
 		private function onTimer( event:TimerEvent ):void {
-			icon.rotation += ROTATION_STEP;
 			currentDotsDelay += timer.delay;
 			
 			if ( currentDotsDelay >= DOTS_DELAY ) {

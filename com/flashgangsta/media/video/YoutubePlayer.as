@@ -24,6 +24,7 @@ package com.flashgangsta.media.video {
 	 * ...
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
 	 * @link https://developers.google.com/youtube/flash_api_reference?hl=ru
+	 * @version 0.01
 	 */
 	
 	public class YoutubePlayer extends Sprite {
@@ -90,11 +91,28 @@ package com.flashgangsta.media.video {
 		 * @param	id
 		 */
 		
-		public function setVideo( id:String ):void {
+		public function setVideo( id:String, autoplay:Boolean = false ):void {
 			videoID = id;
 			if ( player ) {
-				player.cueVideoById( videoID );
+				player.stopVideo();
+				
+				if( autoplay ) {
+					player.loadVideoById( id );
+				} else {
+					player.cueVideoById( videoID );
+				}
 			}
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function stop():void {
+			if ( player ) {
+				player.stopVideo();
+			}
+			controllBar.disable();
 		}
 		
 		/**
@@ -302,6 +320,8 @@ package com.flashgangsta.media.video {
 			if( showTraces ) trace( "player state:", state );
 			
 			switch( state ) {
+				case YoutubePlayerInstance.STATE_NOT_STARTED:
+					reset();
 				case YoutubePlayerInstance.STATE_READY:
 					controllBar.enable();
 					break;
@@ -337,6 +357,24 @@ package com.flashgangsta.media.video {
 		
 		/**
 		 * 
+		 */
+		
+		private function reset():void {
+			if ( preloaderTimer.running ) {
+				preloaderTimer.stop();
+			}
+			
+			if ( playingTimer.running ) {
+				playingTimer.stop();
+			}
+			
+			if ( mouseListenerRect ) mouseListenerRect.visible = false;
+			
+			controllBar.reset();
+		}
+		
+		/**
+		 * 
 		 * @param	event
 		 */
 		
@@ -361,6 +399,7 @@ package com.flashgangsta.media.video {
 		 */
 		
 		private function onPlayOrPauseClicked( event:MediaControllerEvent ):void {
+			trace( "onPlayOrPauseClicked" );
 			event.stopImmediatePropagation();
 			togglePlaying();
 		}
@@ -370,6 +409,7 @@ package com.flashgangsta.media.video {
 		 */
 		
 		private function togglePlaying():void {
+			trace( "togglePlaying", player.getPlayerState() );
 			switch( player.getPlayerState() ) {
 				case YoutubePlayerInstance.STATE_PLAYING :
 					player.pauseVideo();
@@ -377,6 +417,7 @@ package com.flashgangsta.media.video {
 				case YoutubePlayerInstance.STATE_PAUSED:
 				case YoutubePlayerInstance.STATE_PLAYING_COMPLETED:
 				case YoutubePlayerInstance.STATE_NOT_STARTED:
+				case YoutubePlayerInstance.STATE_READY:
 					player.playVideo();
 					break;
 				
@@ -462,11 +503,7 @@ package com.flashgangsta.media.video {
 			if ( !hasEventListener( Event.ADDED_TO_STAGE ) ) {
 				addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			}
-			if ( player ) {
-				if ( player.isPlaying() ) {
-					player.pauseVideo();
-				}
-			}
+			player.stopVideo();
 		}
 		
 	}

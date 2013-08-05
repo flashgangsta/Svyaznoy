@@ -40,8 +40,17 @@ package com.svyaznoy {
 		 */
 		
 		public function enable():void {
-				mouseEnabled = mouseChildren = true;
+			mouseEnabled = mouseChildren = true;
 			seeker.alpha = playPauseButton.alpha = 1;
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function reset():void {
+			seeker.reset();
+			playPauseButton.setState();
 		}
 		
 		/**

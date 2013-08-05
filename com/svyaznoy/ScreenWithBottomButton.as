@@ -3,13 +3,15 @@ package com.svyaznoy {
 	import com.svyaznoy.events.DynamicItemEvent;
 	import com.svyaznoy.events.ProviderEvent;
 	import com.svyaznoy.gui.Button;
+	
 	/**
 	 * ...
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
 	 */
+	
 	public class ScreenWithBottomButton extends ScreenWithDynamicContent {
 		
-		private const MARGIN:int = 15;
+		public static const MARGIN:int = 15;
 		
 		protected var bottomButton:Button;
 		

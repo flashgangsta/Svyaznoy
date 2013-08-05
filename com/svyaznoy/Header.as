@@ -3,8 +3,10 @@ package com.svyaznoy {
 	import com.svyaznoy.events.DynamicItemEvent;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
 	
 	/**
 	 * ...
@@ -13,11 +15,14 @@ package com.svyaznoy {
 	public class Header extends Sprite {
 		
 		const MARGIN:int = 4;
+		private const TEXTFIELD_MARGIN:int = 6;
 		
 		private var titleLabel:TextField;
 		private var dateLabel:TextField;
 		private var titleImage:DynamicImage;
 		private var startWidth:int;
+		private var titleHitObject:Sprite;
+		private var titleTextFormat:TextFormat;
 		
 		/**
 		 * 
@@ -28,10 +33,11 @@ package com.svyaznoy {
 			dateLabel = getChildByName( "date_txt" ) as TextField;
 			titleImage = getChildByName( "image_mc" ) as DynamicImage;
 			
+			titleTextFormat = titleLabel.getTextFormat();
 			startWidth = width;
 			
 			titleLabel.autoSize = TextFieldAutoSize.LEFT;
-			dateLabel.autoSize = TextFieldAutoSize.LEFT;
+			if( dateLabel ) dateLabel.autoSize = TextFieldAutoSize.LEFT;
 			
 			visible = false;
 		}
@@ -46,9 +52,19 @@ package com.svyaznoy {
 			
 			if ( data.hasOwnProperty( "title" ) && data.title ) {
 				titleLabel.htmlText = data.title;
+				if ( titleHitObject ) {
+					titleHitObject.width = titleLabel.textWidth + TEXTFIELD_MARGIN;
+					titleHitObject.height = titleLabel.height;
+				}
 			} else {
 				removeChild( titleLabel );
 				titleLabel = null;
+				if ( titleHitObject ) {
+					removeChild( titleHitObject );
+					titleHitObject.removeEventListener( MouseEvent.ROLL_OVER, onTitleRollOver );
+					titleHitObject.removeEventListener( MouseEvent.ROLL_OUT, onTitleRollOut );
+					titleHitObject = null;
+				}
 			}
 			
 			//Date
@@ -76,6 +92,50 @@ package com.svyaznoy {
 			
 			setPositions();
 			visible = true;
+		}
+		
+		/**
+		 * 
+		 * @return
+		 */
+		
+		public function setTitleHasButton():Sprite {
+			if( !titleHitObject ) {
+				titleHitObject = new Sprite();
+				titleHitObject.graphics.beginFill( 0, 0 );
+				titleHitObject.graphics.drawRect( 0, 0, titleLabel.width, titleLabel.height );
+				titleHitObject.graphics.endFill();
+				titleHitObject.buttonMode = true;
+				titleHitObject.addEventListener( MouseEvent.ROLL_OVER, onTitleRollOver );
+				titleHitObject.addEventListener( MouseEvent.ROLL_OUT, onTitleRollOut );
+				
+				addChild( titleHitObject );
+			}
+			
+			titleHitObject.width = titleLabel.textWidth + TEXTFIELD_MARGIN;
+			titleHitObject.height = titleLabel.height;
+			
+			return titleHitObject;
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onTitleRollOver( event:MouseEvent ):void {
+			titleTextFormat.underline = true;
+			titleLabel.setTextFormat( titleTextFormat );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onTitleRollOut( event:MouseEvent ):void {
+			titleTextFormat.underline = false;
+			titleLabel.setTextFormat( titleTextFormat );
 		}
 		
 		/**

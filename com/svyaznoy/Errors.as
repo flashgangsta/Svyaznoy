@@ -1,4 +1,5 @@
 package com.svyaznoy {
+	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.SecurityErrorEvent;
 	/**
@@ -133,7 +134,7 @@ package com.svyaznoy {
 		 */
 		
 		public function onNewsDetailError( data:Object ):void {
-			traceError( "dynamicImageLoadError", data );
+			traceError( "onNewsDetailError", data );
 		}
 		
 		/**
@@ -141,7 +142,7 @@ package com.svyaznoy {
 		 */
 		
 		public function getLegendError( data:Object ):void {
-			traceError( "dynamicImageLoadError", data );
+			traceError( "getLegendError", data );
 		}
 		
 		/**
@@ -150,7 +151,7 @@ package com.svyaznoy {
 		 */
 		
 		public function getAboutError( data:Object ):void {
-			traceError( "dynamicImageLoadError", data );
+			traceError( "getAboutError", data );
 		}
 		
 		/**
@@ -165,7 +166,25 @@ package com.svyaznoy {
 		
 		
 		public function onDeparturesError( data:Object ):void {
-			traceError( "getThermsOfMotivationError", data );
+			traceError( "onDeparturesError", data );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		public function previewImageLoadError( event:Event ):void {
+			traceError( "previewImageLoadError", event );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		public function videoInfoLoadError( event:IOErrorEvent ):void {
+			traceError( "videoInfoLoadError", event );
 		}
 		
 		

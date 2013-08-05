@@ -18,6 +18,7 @@ package com.svyaznoy {
 		public static const MARGIN:int = 10;
 		
 		private var preloader:MiniPreloader;
+		private var elementsForVisibleControll:Vector.<DisplayObject> = new Vector.<DisplayObject>();
 		
 		protected var data:Object;
 		protected var provider:Provider = Provider.getInstance();
@@ -90,9 +91,29 @@ package com.svyaznoy {
 		
 		/**
 		 * 
+		 * @param	value
 		 */
 		
-		private function removePreloader():void {
+		protected function setVisibleForElements( value:Boolean ):void {
+			for ( var i:int = 0; i < elementsForVisibleControll.length; i++ ) {
+				elementsForVisibleControll[ i ].visible = value;
+			}
+		}
+		
+		/**
+		 * 
+		 * @param	...rest DisplayObjects
+		 */
+		
+		protected function setElementsForVisibleControll( ...rest ):void {
+			elementsForVisibleControll = elementsForVisibleControll.concat( Vector.<DisplayObject>( rest ) );
+		}
+		
+		/**
+		 * 
+		 */
+		
+		protected function removePreloader():void {
 			if ( !preloader ) return;
 			preloader.stop();
 			removeChild( preloader );

@@ -24,6 +24,8 @@ package com.svyaznoy.events {
 		static public const NAVIGATE_TO_RADIO:String = "navigateToRadio";
 		/// Условия мотивации
 		static public const NAVIGATE_TO_THERMS_OF_MOTIVATION:String = "navigate_to_therms_of_motivation";
+		/// Видео отчеты
+		static public const NAVIGATE_TO_VIDEO_REPORT:String = "navigateToVideoReport";
 		
 		
 		/**

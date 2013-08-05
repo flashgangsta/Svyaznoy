@@ -33,9 +33,7 @@ package com.flashgangsta.media.controls {
 			seekerCenter = seeker.width / 2;
 			fullWidthForSeeker = width - seeker.width;
 			
-			preloader.width = 0;
-			seeker.x = 0;
-			progressbar.width = seekerCenter;
+			reset();
 			
 			seeker.buttonMode = true;
 			
@@ -44,15 +42,12 @@ package com.flashgangsta.media.controls {
 		
 		/**
 		 * 
-		 * @param	event
 		 */
 		
-		private function onLinePressed( event:MouseEvent ):void {
-			if ( event.target !== seeker ) {
-				seeker.x = mouseX - seekerCenter;
-				progressbar.width = seeker.x + seekerCenter;
-			}
-			onSeekerPressed();
+		public function reset():void {
+			preloader.width = 0;
+			seeker.x = 0;
+			progressbar.width = seekerCenter;
 		}
 		
 		/**
@@ -77,6 +72,19 @@ package com.flashgangsta.media.controls {
 			var progress:Number = currentTime / duration;
 			seeker.x = Math.round( ( width - seeker.width ) * progress );
 			progressbar.width = seeker.x + seekerCenter;
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onLinePressed( event:MouseEvent ):void {
+			if ( event.target !== seeker ) {
+				seeker.x = mouseX - seekerCenter;
+				progressbar.width = seeker.x + seekerCenter;
+			}
+			onSeekerPressed();
 		}
 		
 		/**

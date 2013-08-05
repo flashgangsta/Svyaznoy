@@ -1,7 +1,9 @@
 package com.svyaznoy.gui {
 	import com.flashgangsta.managers.ButtonManager;
+	import com.flashgangsta.ui.Label;
 	import flash.display.MovieClip;
 	import flash.text.TextField;
+	
 	
 	/**
 	 * ...
@@ -9,7 +11,7 @@ package com.svyaznoy.gui {
 	 */
 	public class Button extends MovieClip {
 		
-		private var label:TextField;
+		private var label:Label;
 		private var labelMessage:String;
 		
 		/**
@@ -17,7 +19,7 @@ package com.svyaznoy.gui {
 		 */
 		
 		public function Button() {
-			label = getChildByName( "label_txt" ) as TextField;
+			label = getChildByName( "label_mc" ) as Label;
 			if( label ) {
 				labelMessage = label.text;
 				updateLabel();
@@ -31,9 +33,9 @@ package com.svyaznoy.gui {
 		
 		private function updateLabel( target:MovieClip = null ):void {
 			if ( !label ) return;
-			label = getChildByName( "label_txt" ) as TextField;
+			label = getChildByName( "label_mc" ) as Label;
 			label.text = labelMessage;
-			label.mouseEnabled = label.mouseWheelEnabled = false;
+			label.mouseEnabled = label.mouseChildren = false;
 		}
 		
 		/**
@@ -52,6 +54,7 @@ package com.svyaznoy.gui {
 		
 		public function dispose():void {
 			ButtonManager.removeButton( this );
+			label.dispose();
 			label = null;
 		}
 		

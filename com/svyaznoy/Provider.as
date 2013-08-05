@@ -28,6 +28,8 @@ package com.svyaznoy {
 	
 	public class Provider extends EventDispatcher {
 		
+		static public var instance:Provider;
+		
 		private const SERVER_ADRESS:String = "http://es.svyaznoy.ru/";
 		private const API_DIRECTORY:String = "api/v1/";
 		private const API_ADRESS:String = SERVER_ADRESS + API_DIRECTORY;
@@ -40,8 +42,6 @@ package com.svyaznoy {
 		private const METHOD_GET_NEWS:String =		 							"content/news";
 		private const METHOD_GET_PAGE:String =		 							"content/pages";
 		private const METHOD_GET_DEPARTURES:String =		 					"departures";
-		
-		static public var instance:Provider;
 		
 		private var errors:Errors = Errors.getInstance();
 		private var helper:Helper = Helper.getInstance();

@@ -1,6 +1,7 @@
 package com.svyaznoy {
 	import caurina.transitions.Tweener;
 	import com.svyaznoy.events.MapEvent;
+	import com.svyaznoy.events.MapItemEvent;
 	import com.svyaznoy.gui.Button;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -31,6 +32,7 @@ package com.svyaznoy {
 		private var country:DisplayObject;
 		private var shapes:Sprite;
 		private var data:Object;
+		private var dispatcher:Dispatcher = Dispatcher.getInstance();
 		
 		private var countryOverParameters:Object = {
 				_saturation: 3,
@@ -68,6 +70,10 @@ package com.svyaznoy {
 			shapes = getChildByName( "shapes_mc" ) as Sprite;
 			photosButton = shapes.getChildByName( "photos_mc" ) as Button;
 			videosButton = shapes.getChildByName( "videos_mc" ) as Button;
+			
+			photosButton.addEventListener( MouseEvent.CLICK, onPhotosClicked );
+			videosButton.addEventListener( MouseEvent.CLICK, onVideosClicked );
+			
 			addEventListener( MouseEvent.MOUSE_OVER, onRollOver );
 		}
 		
@@ -151,6 +157,26 @@ package com.svyaznoy {
 				onRollOut( null );
 			}
 			
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onPhotosClicked( event:MouseEvent ):void {
+			
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onVideosClicked( event:MouseEvent ):void {
+			var outputEvent:MapItemEvent = new MapItemEvent( MapItemEvent.VIDEO_REPORTS_CLICKED );
+			outputEvent.itemData = data;
+			dispatcher.dispatchEvent( outputEvent );
 		}
 		
 	}
