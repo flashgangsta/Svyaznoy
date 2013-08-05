@@ -9,12 +9,10 @@ package com.svyaznoy {
 	 */
 	public class InputError extends Sprite {
 		
-		static private const TIME:Number = .032;
-		static private const MAX_COUNT:int = 10;
+		static private const TIME:Number = .3;
 		
 		private var label:TextField;
-		private var count:int = 0;
-		private var motionParams:Object = { time: TIME, onComplete: onComplete };
+		private var motionParams:Object = { alpha: 0, time: TIME, transition: "easeInOutCubic", onComplete: onComplete };
 		
 		/**
 		 * 
@@ -22,6 +20,7 @@ package com.svyaznoy {
 		
 		public function InputError() {
 			visible = false;
+			alpha = 0;
 			label = getChildByName( "label_txt" ) as TextField;
 			label.text = "";
 		}
@@ -40,8 +39,9 @@ package com.svyaznoy {
 		 */
 		
 		public function show():void {
-			hide();
-			onComplete()
+			visible = true;
+			motionParams.alpha = 1;
+			Tweener.addTween( this, motionParams );
 		}
 		
 		/**
@@ -49,11 +49,11 @@ package com.svyaznoy {
 		 */
 		
 		public function hide():void {
-			visible = false;
-			count = 0;
 			if ( isPlaying() ) {
 				Tweener.removeTweens( this );
 			}
+			motionParams.alpha = 0;
+			Tweener.addTween( this, motionParams );
 		}
 		
 		/**
@@ -70,12 +70,7 @@ package com.svyaznoy {
 		 */
 		
 		private function onComplete():void {
-			visible = !visible;
-			if ( ++count === MAX_COUNT ) {
-				visible = true;
-			} else {
-				Tweener.addTween( this, motionParams  );
-			}
+			visible = Boolean( alpha );
 		}
 		
 	}

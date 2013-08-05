@@ -33,6 +33,8 @@ package com.svyaznoy {
 			background = getChildByName( "background_mc" ) as Sprite;
 			preloader = getChildByName( "prelaoder_mc" ) as MovieClip;
 			
+			preloader.gotoAndPlay( int( Math.random() * preloader.totalFrames ) );
+			
 			titleLabel.autoSize = TextFieldAutoSize.LEFT;
 			descriptionLabel.autoSize = TextFieldAutoSize.LEFT;
 			
@@ -141,6 +143,10 @@ package com.svyaznoy {
 			descriptionLabel.text = value;
 			descriptionLabel.visible = Boolean( value );
 			setPositions();
+		}
+		
+		override public function displayData( data:Object ):void {
+			super.displayData( data );
 		}
 		
 		/**

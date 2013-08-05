@@ -70,11 +70,8 @@ package com.svyaznoy {
 			shapes = getChildByName( "shapes_mc" ) as Sprite;
 			photosButton = shapes.getChildByName( "photos_mc" ) as Button;
 			videosButton = shapes.getChildByName( "videos_mc" ) as Button;
-			
-			photosButton.addEventListener( MouseEvent.CLICK, onPhotosClicked );
-			videosButton.addEventListener( MouseEvent.CLICK, onVideosClicked );
-			
-			addEventListener( MouseEvent.MOUSE_OVER, onRollOver );
+			photosButton.visible = false;
+			videosButton.visible = false;
 		}
 		
 		/**
@@ -86,8 +83,21 @@ package com.svyaznoy {
 			this.country = country;
 			this.data = data;
 			
-			photosButton.visible = data.galleries.length;
-			videosButton.visible = data.videos.length;
+			if ( data.galleries.length ) {
+				photosButton.visible = true;
+				photosButton.addEventListener( MouseEvent.CLICK, onPhotosClicked );
+			}
+			
+			if ( data.videos.length ) {
+				videosButton.visible = true;
+				videosButton.addEventListener( MouseEvent.CLICK, onVideosClicked );
+			}
+			
+			trace( ">>>", data.start );
+			
+			if( !data.start ) {
+				addEventListener( MouseEvent.MOUSE_OVER, onRollOver );
+			}
 		}
 		
 		/**
@@ -151,6 +161,7 @@ package com.svyaznoy {
 		 */
 		
 		private function onOverMotionComplete():void {
+			if ( !stage ) return;
 			if ( this.hitTestPoint( stage.mouseX, stage.mouseY, true ) ) {
 				addEventListener( MouseEvent.MOUSE_OUT, onRollOut );
 			} else {
@@ -165,7 +176,9 @@ package com.svyaznoy {
 		 */
 		
 		private function onPhotosClicked( event:MouseEvent ):void {
-			
+			var outputEvent:MapItemEvent = new MapItemEvent( MapItemEvent.PHOTO_REPORTS_CLICKED );
+			outputEvent.itemData = data;
+			dispatcher.dispatchEvent( outputEvent );
 		}
 		
 		/**

@@ -34,14 +34,15 @@ package com.svyaznoy {
 		private const API_DIRECTORY:String = "api/v1/";
 		private const API_ADRESS:String = SERVER_ADRESS + API_DIRECTORY;
 		
-		private const METHOD_LOGIN:String = 									"login";
-		private const METHOD_SET_EMPLOYEE:String = 		METHOD_LOGIN + 			"/employee";
-		private const METHOD_CONFIRM_EMPLOYEE:String = 	METHOD_SET_EMPLOYEE + 	"/confirm";
-		private const METHOD_DISABLE_INTRO:String = 							"me/disable-intro";
-		private const METHOD_GET_INTRO:String =		 							"content/intro";
-		private const METHOD_GET_NEWS:String =		 							"content/news";
-		private const METHOD_GET_PAGE:String =		 							"content/pages";
-		private const METHOD_GET_DEPARTURES:String =		 					"departures";
+		private const METHOD_LOGIN:String = 											"login";
+		private const METHOD_SET_EMPLOYEE:String = 				METHOD_LOGIN + 			"/employee";
+		private const METHOD_CONFIRM_EMPLOYEE:String = 			METHOD_SET_EMPLOYEE + 	"/confirm";
+		private const METHOD_DISABLE_INTRO:String = 									"me/disable-intro";
+		private const METHOD_GET_PAGE:String =		 									"content/pages";
+		private const METHOD_GET_INTRO_FOR_EMPLOYEE:String =	METHOD_GET_PAGE +		"/intro-employee";
+		private const METHOD_GET_INTRO_FOR_GUEST:String = 		METHOD_GET_PAGE +		"/intro";
+		private const METHOD_GET_NEWS:String =		 									"content/news";
+		private const METHOD_GET_DEPARTURES:String =		 							"departures";
 		
 		private var errors:Errors = Errors.getInstance();
 		private var helper:Helper = Helper.getInstance();
@@ -191,7 +192,8 @@ package com.svyaznoy {
 		
 		public function getIntro():void {
 			var loader:ProviderURLLoader = new ProviderURLLoader();
-			var request:URLRequest = new URLRequest( API_ADRESS + METHOD_GET_INTRO );
+			var method:String = helper.getUserData().employee && helper.isEmployeeMode ? METHOD_GET_INTRO_FOR_EMPLOYEE : METHOD_GET_INTRO_FOR_GUEST;
+			var request:URLRequest = new URLRequest( API_ADRESS + method );
 			
 			request.method = URLRequestMethod.GET;
 			loader.completeHandler = onIntroData;

@@ -503,7 +503,10 @@ package com.flashgangsta.media.video {
 			if ( !hasEventListener( Event.ADDED_TO_STAGE ) ) {
 				addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			}
-			player.stopVideo();
+			
+			if ( player ) {
+				player.stopVideo();
+			}
 		}
 		
 	}

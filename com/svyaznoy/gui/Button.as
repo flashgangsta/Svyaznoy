@@ -1,7 +1,9 @@
 package com.svyaznoy.gui {
 	import com.flashgangsta.managers.ButtonManager;
 	import com.flashgangsta.ui.Label;
+	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
+	import flash.display.Sprite;
 	import flash.text.TextField;
 	
 	
@@ -13,29 +15,24 @@ package com.svyaznoy.gui {
 		
 		private var label:Label;
 		private var labelMessage:String;
+		private var hit:Sprite;
 		
 		/**
 		 * 
 		 */
 		
 		public function Button() {
-			label = getChildByName( "label_mc" ) as Label;
-			if( label ) {
-				labelMessage = label.text;
-				updateLabel();
+			for ( var i:int = 0; i < numChildren; i++ ) {
+				var child:DisplayObject = getChildAt( i );
+				if ( child is Label ) {
+					label = child as Label;
+				} else if ( child is TextField ) {
+					TextField( child ).mouseEnabled = false;
+					TextField( child ).mouseWheelEnabled = false;
+				}
 			}
-			ButtonManager.addButton( this, null, updateLabel, updateLabel, updateLabel );
-		}
-		
-		/**
-		 * 
-		 */
-		
-		private function updateLabel( target:MovieClip = null ):void {
-			if ( !label ) return;
-			label = getChildByName( "label_mc" ) as Label;
-			label.text = labelMessage;
-			label.mouseEnabled = label.mouseChildren = false;
+			
+			ButtonManager.addButton( this );
 		}
 		
 		/**
@@ -44,8 +41,8 @@ package com.svyaznoy.gui {
 		 */
 		
 		public function setLabel( message:String ):void {
-			labelMessage = message;
-			updateLabel();
+			if ( !label ) return;
+			label.text = message;
 		}
 		
 		/**
@@ -54,8 +51,10 @@ package com.svyaznoy.gui {
 		
 		public function dispose():void {
 			ButtonManager.removeButton( this );
-			label.dispose();
-			label = null;
+			if ( label ) {
+				label.dispose();
+				label = null;
+			}
 		}
 		
 	}

@@ -12,14 +12,13 @@ package com.svyaznoy {
 	 * ...
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
 	 */
-	public dynamic class PreviewVideo extends PreviewItem {
+	public dynamic class PreviewVideo extends PreviewItemWithImage {
 		
 		static const KEY_FOR_REPLACE:String = "%VIDEO_ID%";
 		static const VIDEO_INFO_ADRESS:String = "http://gdata.youtube.com/feeds/api/videos/" + KEY_FOR_REPLACE + "?v=2&alt=jsonc";
-		static const VIDEO_THUMBNAIL_ADRESS:String = "http://img.youtube.com/vi/" + KEY_FOR_REPLACE + "/mqdefault.jpg";
+		static const VIDEO_THUMBNAIL_ADRESS:String = "http://i1.ytimg.com/vi/" + KEY_FOR_REPLACE + "/mqdefault.jpg";
 		
 		private var playButton:Button;
-		private var previewImage:PreviewImage;
 		private var clock:TimePreview;
 		private var clockMarginsX:int;
 		private var clockMarginsY:int;
@@ -29,7 +28,6 @@ package com.svyaznoy {
 		 */
 		
 		public function PreviewVideo() {
-			previewImage = getChildByName( "previewImage_mc" ) as PreviewImage;
 			playButton = getChildByName( "playButton_mc" ) as Button;
 			clock = getChildByName( "clock_mc" ) as TimePreview;
 			
@@ -82,9 +80,7 @@ package com.svyaznoy {
 		
 		override public function displayData( data:Object ):void {
 			super.displayData( data );
-			previewImage.title = data.title;
-			previewImage.description = data.anonce;
-			previewImage.loadImage( "http://i1.ytimg.com/vi/gYFlq7s6BrY/hqdefault.jpg" );
+			previewImage.loadImage( VIDEO_THUMBNAIL_ADRESS.replace( KEY_FOR_REPLACE, data.video ) );
 			loadVideoInfo();
 		}
 		

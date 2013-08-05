@@ -1,4 +1,5 @@
 package com.svyaznoy {
+	import flash.geom.Rectangle;
 	import flash.system.ApplicationDomain;
 	import flash.system.LoaderContext;
 	import flash.system.SecurityDomain;
@@ -18,6 +19,7 @@ package com.svyaznoy {
 		private var _flashvars:Object;
 		private var _userData:UserData;
 		private var _newsDatasByID:Dictionary = new Dictionary();
+		private var _screenRectangle:Rectangle;
 		
 		public var isEmployeeMode:Boolean = false;
 		
@@ -141,6 +143,27 @@ package com.svyaznoy {
 		
 		public function setNewsData( data:Object ):void {
 			_newsDatasByID[ data.id ] = data;
+		}
+		
+		/**
+		 * 
+		 * @param	x
+		 * @param	y
+		 * @param	width
+		 * @param	height
+		 */
+		
+		public function setScreenRectangle( x:Number, y:Number, width:Number, height:Number ):void {
+			_screenRectangle = new Rectangle( x, y, width, height );
+		}
+		
+		/**
+		 * 
+		 * @return
+		 */
+		
+		public function getScreenRectangle():Rectangle {
+			return _screenRectangle;
 		}
 		
 	}

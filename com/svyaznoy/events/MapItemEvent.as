@@ -8,6 +8,7 @@ package com.svyaznoy.events {
 	public class MapItemEvent extends Event {
 		
 		static public const VIDEO_REPORTS_CLICKED:String = "videoReportsClicked";
+		static public const PHOTO_REPORTS_CLICKED:String = "photoReportsClicked";
 		
 		public var itemData:Object;
 		

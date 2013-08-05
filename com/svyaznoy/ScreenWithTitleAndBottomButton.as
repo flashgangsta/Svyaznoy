@@ -11,6 +11,10 @@ package com.svyaznoy {
 		protected var title:TextField;
 		protected var bottomButton:Button;
 		
+		/**
+		 * 
+		 */
+		
 		public function ScreenWithTitleAndBottomButton() {
 			title = getChildByName( "titleLabel_txt" ) as TextField;
 			bottomButton = getChildByName( "bottomButton_mc" ) as Button;
@@ -18,6 +22,15 @@ package com.svyaznoy {
 			title.autoSize = TextFieldAutoSize.LEFT;
 			
 			setElementsForVisibleControll( title, bottomButton );
+		}
+		
+		/**
+		 * 
+		 * @param	message
+		 */
+		
+		public function setBottomButtonLabel( message:String ):void {
+			bottomButton.setLabel( message );
 		}
 		
 	}

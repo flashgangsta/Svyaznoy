@@ -2,6 +2,8 @@ package com.svyaznoy {
 	import com.flashgangsta.managers.MappingManager;
 	import com.flashgangsta.media.video.YoutubePlayer;
 	import com.svyaznoy.events.PreviewsTableEvent;
+	import com.svyaznoy.events.ScreenEvent;
+	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	
@@ -10,7 +12,7 @@ package com.svyaznoy {
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
 	 */
 	
-	public class VideoReport extends ScreenWithTitleAndBottomButton {
+	public class VideoReport extends ReportScreen {
 		
 		private const TITLE_BOTTOM_MARGIN:int = 10;
 		private const VIDEO_TITLE_BOTTOM_MARGIN:int = -3;
@@ -18,11 +20,10 @@ package com.svyaznoy {
 		private const PREVIEWS_TOP_MARGIN:int = 15;
 		
 		private var currentVideoIndex:int = 0;
-		private var videosList:Array;
 		private var player:YoutubePlayer;
 		private var videoTitleLabel:TextField;
 		private var videoDescriptionLabel:TextField;
-		private var previewsTable:PreviewsTable;
+		private var screenRectangle:Rectangle;
 		
 		/**
 		 * 
@@ -36,7 +37,7 @@ package com.svyaznoy {
 			videoTitleLabel.autoSize = TextFieldAutoSize.LEFT;
 			videoDescriptionLabel.autoSize = TextFieldAutoSize.LEFT;
 			
-			setVisibleForElements( false );
+			screenRectangle = Helper.getInstance().getScreenRectangle();
 		}
 		
 		/**
@@ -52,12 +53,10 @@ package com.svyaznoy {
 			 * image_with_path:String
 		 */
 		
-		public function showVideos( departureData:Object ):void {
-			if ( data && data.id === departureData.id ) return;
-			else clear();
-			data = departureData;
-			videosList = data.videos;
-			removePreloader();
+		override public function showReport( departureData:Object ):void {
+			super.showReport( departureData );
+			if ( !needUpdate ) return;
+			previewDatasList = data.videos;
 			displayData();
 		}
 		
@@ -67,19 +66,12 @@ package com.svyaznoy {
 		
 		override protected function displayData():void {
 			super.displayData();
-			title.text = data.title + ": ВИДЕООТЧЁТЫ";
+			title.appendText( ": ВИДЕООТЧЁТЫ" );
 			videoTitleLabel.y = MappingManager.getBottom( title, this ) + TITLE_BOTTOM_MARGIN;
 			
 			initPreviews();
-			initVideo( videosList[ currentVideoIndex ] );
-			setVisibleForElements( true );
+			initVideo( previewDatasList[ currentVideoIndex ] );
 			dispatchHeighUpdated();
-		}
-		
-		private function clear():void {
-			if ( previewsTable ) {
-				previewsTable.dispose();
-			}
 		}
 		
 		/**
@@ -117,16 +109,12 @@ package com.svyaznoy {
 		 * 
 		 */
 		
-		private function initPreviews():void {
+		override protected function initPreviews():void {
+			super.initPreviews();
 			
-			if ( previewsTable ) {
-				previewsTable.dispose();
-				removeChild( previewsTable );
-			}
-			
-			if( videosList.length > 1 ) {
+			if( previewDatasList.length > 1 ) {
 				previewsTable = new PreviewsTable();
-				previewsTable.fill( videosList, PreviewVideo, currentVideoIndex );
+				previewsTable.fill( previewDatasList, PreviewVideo, currentVideoIndex );
 				previewsTable.addEventListener( PreviewsTableEvent.ON_PREVIEW_SELECTED, onPreviewSelected );
 				addChild( previewsTable );
 			}
@@ -137,12 +125,19 @@ package com.svyaznoy {
 		 * @param	event
 		 */
 		
-		private function onPreviewSelected( event:PreviewsTableEvent ):void {
-			var previewData:Object = previewsTable.getSelectedItemData()
-			currentVideoIndex = videosList.indexOf( previewData );
+		override protected function onPreviewSelected( event:PreviewsTableEvent ):void {
+			super.onPreviewSelected( event );
+			
+			var previewData:Object = previewsTable.getSelectedItemData();
+			currentVideoIndex = previewDatasList.indexOf( previewData );
 			previewsTable.refill( currentVideoIndex );
 			initVideo( previewData, true );
+			
 			dispatchHeighUpdated();
+			
+			if ( player.getBounds( stage ).y < screenRectangle.y ) {
+				Dispatcher.getInstance().dispatchEvent( new ScreenEvent( ScreenEvent.RESET_SCROLL_NEEDED ) );
+			}
 		}
 		
 	}

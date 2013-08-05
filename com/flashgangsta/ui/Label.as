@@ -1,6 +1,7 @@
 package com.flashgangsta.ui {
 	import flash.display.Sprite;
 	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
 	
 	/**
 	 * ...
@@ -16,6 +17,8 @@ package com.flashgangsta.ui {
 			label = getChildByName( "label_txt" ) as TextField;
 			label.mouseEnabled = false;
 			label.mouseWheelEnabled = false;
+			label.autoSize = TextFieldAutoSize.LEFT;
+			mouseEnabled = mouseChildren = false;
 		}
 		
 		/**

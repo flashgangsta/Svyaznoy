@@ -8,6 +8,8 @@ package com.svyaznoy.events {
 	public class ScreenEvent extends Event {
 		
 		static public const HEIGHT_UPDATED:String = "heightUpdated";
+		static public const RESET_SCROLL_NEEDED:String = "resetScrollNeeded";
+		static public const GO_BACK:String = "goBack";
 		
 		public function ScreenEvent( type:String, bubbles:Boolean = false, cancelable:Boolean = false ) { 
 			super( type, bubbles, cancelable );
