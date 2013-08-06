@@ -88,22 +88,6 @@ package com.svyaznoy {
 		
 		/**
 		 * 
-		 */
-		
-		public function show():void {
-			visible = true;
-		}
-		
-		/**
-		 * 
-		 */
-		
-		public function hide():void {
-			visible = false;
-		}
-		
-		/**
-		 * 
 		 * @param	id
 		 * @return
 		 */

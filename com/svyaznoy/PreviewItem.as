@@ -9,13 +9,14 @@ package com.svyaznoy {
 		
 		///
 		protected var data:Object;
+		protected var isLinkToReport:Boolean = false;
 		
 		/**
 		 * 
 		 */
 		
 		public function PreviewItem() {
-			
+			scaleX = scaleY = 1;
 		}
 		
 		/**

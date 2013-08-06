@@ -165,8 +165,8 @@ package com.svyaznoy {
 		
 		
 		
-		public function onDeparturesError( data:Object ):void {
-			traceError( "onDeparturesError", data );
+		public function onDeparturesListError( data:Object ):void {
+			traceError( "onDeparturesListError", data );
 		}
 		
 		/**
@@ -185,6 +185,48 @@ package com.svyaznoy {
 		
 		public function videoInfoLoadError( event:IOErrorEvent ):void {
 			traceError( "videoInfoLoadError", event );
+		}
+		
+		/**
+		 * 
+		 * @param	data
+		 */
+		
+		public function onRandomGalleriesError( data:Object ):void {
+			traceError( "onRandomGalleriesError", data );
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function onRandomVideosError( data:Object ):void {
+			traceError( "onRandomVideosError", data );
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function onLastGalleriesError( data:Object ):void {
+			traceError( "onLastGalleriesError", data );
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function onLastVideosError( data:Object ):void {
+			traceError( "onLastVideosError", data );
+		}
+		
+		/**
+		 * 
+		 * @param	data
+		 */
+		
+		public function onGetDepartureError( data:Object ):void {
+			traceError( "onGetDepartureError", data );
 		}
 		
 		

@@ -21,7 +21,7 @@ package com.svyaznoy {
 		private var _newsDatasByID:Dictionary = new Dictionary();
 		private var _screenRectangle:Rectangle;
 		
-		public var isEmployeeMode:Boolean = false;
+		private var _isEmployeeMode:Boolean = false;
 		
 		/**
 		 * 
@@ -90,6 +90,14 @@ package com.svyaznoy {
 		
 		public function get vkAPI():APIConnection {
 			return _vkAPI;
+		}
+		
+		public function get isEmployeeMode():Boolean {
+			return _isEmployeeMode;
+		}
+		
+		public function set isEmployeeMode(value:Boolean):void {
+			_isEmployeeMode = value;
 		}
 		
 		/**

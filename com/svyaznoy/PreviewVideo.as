@@ -2,9 +2,11 @@ package com.svyaznoy {
 	import caurina.transitions.Tweener;
 	import com.flashgangsta.managers.ButtonManager;
 	import com.flashgangsta.managers.MappingManager;
+	import com.svyaznoy.events.PreviewEvent;
 	import com.svyaznoy.gui.Button;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
+	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
@@ -20,8 +22,6 @@ package com.svyaznoy {
 		
 		private var playButton:Button;
 		private var clock:TimePreview;
-		private var clockMarginsX:int;
-		private var clockMarginsY:int;
 		
 		/**
 		 * 
@@ -36,13 +36,7 @@ package com.svyaznoy {
 			
 			previewImage.removePreloader();
 			
-			clockMarginsX = clock.x;
-			clockMarginsY = previewImage.height - clock.y;
-			
-			width = super.width;
-			height = super.height;
-			
-			scaleX = scaleY = 1;
+			setElementsPositions();
 			
 			ButtonManager.addButton( playButton, this );
 		}
@@ -79,8 +73,11 @@ package com.svyaznoy {
 		 */
 		
 		override public function displayData( data:Object ):void {
-			super.displayData( data );
+			this.data = data;
+			if ( isLinkToReport ) buttonMode = true;
 			previewImage.loadImage( VIDEO_THUMBNAIL_ADRESS.replace( KEY_FOR_REPLACE, data.video ) );
+			previewImage.title = data.title;
+			previewImage.description = data.anonce;
 			loadVideoInfo();
 		}
 		
@@ -95,6 +92,36 @@ package com.svyaznoy {
 			ButtonManager.removeButton( playButton, this );
 			previewImage = null;
 			playButton = null;
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function removeTextFields():void {
+			previewImage.removeTextFields();
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function makeNavigationToVideoReport():void {
+			isLinkToReport = true;
+			if ( !data ) buttonMode = false;
+			addEventListener( MouseEvent.CLICK, onClicked );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onClicked( event:MouseEvent ):void {
+			if ( !data ) return;
+			var outputEvent:PreviewEvent = new PreviewEvent( PreviewEvent.ON_VIDEO_REPORT_CALLED );
+			outputEvent.previewData = getData();
+			Dispatcher.getInstance().dispatchEvent( outputEvent );
 		}
 		
 		/**
@@ -140,7 +167,7 @@ package com.svyaznoy {
 		 * @param	loader
 		 */
 		
-		private function removeListeners(loader:URLLoader):void {
+		private function removeListeners( loader:URLLoader ):void {
 			loader.addEventListener( Event.COMPLETE, onVideoInfo ); 
 			loader.addEventListener( IOErrorEvent.IO_ERROR, onVideoInfoIOError );
 			loader = null;
@@ -152,8 +179,7 @@ package com.svyaznoy {
 		
 		private function setElementsPositions():void {
 			MappingManager.setAlign( playButton, new Rectangle( 0, 0, previewImage.width, previewImage.height ) );
-			clock.x = clockMarginsX;
-			clock.y = previewImage.height - clockMarginsY;
+			clock.y = previewImage.height - clock.height - clock.x;
 		}
 		
 	}

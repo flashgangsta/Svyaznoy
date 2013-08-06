@@ -27,6 +27,10 @@ package com.svyaznoy {
 			background.width = Math.ceil( label.width );
 		}
 		
+		override public function get height():Number {
+			return background.height;
+		}
+		
 	}
 
 }

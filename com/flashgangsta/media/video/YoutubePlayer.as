@@ -4,6 +4,7 @@ package com.flashgangsta.media.video {
 	import com.flashgangsta.events.MediaSeekEvent;
 	import com.flashgangsta.events.YoutubePlayerEvent;
 	import com.flashgangsta.managers.MappingManager;
+	import com.flashgangsta.utils.Queue;
 	import com.svyaznoy.PlayerControllBar;
 	import flash.display.DisplayObject;
 	import flash.display.Graphics;
@@ -50,6 +51,8 @@ package com.flashgangsta.media.video {
 		private var playingTimer:Timer = new Timer( 500 );
 		private var seekToAfterDetectionDuration:Number = 0;
 		private var videoID:String;
+		private var isReady:Boolean = false;
+		private var queue:Queue = new Queue();
 		
 		/**
 		 * 
@@ -96,10 +99,15 @@ package com.flashgangsta.media.video {
 			if ( player ) {
 				player.stopVideo();
 				
-				if( autoplay ) {
-					player.loadVideoById( id );
+				if( isReady ) {
+					if( autoplay ) {
+						player.loadVideoById( id );
+					} else {
+						player.cueVideoById( videoID );
+					}
 				} else {
-					player.cueVideoById( videoID );
+					if ( !queue ) queue = new Queue();
+					queue.add( setVideo, id, autoplay );
 				}
 			}
 		}
@@ -278,6 +286,7 @@ package com.flashgangsta.media.video {
 		 */
 		
 		private function onPlayerReady( event:Event ):void {
+			isReady = true;
 			// Event.data contains the event parameter, which is the Player API ID 
 			if( showTraces ) trace( "Player is ready" );
 			
@@ -294,6 +303,8 @@ package com.flashgangsta.media.video {
 			if ( videoID ) {
 				player.cueVideoById( videoID );
 			}
+			
+			if ( queue ) queue.applyAll();
 			
 			addChild( controllBar );
 		}

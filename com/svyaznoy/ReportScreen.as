@@ -10,7 +10,7 @@ package com.svyaznoy {
 		
 		protected var previewDatasList:Array;
 		protected var previewsTable:PreviewsTable;
-		protected var needUpdate:Boolean;
+		protected var needUpdate:Boolean = true;
 		
 		/**
 		 * 
@@ -35,12 +35,14 @@ package com.svyaznoy {
 		 */
 		
 		public function showReport( departureData:Object ):void {
-			if ( data && data.id === departureData.id ) {
-				needUpdate = false;
-				return;
-			} else {
-				needUpdate = true;
-				clear();
+			if( data ) {
+				if ( data.id === departureData.id ) {
+					needUpdate = false;
+					return;
+				} else {
+					needUpdate = true;
+					clear();
+				}
 			}
 			data = departureData;
 			removePreloader();

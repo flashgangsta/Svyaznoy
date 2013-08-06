@@ -15,7 +15,7 @@ package com.svyaznoy {
 		private var _completeHandler:Function;
 		private var _errorHandler:Function;
 		private var isOpened:Boolean = false;
-		private var showTraces:Boolean = false;
+		private var showTraces:Boolean = true;
 		
 		/**
 		 * 
@@ -63,11 +63,16 @@ package com.svyaznoy {
 			
 			var helper:Helper = Helper.getInstance();
 			
-			if ( request.method === URLRequestMethod.GET && request.data ) {
-				request.data.auth_key = helper.getAuthKey();
-				request.data.user_id = helper.getUserID();
+			if ( request.data ) {
+				if ( request.method === URLRequestMethod.GET ) {
+					request.data.auth_key = helper.getAuthKey();
+					request.data.user_id = helper.getUserID();
+				}
+				request.data.is_employee = int( helper.isEmployeeMode );
 			} else {
-				request.url += "?auth_key=" + helper.getAuthKey() + "&user_id=" + helper.getUserID();
+				request.url += "?auth_key=" + helper.getAuthKey();
+				request.url += "&user_id=" + helper.getUserID();
+				request.url += "&is_employee=" + int( helper.isEmployeeMode );
 			}
 			
 			if( showTraces ) {

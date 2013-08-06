@@ -17,7 +17,12 @@ package com.svyaznoy.events {
 		static public const ON_LEGEND:String = "onLegend";
 		static public const ON_ABOUT:String = "onAbout";
 		static public const ON_THERMS_OF_MOTIVATION:String = "onThermsOfMotivation";
-		static public const ON_DEPARTURES:String = "onDepartures";
+		static public const ON_DEPARTURES_LIST:String = "onDeparturesList";
+		static public const ON_RANDOM_GALLERIES:String = "onRandomGalleries";
+		static public const ON_RANDOM_VIDEOS:String = "onRandomVideos";
+		static public const ON_LAST_GALLERIES:String = "onLastGalleries";
+		static public const ON_LAST_VIDEOS:String = "onLastVideos";
+		static public const ON_VIDEO_REPORT:String = "onVideoReport";
 		
 		public var data:Object;
 		

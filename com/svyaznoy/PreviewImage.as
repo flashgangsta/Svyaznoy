@@ -14,7 +14,8 @@ package com.svyaznoy {
 	 */
 	public class PreviewImage extends PreviewItem {
 		
-		private const BACKGROUND_BOTTOM_MARGIN:int = 3;
+		private const BACKGROUND_BOTTOM_MARGIN:int = 2;
+		private const TITLE_BOTTOM_MARGIN:int = -1;
 		
 		private var titleLabel:TextField;
 		private var descriptionLabel:TextField;
@@ -153,6 +154,17 @@ package com.svyaznoy {
 		 * 
 		 */
 		
+		public function removeTextFields():void {
+			title = "";
+			description = "";
+			titleLabel.visible = descriptionLabel.visible = false;
+			descriptionLabel.y = titleLabel.y = 0;
+		}
+		
+		/**
+		 * 
+		 */
+		
 		private function setPositions():void {
 			if ( titleLabel.visible ) {
 				titleLabel.y = MappingManager.getBottom( background, this ) + BACKGROUND_BOTTOM_MARGIN;
@@ -161,9 +173,13 @@ package com.svyaznoy {
 			}
 			
 			if ( descriptionLabel.visible && titleLabel.visible ) {
-				descriptionLabel.y = MappingManager.getBottom( titleLabel, this );
+				descriptionLabel.y = MappingManager.getBottom( titleLabel, this ) + TITLE_BOTTOM_MARGIN;
 			} else if ( descriptionLabel.visible ) {
 				descriptionLabel.y = MappingManager.getBottom( background, this ) + BACKGROUND_BOTTOM_MARGIN;
+			}
+			
+			if ( preloader ) {
+				MappingManager.setAlign( preloader, background.getBounds( this ) );
 			}
 		}
 		
