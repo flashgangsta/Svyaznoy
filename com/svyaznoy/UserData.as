@@ -1,85 +1,1 @@
-package com.svyaznoy {
-	/**
-	 * ...
-	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
-	 */
-	public class UserData {
-		
-		private var _username:String;
-		private var _active:Boolean;
-		private var _created_at:String;
-		private var _id:String;
-		private var _updated_at:String;
-		private var _employee:Boolean;
-		private var _intro:Boolean;
-		
-		/**
-		 * 
-		 * @param	data
-		 */
-		
-		public function UserData( data:Object ) {
-			_username = data.username;
-			_active = Boolean( int( data.active ) );
-			_created_at = data.created_at;
-			_id = data.id;
-			_updated_at = data.updated_at;
-			_employee = data.hasOwnProperty( "employee" );
-			_intro = Boolean( int( data.intro ) );
-		}
-		
-		/**
-		 * 
-		 */
-		
-		public function get username():String {
-			return _username;
-		}
-		
-		/**
-		 * 
-		 */
-		
-		public function get active():Boolean {
-			return _active;
-		}
-		
-		/**
-		 * 
-		 */
-		
-		public function get created_at():String {
-			return _created_at;
-		}
-		
-		/**
-		 * 
-		 */
-		
-		public function get id():String {
-			return _id;
-		}
-		
-		/**
-		 * 
-		 */
-		
-		public function get updated_at():String {
-			return _updated_at;
-		}
-		
-		/**
-		 * 
-		 */
-		
-		public function get employee():Boolean {
-			return _employee;
-		}
-		
-		public function get intro():Boolean {
-			return _intro;
-		}
-		
-	}
-
-}
+﻿package com.svyaznoy {	/**	 * ...	 * @author Sergey Krivtsov (flashgangsta@gmail.com)	 */	public class UserData {				private var _username:String;		private var _created_at:String;		private var _id:String;		private var _updated_at:String;		private var _employee:Boolean;		private var _intro:Boolean;		private var _employeIsNotFired:Boolean = false;		private var employeData:Object;		private var _firstName:String;		private var _lastName:String;		private var _middleName:String;		private var _fullName:String;				/**		 * 		 * @param	data		 */				public function UserData( data:Object ) {			_username = data.username;			_created_at = data.created_at;			_id = data.id;			_updated_at = data.updated_at;			_employee = data.hasOwnProperty( "employee" );			_intro = Boolean( int( data.intro ) );						if ( _employee ) {				employeData = data.employee;				_employeIsNotFired = Boolean( employeData.status );				_firstName = employeData.first_name;				_lastName = employeData.last_name;				_middleName = employeData.middle_name;				_fullName = setFullName( _firstName, _lastName, _middleName );							}		}				/**		 * 		 */				public function get username():String {			return _username;		}				/**		 * 		 */				public function get created_at():String {			return _created_at;		}				/**		 * 		 */				public function get id():String {			return _id;		}				/**		 * 		 */				public function get updated_at():String {			return _updated_at;		}				/**		 * 		 */				public function get employee():Boolean {			return _employee;		}				/**		 * 		 */				public function get intro():Boolean {			return _intro;		}				/**		 * 		 */				public function get fullName():String {			return _fullName;		}				/**		 * 		 */				public function get employeIsNotFired():Boolean {			return _employeIsNotFired;		}				/**		 * 		 */				public function get firstName():String {			return _firstName;		}				/**		 * 		 */				public function get lastName():String {			return _lastName;		}				/**		 * 		 */				public function get middleName():String {			return _middleName;		}				/**		 * 		 * @param	firstName		 * @param	lastName		 * @param	middleName		 * @return		 */				public function setFullName( firstName:String, lastName:String, middleName:String = null ):String {			_firstName = firstName;			_lastName = lastName;			_fullName = lastName + " " + firstName;						if ( middleName ) {				_middleName = middleName;				_fullName += " " + middleName;			}						return _fullName;		}			}}

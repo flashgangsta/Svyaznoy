@@ -15,8 +15,9 @@ package com.svyaznoy {
 	public class PreviewImage extends PreviewItem {
 		
 		private const BACKGROUND_BOTTOM_MARGIN:int = 2;
-		private const TITLE_BOTTOM_MARGIN:int = 2;
+		private const TITLE_BOTTOM_MARGIN:int = -2;
 		
+		private var zoomIcon:MovieClip;
 		private var titleLabel:TextField;
 		private var descriptionLabel:TextField;
 		private var background:Sprite;
@@ -33,8 +34,12 @@ package com.svyaznoy {
 			descriptionLabel = getChildByName( "descriptionLabel_txt" ) as TextField;
 			background = getChildByName( "background_mc" ) as Sprite;
 			preloader = getChildByName( "prelaoder_mc" ) as MovieClip;
+			zoomIcon = getChildByName( "zoomIcon_mc" ) as MovieClip;
 			
 			preloader.gotoAndPlay( int( Math.random() * preloader.totalFrames ) );
+			
+			zoomIcon.stop();
+			zoomIcon.visible = false;
 			
 			titleLabel.autoSize = TextFieldAutoSize.LEFT;
 			descriptionLabel.autoSize = TextFieldAutoSize.LEFT;
@@ -127,7 +132,7 @@ package com.svyaznoy {
 		}
 		
 		public function set title( value:String ):void {
-			titleLabel.text = value;
+			titleLabel.text = value.replace( /\\n/g, "\n" );
 			titleLabel.visible = Boolean( value );
 			setPositions();
 		}
@@ -141,7 +146,7 @@ package com.svyaznoy {
 		}
 		
 		public function set description( value:String ):void {
-			descriptionLabel.text = value;
+			descriptionLabel.text = value.replace( /\\n/g, "\n" )
 			descriptionLabel.visible = Boolean( value );
 			setPositions();
 		}
@@ -159,6 +164,10 @@ package com.svyaznoy {
 			description = "";
 			titleLabel.visible = descriptionLabel.visible = false;
 			descriptionLabel.y = titleLabel.y = 0;
+		}
+		
+		public function getZoomIcon():MovieClip {
+			return zoomIcon;
 		}
 		
 		/**

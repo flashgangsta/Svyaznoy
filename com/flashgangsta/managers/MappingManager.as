@@ -3,12 +3,13 @@
  * Manager for quick and easy to scale and align objects.
  *
  * @author		Sergei Krivtsov
- * @version		1.00.12		30/07/2013
+ * @version		1.00.13		07/08/2013
  * 
  */
 
 package com.flashgangsta.managers {
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import flash.geom.Rectangle;
 	import flash.display.MovieClip;
 	
@@ -116,9 +117,12 @@ package com.flashgangsta.managers {
 		}
 		
 		/**
-		 * 
+		 * Округляет размеры объекта
 		 * @param	target
-		 * @param	method
+		 * @param	method метод округления. Допустимые значения:
+			 * Math.ceil
+			 * Math.floor
+			 * Math.round
 		 */
 		
 		public static function roundObjectSides( target:DisplayObject, method:Function ):void {
@@ -127,7 +131,7 @@ package com.flashgangsta.managers {
 		}
 		
 		/**
-		 * 
+		 * Возвращает y координату нижней граници объекта
 		 * @param	target
 		 * @param	targetCoordinateSpace
 		 * @return
@@ -135,6 +139,39 @@ package com.flashgangsta.managers {
 		
 		public static function getBottom( target:DisplayObject, targetCoordinateSpace:DisplayObject ):int {
 			return Math.ceil( target.getBounds( targetCoordinateSpace ).bottom );
+		}
+		
+		/**
+		 *  Устанавливает x, y свойства от одного объекта к другому
+		 * @param	copyTo объект к которому будут применены свойства
+		 * @param	copyFrom объект от которого будут взяты применяемые свойства
+		 */
+		
+		static public function copyPosition( copyTo:Object, copyFrom:Object ):void {
+			copyTo.x = copyFrom.x;
+			copyTo.y = copyFrom.y;
+		}
+		
+		/**
+		 *  Устанавливает width, height свойства от одного объекта к другому
+		 * @param	copyTo объект к которому будут применены свойства
+		 * @param	copyFrom объект от которого будут взяты применяемые свойства
+		 */
+		
+		static public function copySize( copyTo:Object, copyFrom:Object ):void {
+			copyTo.width = copyFrom.width;
+			copyTo.height = copyFrom.height;
+		}
+		
+		/**
+		 *  Устанавливает x, y, width, height свойства от одного объекта к другому
+		 * @param	copyTo объект к которому будут применены свойства
+		 * @param	copyFrom объект от которого будут взяты применяемые свойства
+		 */
+		
+		static public function copyPositionAndSize( copyTo:Object, copyFrom:Object ):void {
+			copyPosition( copyTo, copyFrom );
+			copySize( copyTo, copyFrom );
 		}
 		
 	}

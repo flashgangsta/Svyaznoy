@@ -420,7 +420,6 @@ package com.flashgangsta.media.video {
 		 */
 		
 		private function togglePlaying():void {
-			trace( "togglePlaying", player.getPlayerState() );
 			switch( player.getPlayerState() ) {
 				case YoutubePlayerInstance.STATE_PLAYING :
 					player.pauseVideo();

@@ -8,8 +8,8 @@ package com.svyaznoy.utils {
 		
 		static const TEMPLATE_TAG:RegExp =			/!\[(\w+)\]\(([^)]+)\s?\[?([\w:@.]*)?\]?\)/; ///!\[(\w+)\]\(([\w:.\/@%\s]+)\s?\[?([\w:@.]*)?\]?\)/;
 													//![link](http://es.svyaznoy.ru/test%20тест фile.doc)
-		static const TEMPLATE_LINK:RegExp = 		/!\[(link)\]\(([^\[)]+)\s?\[?([\w:@.]*)?\]?\)/; ///!\[(link)\]\(([\w:\/.@]+)\s?\[?([\w:@.]*)?\]?\)/;
-		static const TEMPLATE_BOLD_TEXT:RegExp = 	/\Q**\E(.+)\Q**\E/;
+		static const TEMPLATE_LINK:RegExp = 		/!\[(link)\]\(([^\[)]+)\s?\[?([\w:@.]*)?\]?\)/g; ///!\[(link)\]\(([\w:\/.@]+)\s?\[?([\w:@.]*)?\]?\)/;
+		static const TEMPLATE_BOLD_TEXT:RegExp = 	/\Q**\E(.+)\Q**\E/g; //**Жирный текст**
 		
 		/**
 		 * 
@@ -65,15 +65,23 @@ package com.svyaznoy.utils {
 		
 		static private function createTextTag( text:String, index:int = 0 ):ContentTag {
 			var tag:ContentTag = new ContentTag( null, ContentTag.TEXT, null, null, index );
-			
-			/// Убирает пробел в конце ссылки при его наличии
-			if( text.charAt( text.length - 1 ) === " " ) {
-				text = text.substr( 0, text.length - 1 );
-			}
-			
 			tag.value = text;
 			tag.tag = "![" + tag.name + "](" + tag.value + ")";
 			return tag;
+		}
+		
+		/**
+		 * Убирает пробел в конце текста при его наличии
+		 * @param	text
+		 * @return
+		 */
+		
+		static private function removeLastSpace( text:String ):String {
+			var result:String;
+			if( text.charAt( text.length - 1 ) === " " ) {
+				result = text.substr( 0, text.length - 1 );
+			}
+			return result;
 		}
 		
 		/**
@@ -82,7 +90,7 @@ package com.svyaznoy.utils {
 		 */
 		
 		static private function replaceLinksTags( tag:String, tagName:String, tagValue:String, tagParam:String, position:int, text:String ):String {
-			return "<a href='" + tagValue + "' target='_blank'>" + ( tagParam.length ? tagParam : tagValue ) + "</a>";
+			return "<a href='" + removeLastSpace( tagValue ) + "' target='_blank'>" + ( tagParam.length ? tagParam : tagValue ) + "</a>";
 		}
 		
 		/**

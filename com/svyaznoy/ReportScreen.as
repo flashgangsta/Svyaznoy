@@ -65,6 +65,7 @@ package com.svyaznoy {
 			if ( previewsTable ) {
 				previewsTable.dispose();
 			}
+			setVisibleForElements( false );
 		}
 		
 		/**

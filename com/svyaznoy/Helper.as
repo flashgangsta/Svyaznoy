@@ -52,7 +52,6 @@ package com.svyaznoy {
 		
 		public function setFlashvars( parameters:Object ):void {
 			_flashvars = parameters;
-			//trace( JSON.stringify( _flashvars ) );
 		}
 		
 		/**

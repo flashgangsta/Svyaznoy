@@ -21,11 +21,15 @@ package com.svyaznoy {
 		
 		public function Country() {
 			addEventListener( DynamicItemEvent.SIZE_CHANGED, onSizeChanged );
+			
+			setElementsForVisibleControll( header, dynamicContentViewer, bottomButton );
+			
 			photosTitle = getChildByName( "photosTitle_mc" );
 			videosTitle = getChildByName( "videosTitle_mc" );
 			
 			photosTitle.visible = false;
 			videosTitle.visible = false;
+			setVisibleForElements( false );
 		}
 		
 		/**
@@ -48,6 +52,9 @@ package com.svyaznoy {
 				removeChild( videosList );
 				videosList = null;
 			}
+			
+			setVisibleForElements( false );
+			addPreloader();
 			
 			provider.getDeparture( itemData.id, "galleries,videos" );
 			if( !provider.hasEventListener( ProviderEvent.ON_DEPARTURE ) ) {
@@ -79,6 +86,8 @@ package com.svyaznoy {
 				videosList.makeNavigationToVideoReport();
 				addChild( videosList );
 			}
+			
+			setVisibleForElements( true );
 			
 			setPositions();
 		}

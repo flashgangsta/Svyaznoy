@@ -17,7 +17,7 @@ package com.svyaznoy {
 	public class Registration extends Popup {
 		
 		const CODE_ERROR_MESSAGE_DEFAULT:String = "Штрих код не указан или указан неверно";
-		const CODE_ERROR_MESSAGE_404:String = "Штрих код указан невено для этого e-mail";
+		const CODE_ERROR_MESSAGE_404:String = "Штрих код указан неверно для этого e-mail";
 		
 		private var codeLabel:InputTextfield;
 		private var emailLabel:InputTextfield;

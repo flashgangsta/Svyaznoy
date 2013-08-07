@@ -72,6 +72,7 @@ package com.svyaznoy {
 			videosButton = shapes.getChildByName( "videos_mc" ) as Button;
 			photosButton.visible = false;
 			videosButton.visible = false;
+			buttonMode = true;
 		}
 		
 		/**
@@ -159,7 +160,8 @@ package com.svyaznoy {
 		 */
 		
 		private function onClicked( event:MouseEvent ):void {
-			if( videosButton.hitTestPoint( stage.mouseX, stage.mouseY, true ) || photosButton.hitTestPoint( stage.mouseX, stage.mouseY, true ) ) return;
+			if( !stage ) return;
+			//if( videosButton.hitTestPoint( stage.mouseX, stage.mouseY, true ) || photosButton.hitTestPoint( stage.mouseX, stage.mouseY, true ) ) return;
 			var outputEvent:MapItemEvent = new MapItemEvent( MapItemEvent.COUNTRY_CLICKED );
 			outputEvent.itemData = data;
 			dispatcher.dispatchEvent( outputEvent );

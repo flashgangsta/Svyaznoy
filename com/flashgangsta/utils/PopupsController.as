@@ -100,6 +100,7 @@ package com.flashgangsta.utils {
 				} else {
 					onBlockRectMotionComplete();
 				}
+				unlock();
 			}
 			
 			this.popup = popup;	
