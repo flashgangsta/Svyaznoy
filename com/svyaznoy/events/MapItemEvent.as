@@ -9,6 +9,7 @@ package com.svyaznoy.events {
 		
 		static public const VIDEO_REPORTS_CLICKED:String = "videoReportsClicked";
 		static public const PHOTO_REPORTS_CLICKED:String = "photoReportsClicked";
+		static public const COUNTRY_CLICKED:String = "countryClicked";
 		
 		public var itemData:Object;
 		

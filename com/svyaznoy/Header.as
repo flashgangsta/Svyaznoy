@@ -72,8 +72,10 @@ package com.svyaznoy {
 			if ( data.hasOwnProperty( "date" ) && data.date && dateLabel ) {
 				dateLabel.htmlText = DateConverter.getFormattedDate( data.date );
 			} else {
-				removeChild( dateLabel );
-				dateLabel = null;
+				//removeChild( dateLabel );
+				//dateLabel = null;
+				dateLabel.text = "";
+				dateLabel.y = 0;
 			}
 			
 			// Image
@@ -86,8 +88,9 @@ package com.svyaznoy {
 					titleImage.addEventListener( DynamicItemEvent.SIZE_CHANGED, onTitleImageSizeChanged );
 				}
 			} else {
-				removeChild( titleImage );
-				titleImage = null;
+				//removeChild( titleImage );
+				//titleImage = null;
+				titleImage.height = 0;
 			}
 			
 			setPositions();

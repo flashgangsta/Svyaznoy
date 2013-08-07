@@ -10,7 +10,7 @@ package com.svyaznoy {
 	public class RightMenu extends Sprite {
 		
 		private var provider:Provider = Provider.getInstance();
-		private var image:PreviewImage;
+		private var image:PreviewGallery = new PreviewGallery();
 		private var video:PreviewVideo;
 		
 		/**
@@ -18,8 +18,18 @@ package com.svyaznoy {
 		 */
 		
 		public function RightMenu() {
-			image = getChildByName( "image_mc" ) as PreviewImage;
 			video = getChildByName( "video_mc" ) as PreviewVideo;
+			
+			var imageTemp:PreviewImage = getChildByName( "image_mc" ) as PreviewImage;
+			
+			image.width = imageTemp.width;
+			image.height = imageTemp.height;
+			image.x = imageTemp.x;
+			image.y = imageTemp.y;
+			imageTemp.dispose();
+			removeChild( imageTemp );
+			imageTemp = null;
+			addChild( image );
 			
 			provider.addEventListener( ProviderEvent.ON_RANDOM_GALLERIES, onRandomGalleries );
 			provider.addEventListener( ProviderEvent.ON_RANDOM_VIDEOS, onRandomVideos );
@@ -54,7 +64,8 @@ package com.svyaznoy {
 		
 		private function onRandomGalleries( event:ProviderEvent ):void {
 			provider.removeEventListener( ProviderEvent.ON_RANDOM_GALLERIES, onRandomGalleries );
-			image.loadImage( event.data[ 0 ].photo_with_path );
+			image.displayData( event.data[ 0 ] );
+			image.removeTextFields();
 		}
 		
 		/**

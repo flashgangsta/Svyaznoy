@@ -73,6 +73,7 @@ package com.flashgangsta.utils {
 			}
 			
 			history.push( screenClass );
+			trace( ">", history );
 			addChild( currentScreen );
 			dispatchEvent( new Event( Event.CHANGE ) );
 			return currentScreen;
@@ -84,6 +85,7 @@ package com.flashgangsta.utils {
 		
 		public function back():void {
 			history.pop();
+			trace( "<", history );
 			addScreen( history.pop(), false );
 		}
 		

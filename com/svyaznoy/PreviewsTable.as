@@ -136,6 +136,14 @@ package com.svyaznoy {
 			clear();
 		}
 		
+		public function makeNavigationToVideoReport():void {
+			for ( var i:int = 0; i < itemsList.length; i++ ) {
+				if ( itemsList[ i ] is PreviewVideo ) {
+					PreviewVideo( itemsList[ i ] ).makeNavigationToVideoReport();
+				}
+			}
+		}
+		
 		/**
 		 * 
 		 * @param	event

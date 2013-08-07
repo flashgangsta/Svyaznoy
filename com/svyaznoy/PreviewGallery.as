@@ -22,14 +22,19 @@ package com.svyaznoy {
 		 */
 		
 		override public function displayData( data:Object ):void {
+			trace( "DISPLAY DATA" );
 			super.displayData( data );
 			previewImage.loadImage( data.photo_with_path );
 			
-			if ( !hasEventListener( MouseEvent.CLICK ) ) {
+			if ( !hasEventListener( MouseEvent.CLICK ) || !isLinkToReport ) {
 				isLinkToReport = true;
 				buttonMode = true;
 				addEventListener( MouseEvent.CLICK, onClicked );
 			}
+		}
+		
+		public function removeTextFields():void {
+			previewImage.removeTextFields();
 		}
 		
 		/**

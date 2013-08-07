@@ -38,6 +38,7 @@ package com.svyaznoy {
 		 */
 		
 		override protected function displayData():void {
+			trace( ">data.content" + data.content );
 			super.displayData();
 			
 			dynamicContentViewer.clear();

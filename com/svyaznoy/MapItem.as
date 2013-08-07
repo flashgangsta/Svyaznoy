@@ -93,11 +93,8 @@ package com.svyaznoy {
 				videosButton.addEventListener( MouseEvent.CLICK, onVideosClicked );
 			}
 			
-			if( !data.start ) {
-				addEventListener( MouseEvent.MOUSE_OVER, onRollOver );
-			} else {
-				
-			}
+			addEventListener( MouseEvent.MOUSE_OVER, onRollOver );
+			addEventListener( MouseEvent.CLICK, onClicked );
 		}
 		
 		/**
@@ -106,7 +103,6 @@ package com.svyaznoy {
 		 */
 		
 		public function resetToDefaultState( dispatcherCountry:DisplayObject ):void {
-			if ( data.start ) return;
 			onRollOut( null, false, dispatcherCountry === country );
 		}
 		
@@ -155,6 +151,18 @@ package com.svyaznoy {
 			Tweener.addTween( shapes, shapesOutParameters );
 			
 			if( dispatchIt ) dispatchEvent( new MapEvent( MapEvent.COUNTRY_MOUSE_OUT, true ) );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onClicked( event:MouseEvent ):void {
+			if( videosButton.hitTestPoint( stage.mouseX, stage.mouseY, true ) || photosButton.hitTestPoint( stage.mouseX, stage.mouseY, true ) ) return;
+			var outputEvent:MapItemEvent = new MapItemEvent( MapItemEvent.COUNTRY_CLICKED );
+			outputEvent.itemData = data;
+			dispatcher.dispatchEvent( outputEvent );
 		}
 		
 		/**

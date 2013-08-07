@@ -52,7 +52,7 @@ package com.svyaznoy {
 		 */
 		
 		private function onSizeChanged( event:DynamicItemEvent ):void {
-			event.stopImmediatePropagation();
+			event.stopPropagation();
 			setPositions();
 			dispatchHeighUpdated();
 		}
