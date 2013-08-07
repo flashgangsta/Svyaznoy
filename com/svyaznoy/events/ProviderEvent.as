@@ -23,6 +23,8 @@ package com.svyaznoy.events {
 		static public const ON_LAST_GALLERIES:String = "onLastGalleries";
 		static public const ON_LAST_VIDEOS:String = "onLastVideos";
 		static public const ON_VIDEO_REPORT:String = "onVideoReport";
+		static public const ON_DEPARTURE:String = "onDeparture";
+		static public const ON_GALLERY_PHOTOS:String = "onGalleryPhotos";
 		
 		public var data:Object;
 		

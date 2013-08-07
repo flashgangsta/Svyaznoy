@@ -36,6 +36,7 @@ package com.svyaznoy {
 		 */
 		
 		public function dispose():void {
+			trace("! DISPOSE" );
 			for ( var i:int = 0; i < numChildren; i++ ) {
 				var item:DisplayObject = getChildAt( i );
 				var disposeProperty:Object;
@@ -44,6 +45,7 @@ package com.svyaznoy {
 					disposeProperty = item[ "dispose" ];
 					if ( disposeProperty is Function ) {
 						var handler:Function = disposeProperty as Function;
+						trace( item );
 						handler();
 					}
 				}

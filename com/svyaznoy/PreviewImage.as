@@ -15,7 +15,7 @@ package com.svyaznoy {
 	public class PreviewImage extends PreviewItem {
 		
 		private const BACKGROUND_BOTTOM_MARGIN:int = 2;
-		private const TITLE_BOTTOM_MARGIN:int = -1;
+		private const TITLE_BOTTOM_MARGIN:int = 2;
 		
 		private var titleLabel:TextField;
 		private var descriptionLabel:TextField;

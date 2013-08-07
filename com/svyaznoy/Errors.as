@@ -46,8 +46,17 @@ package com.svyaznoy {
 		 * @param	text
 		 */
 		
-		public function ioError(text:String):void {
-			trace( "# IOError:", text );
+		public function ioError( event:Event ):void {
+			traceError( "ioError", event );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		public function securityError( event:SecurityErrorEvent ):void {
+			traceError( "securityError", event );
 		}
 		
 		/**
@@ -227,6 +236,23 @@ package com.svyaznoy {
 		
 		public function onGetDepartureError( data:Object ):void {
 			traceError( "onGetDepartureError", data );
+		}
+		
+		/**
+		 * 
+		 * @param	data
+		 */
+		
+		public function onDepartureError( data:Object ):void {
+			traceError( "onDepartureError", data );
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function onGetGalleryPhotosError( data:Object ):void {
+			traceError( "onGetGalleryPhotosError", data );
 		}
 		
 		

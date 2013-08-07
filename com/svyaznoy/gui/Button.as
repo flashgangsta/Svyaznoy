@@ -16,6 +16,7 @@ package com.svyaznoy.gui {
 		private var label:Label;
 		private var labelMessage:String;
 		private var hit:Sprite;
+		private var _disabledAlpha:Number = .5;
 		
 		/**
 		 * 
@@ -33,6 +34,31 @@ package com.svyaznoy.gui {
 			}
 			
 			ButtonManager.addButton( this );
+		}
+		
+		/**
+		 * 
+		 */
+		
+		override public function get enabled():Boolean {
+			return super.enabled;
+		}
+		
+		override public function set enabled( value:Boolean ):void {
+			super.enabled = value;
+			ButtonManager.setButtonEnable( this, value, true, disabledAlpha );
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function get disabledAlpha():Number {
+			return _disabledAlpha;
+		}
+		
+		public function set disabledAlpha(value:Number):void {
+			_disabledAlpha = value;
 		}
 		
 		/**

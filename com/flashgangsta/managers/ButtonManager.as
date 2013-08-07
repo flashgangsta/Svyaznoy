@@ -3,7 +3,7 @@
  * Manager for quick and easy assignment of event handlers for the buttons.
  *
  * @author		Sergei Krivtsov
- * @version		1.00.94 (27.07.2013)
+ * @version		1.00.95 (06.08.2013)
  * @e-mail		flashgangsta@gmail.com
  *
  *
@@ -336,17 +336,17 @@ package com.flashgangsta.managers {
 		}
 		
 		
-		/*
-		*
-		*	Включает/выключает кнопку
-		*
-		*/
-		
+		/**
+		 * Включает/выключает кнопку
+		 * @param	target
+		 * @param	enabled
+		 * @param	alphed
+		 * @param	alphaValue
+		 */
 		
 		public static function setButtonEnable( target:MovieClip, enabled:Boolean = true, alphed:Boolean = false, alphaValue:Number = .5 ):void {
 			target.mouseChildren = enabled;
 			target.mouseEnabled = enabled;
-			target.enabled = enabled;
 			
 			if( alphed ) {
 				target.alpha = enabled ? 1 : alphaValue;

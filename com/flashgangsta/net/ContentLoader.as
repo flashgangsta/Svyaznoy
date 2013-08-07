@@ -34,9 +34,15 @@ package com.flashgangsta.net {
 	[Event(name="ioError", type="flash.events.IOErrorEvent")] 
 	
 	/**
+	 * Dispatched an security error occurred when loading
+	 * @eventType	flash.events.SecurityErrorEvent
+	 */
+	[Event(name="securityError", type="flash.events.SecurityErrorEvent")] 
+	
+	/**
 	 * ...
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
-	 * @version 0.03	31.07.2013
+	 * @version 0.04	07.08.2013
 	 */
 	
 	public class ContentLoader extends EventDispatcher {
