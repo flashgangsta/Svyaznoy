@@ -109,6 +109,22 @@ package com.svyaznoy {
 		
 		/**
 		 * 
+		 * @param	video_id
+		 */
+		
+		public function selectItemByVideo( video_id:String ):void {
+			trace( "selectItemByVideo" );
+			for ( var i:int = 0; i < itemsList.length; i++ ) {
+				if ( itemsList[ i ].getData().video === video_id ) {
+					trace( "searched" );
+					itemsList[ i ].dispatchEvent( new MouseEvent( MouseEvent.CLICK ) );
+					break;
+				}
+			}
+		}
+		
+		/**
+		 * 
 		 */
 		
 		private function clear():void {
