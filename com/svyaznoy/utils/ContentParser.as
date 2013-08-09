@@ -6,9 +6,8 @@ package com.svyaznoy.utils {
 	 */
 	public class ContentParser {
 		
-		static const TEMPLATE_TAG:RegExp =			/!\[(\w+)\]\(([^)]+)\s?\[?([\w:@.]*)?\]?\)/; ///!\[(\w+)\]\(([\w:.\/@%\s]+)\s?\[?([\w:@.]*)?\]?\)/;
-													//![link](http://es.svyaznoy.ru/test%20тест фile.doc)
-		static const TEMPLATE_LINK:RegExp = 		/!\[(link)\]\(([^\[)]+)\s?\[?([\w:@.]*)?\]?\)/g; ///!\[(link)\]\(([\w:\/.@]+)\s?\[?([\w:@.]*)?\]?\)/;
+		static const TEMPLATE_TAG:RegExp =			/!\[(\w+)\]\(([^)]+)\s?\[?([^]\]*)?\]?\)/m; ///!\[(\w+)\]\(([\w:.\/@%\s]+)\s?\[?([\w:@.]*)?\]?\)/;
+		static const TEMPLATE_LINK:RegExp = 		/!\[(link)\]\(([^\[)]+)\s?\[?([^\]]*)?\]?\)/m; ///!\[(link)\]\(([\w:\/.@]+)\s?\[?([\w:@.]*)?\]?\)/;
 		static const TEMPLATE_BOLD_TEXT:RegExp = 	/\Q**\E(.+)\Q**\E/g; //**Жирный текст**
 		
 		/**

@@ -73,6 +73,10 @@ package com.svyaznoy {
 		 */
 		
 		override public function displayData( data:Object ):void {
+			if ( !data ) {
+				visible = false;
+				return;
+			}
 			this.data = data;
 			if ( isLinkToReport ) buttonMode = true;
 			previewImage.loadImage( VIDEO_THUMBNAIL_ADRESS.replace( KEY_FOR_REPLACE, data.video ) );

@@ -20,6 +20,7 @@ package com.svyaznoy {
 		private var submitButton:Button;
 		private var popupsController:PopupsController = PopupsController.getInstance();
 		private var provider:Provider = Provider.getInstance();
+		private var data:Object;
 		
 		/**
 		 * 
@@ -55,6 +56,15 @@ package com.svyaznoy {
 			
 			codeLabel = null;
 			submitButton = null;
+		}
+		
+		/**
+		 * 
+		 * @return
+		 */
+		
+		public function getData():Object {
+			return data;
 		}
 		
 		/**
@@ -100,6 +110,7 @@ package com.svyaznoy {
 		 */
 		
 		private function onEmployeeConfirmed( event:ProviderEvent ):void {
+			data = event.data;
 			dispatchEvent( new Event( Event.COMPLETE ) );
 		}
 		

@@ -39,6 +39,8 @@ package com.svyaznoy {
 		
 		public function showCountry( itemData:Object ):void {
 			
+			trace( JSON.stringify( itemData ) );
+			
 			if ( galleriesList ) {
 				photosTitle.visible = false;
 				galleriesList.dispose();

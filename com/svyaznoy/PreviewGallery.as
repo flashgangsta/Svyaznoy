@@ -1,5 +1,4 @@
 package com.svyaznoy {
-	import com.flashgangsta.managers.ButtonManager;
 	import com.svyaznoy.events.PreviewEvent;
 	import flash.display.MovieClip;
 	import flash.events.MouseEvent;
@@ -16,7 +15,8 @@ package com.svyaznoy {
 		public function PreviewGallery() {
 			width = super.width;
 			height = super.height;
-			ButtonManager.addButton( previewImage.getZoomIcon(), this, onClicked );
+			buttonMode = true;
+			addEventListener( MouseEvent.CLICK, onClicked );
 		}
 		
 		/**
@@ -25,10 +25,16 @@ package com.svyaznoy {
 		 */
 		
 		override public function displayData( data:Object ):void {
+			if ( !data ) {
+				visible = false;
+				return;
+			}
 			super.displayData( data );
 			previewImage.loadImage( data.photo_with_path );
 			previewImage.getZoomIcon().visible = true;
 		}
+		
+		
 		
 		/**
 		 * 
@@ -67,7 +73,7 @@ package com.svyaznoy {
 		 * @param	event
 		 */
 		
-		private function onClicked( target:MovieClip ):void {
+		private function onClicked( target:MouseEvent ):void {
 			if ( !data ) return;
 			var outputEvent:PreviewEvent = new PreviewEvent( PreviewEvent.ON_PHOTO_REPORT_CALLED );
 			outputEvent.previewData = getData();

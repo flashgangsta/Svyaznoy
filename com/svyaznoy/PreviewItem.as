@@ -45,6 +45,13 @@ package com.svyaznoy {
 			data = null;
 		}
 		
+		override public function set visible(value:Boolean):void {
+			if ( value && !data ) {
+				return;
+			}
+			super.visible = value;
+		}
+		
 	}
 
 }

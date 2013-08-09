@@ -52,6 +52,10 @@ package com.svyaznoy {
 		
 		public function setFlashvars( parameters:Object ):void {
 			_flashvars = parameters;
+			/*trace( "FLASHVARS:" );
+			for ( var p in _flashvars ) {
+				trace( p + "=" + _flashvars[ p ] );
+			}*/
 		}
 		
 		/**
@@ -91,6 +95,10 @@ package com.svyaznoy {
 			return _vkAPI;
 		}
 		
+		/**
+		 * 
+		 */
+		
 		public function get isEmployeeMode():Boolean {
 			return _isEmployeeMode;
 		}
@@ -113,7 +121,16 @@ package com.svyaznoy {
 		 */
 		
 		public function getAuthKey():String {
-			return isDebug ? "589d9dd4555389ebf5d65b87836d44e2" : _flashvars.auth_key;
+			return isDebug ? "a2950141ba34e2f0a07bd9299bd55209" : _flashvars.auth_key;
+		}
+		
+		/**
+		 * 
+		 * @return
+		 */
+		
+		public function getAppID():int {
+			return _flashvars.api_id;
 		}
 		
 		/**

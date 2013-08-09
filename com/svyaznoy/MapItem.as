@@ -1,5 +1,6 @@
 package com.svyaznoy {
 	import caurina.transitions.Tweener;
+	import com.flashgangsta.managers.MappingManager;
 	import com.svyaznoy.events.MapEvent;
 	import com.svyaznoy.events.MapItemEvent;
 	import com.svyaznoy.gui.Button;
@@ -33,34 +34,35 @@ package com.svyaznoy {
 		private var shapes:Sprite;
 		private var data:Object;
 		private var dispatcher:Dispatcher = Dispatcher.getInstance();
+		private var startLabel:MapItemDate;
+		private var hitCircle:MapItemHitCircle;
 		
 		private var countryOverParameters:Object = {
-				_saturation: 3,
-				time: COUNTRY_TIME_OVER,
-				transition: "easeInOut" + COUNTRY_TRANSITION
-			};
+			_saturation: 3,
+			time: COUNTRY_TIME_OVER,
+			transition: "easeInOut" + COUNTRY_TRANSITION
+		};
 			
 		private var countryOutParameters:Object = {
-				_saturation: 1,
-				time: COUNTRY_TIME_OUT,
-				transition: "easeInOut" + COUNTRY_TRANSITION
-			};
+			_saturation: 1,
+			time: COUNTRY_TIME_OUT,
+			transition: "easeInOut" + COUNTRY_TRANSITION
+		};
 		
 		private var shapesOverParameters:Object = {
-				scaleX: SHAPES_SCALE,
-				scaleY: SHAPES_SCALE,
-				time: SHAPES_TIME_OVER,
-				transition: "easeInOut" + SHAPES_TRANSITION,
-				onComplete: onOverMotionComplete
-			};
-			
+			scaleX: SHAPES_SCALE,
+			scaleY: SHAPES_SCALE,
+			time: SHAPES_TIME_OVER,
+			transition: "easeInOut" + SHAPES_TRANSITION,
+			onComplete: onOverMotionComplete
+		};
+		
 		private var shapesOutParameters:Object = {
 				scaleX: 1,
 				scaleY: 1,
 				time: SHAPES_TIME_OUT,
 				transition: "easeInOut" + SHAPES_TRANSITION
-			};
-		
+		};
 		
 		/**
 		 * 
@@ -70,6 +72,7 @@ package com.svyaznoy {
 			shapes = getChildByName( "shapes_mc" ) as Sprite;
 			photosButton = shapes.getChildByName( "photos_mc" ) as Button;
 			videosButton = shapes.getChildByName( "videos_mc" ) as Button;
+			hitCircle = getHitCircle();
 			photosButton.visible = false;
 			videosButton.visible = false;
 			buttonMode = true;
@@ -84,6 +87,22 @@ package com.svyaznoy {
 			this.country = country;
 			this.data = data;
 			
+			
+			
+			if ( data.start ) {
+				startLabel = new MapItemDate( data.start );
+				
+				if( startLabel.getDaysRemaining() ) {
+					addChildAt( startLabel, 0 );
+					MappingManager.setScaleOnlyReduce( startLabel, hitCircle.width, hitCircle.height );
+					MappingManager.setAlign( startLabel, hitCircle.getBounds( this ) );
+				} else {
+					addFinishedFlag();
+				}
+			} else {
+				addFinishedFlag();
+			}
+			
 			if ( data.galleries.length ) {
 				photosButton.visible = true;
 				photosButton.addEventListener( MouseEvent.CLICK, onPhotosClicked );
@@ -96,6 +115,19 @@ package com.svyaznoy {
 			
 			addEventListener( MouseEvent.MOUSE_OVER, onRollOver );
 			addEventListener( MouseEvent.CLICK, onClicked );
+		}
+		
+		/**
+		 * 
+		 */
+		
+		private function addFinishedFlag():void {
+			if ( numChildren === 1 ) {
+				var flag:DisplayObject = new MapFinishFlag();
+				MappingManager.setScaleOnlyReduce( flag, hitCircle.width - 6, hitCircle.height - 6 );
+				MappingManager.setAlign( flag, hitCircle.getBounds( this ) );
+				addChildAt( flag, 0 );
+			}
 		}
 		
 		/**
@@ -161,7 +193,6 @@ package com.svyaznoy {
 		
 		private function onClicked( event:MouseEvent ):void {
 			if( !stage ) return;
-			//if( videosButton.hitTestPoint( stage.mouseX, stage.mouseY, true ) || photosButton.hitTestPoint( stage.mouseX, stage.mouseY, true ) ) return;
 			var outputEvent:MapItemEvent = new MapItemEvent( MapItemEvent.COUNTRY_CLICKED );
 			outputEvent.itemData = data;
 			dispatcher.dispatchEvent( outputEvent );
@@ -201,6 +232,24 @@ package com.svyaznoy {
 			var outputEvent:MapItemEvent = new MapItemEvent( MapItemEvent.VIDEO_REPORTS_CLICKED );
 			outputEvent.itemData = data;
 			dispatcher.dispatchEvent( outputEvent );
+		}
+		
+		/**
+		 * 
+		 * @return
+		 */
+		
+		private function getHitCircle():MapItemHitCircle {
+			var child:DisplayObject;
+			var result:MapItemHitCircle;
+			for ( var i:int = 0; i < shapes.numChildren; i++ ) {
+				child = shapes.getChildAt( i );
+				if ( child is MapItemHitCircle ) {
+					result = child as MapItemHitCircle;
+					break;
+				}
+			}
+			return result;
 		}
 		
 	}

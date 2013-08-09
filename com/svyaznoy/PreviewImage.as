@@ -1,4 +1,5 @@
 package com.svyaznoy {
+	import caurina.transitions.Tweener;
 	import com.flashgangsta.managers.MappingManager;
 	import com.flashgangsta.net.ContentLoader;
 	import flash.display.Bitmap;
@@ -6,12 +7,16 @@ package com.svyaznoy {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
+	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
+	
 	/**
 	 * ...
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
 	 */
+	
 	public class PreviewImage extends PreviewItem {
 		
 		private const BACKGROUND_BOTTOM_MARGIN:int = 2;
@@ -24,6 +29,8 @@ package com.svyaznoy {
 		private var preloader:MovieClip;
 		private var loader:ContentLoader = new ContentLoader();
 		private var bitmap:Bitmap;
+		private var zoomIcoRectDefault:Rectangle;
+		private var zoomIcoRectOver:Rectangle = new Rectangle( 0, 0, 44, 44 );
 		
 		/**
 		 * 
@@ -40,6 +47,8 @@ package com.svyaznoy {
 			
 			zoomIcon.stop();
 			zoomIcon.visible = false;
+			zoomIcoRectDefault = zoomIcon.getBounds( this );
+			updateZoomIconRectangle();
 			
 			titleLabel.autoSize = TextFieldAutoSize.LEFT;
 			descriptionLabel.autoSize = TextFieldAutoSize.LEFT;
@@ -51,11 +60,14 @@ package com.svyaznoy {
 			height = super.height;
 			
 			scaleX = scaleY = 1;
+			
+			addEventListener( MouseEvent.ROLL_OVER, onMouseOver );
+			addEventListener( MouseEvent.ROLL_OUT, onMouseOut );
 		}
 		
 		/**
 		 * 
-		 * @param	stc
+		 * @param	src
 		 */
 		
 		public function loadImage( src:String ):void {
@@ -121,6 +133,9 @@ package com.svyaznoy {
 			}
 			loader = null;
 			removePreloader();
+			
+			removeEventListener( MouseEvent.ROLL_OVER, onMouseOver );
+			removeEventListener( MouseEvent.ROLL_OUT, onMouseOut );
 		}
 		
 		/**
@@ -190,6 +205,14 @@ package com.svyaznoy {
 			if ( preloader ) {
 				MappingManager.setAlign( preloader, background.getBounds( this ) );
 			}
+			
+			if ( zoomIcon.visible ) {
+				zoomIcoRectDefault.y = height - zoomIcoRectDefault.height - zoomIcoRectDefault.x;
+				if ( !Tweener.isTweening( zoomIcon ) ) {
+					zoomIcon.y = zoomIcoRectDefault.y;
+				}
+				updateZoomIconRectangle();
+			}
 		}
 		
 		/**
@@ -226,6 +249,32 @@ package com.svyaznoy {
 			loader.removeEventListener( Event.COMPLETE, onLoaded );
 		}
 		
+		/**
+		 * 
+		 */
+		
+		private function updateZoomIconRectangle():void {
+			zoomIcoRectOver.x = MappingManager.getCentricPoint( this.width, zoomIcoRectOver.width );
+			zoomIcoRectOver.y = MappingManager.getCentricPoint( this.height, zoomIcoRectOver.height );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onMouseOver( event:MouseEvent ):void {
+			Tweener.addTween( zoomIcon, { x: zoomIcoRectOver.x, y: zoomIcoRectOver.y, width: zoomIcoRectOver.width, height: zoomIcoRectOver.height, alpha: .75, time: .4, transition: "easeInOutCubic" } );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onMouseOut( event:MouseEvent ):void {
+			Tweener.addTween( zoomIcon, { x: zoomIcoRectDefault.x, y: zoomIcoRectDefault.y, width: zoomIcoRectDefault.width, height: zoomIcoRectDefault.height, alpha: 1, time: .4, transition: "easeInOutCubic" } );
+		}
 	}
 
 }
