@@ -1,5 +1,6 @@
 package com.svyaznoy {
 	import com.flashgangsta.ui.Label;
+	import com.svyaznoy.utils.DateParser;
 	import flash.display.Sprite;
 	import flash.text.TextField;
 	
@@ -24,7 +25,7 @@ package com.svyaznoy {
 		 */
 		
 		public function MapItemDate( startDate:String ) {
-			targetDateInMoscow = new Date( startDate.substr( 0, 4 ), int( startDate.substr( 5, 2 ) ) - 1, startDate.substr( 8 ) );
+			targetDateInMoscow = DateParser.parse( startDate );
 			thisTimezoneOffset = targetDateInMoscow.timezoneOffset;
 			timeOffset = ( thisTimezoneOffset - MOSCOW_TIMEZONE_OFFSET ) * MILLISECONDS_MULTIPLER;
 			targetDateHere = new Date( targetDateInMoscow.time - timeOffset );

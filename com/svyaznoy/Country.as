@@ -3,6 +3,7 @@ package com.svyaznoy {
 	import com.svyaznoy.events.DynamicItemEvent;
 	import com.svyaznoy.events.ProviderEvent;
 	import com.svyaznoy.events.ScreenEvent;
+	import com.svyaznoy.utils.DateParser;
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -38,9 +39,6 @@ package com.svyaznoy {
 		 */
 		
 		public function showCountry( itemData:Object ):void {
-			
-			trace( JSON.stringify( itemData ) );
-			
 			if ( galleriesList ) {
 				photosTitle.visible = false;
 				galleriesList.dispose();
@@ -75,16 +73,18 @@ package com.svyaznoy {
 			bottomButton.addEventListener( MouseEvent.CLICK, onBackClicked );
 			
 			if ( data.galleries.length ) {
+				var sortedGalleries:Array = sortByDate( data.galleries );
 				photosTitle.visible = true;
 				galleriesList = new PreviewsTable();
-				galleriesList.fill( data.galleries, PreviewGallery );
+				galleriesList.fill( data.galleries, PreviewGallery, 3 );
 				addChild( galleriesList );
 			}
 			
 			if ( data.videos.length ) {
+				var sortedVideos:Array = sortByDate( data.videos );
 				videosTitle.visible = true;
 				videosList = new PreviewsTable();
-				videosList.fill( data.videos, PreviewVideo );
+				videosList.fill( sortedVideos, PreviewVideo, 3 );
 				videosList.makeNavigationToVideoReport();
 				addChild( videosList );
 			}
@@ -92,6 +92,20 @@ package com.svyaznoy {
 			setVisibleForElements( true );
 			
 			setPositions();
+		}
+		
+		private function sortByDate( list:Array ):Array {
+			var result:Array = [];
+			var item:Object;
+			for ( var i:int = 0; i < list.length; i++ ) {
+				item = list[ i ];
+				item.time_of_updated_at = DateParser.parse( item.updated_at ).time;
+				result.push( item );
+			}
+			
+			result.sortOn( "time_of_updated_at", Array.NUMERIC | Array.DESCENDING );
+			
+			return result;
 		}
 		
 		/**

@@ -8,7 +8,7 @@ package com.svyaznoy {
 	public class PreviewItem extends MovieClip {
 		
 		///
-		protected var data:Object;
+		private var _data:Object;
 		protected var isLinkToReport:Boolean = false;
 		
 		/**
@@ -50,6 +50,15 @@ package com.svyaznoy {
 				return;
 			}
 			super.visible = value;
+		}
+		
+		public function get data():Object {
+			return _data;
+		}
+		
+		public function set data(value:Object):void {
+			_data = value;
+			if ( !visible && data ) visible = true;
 		}
 		
 	}

@@ -161,7 +161,7 @@ package com.svyaznoy {
 		}
 		
 		public function set description( value:String ):void {
-			descriptionLabel.text = value.replace( /\\n/g, "\n" )
+			descriptionLabel.text = value.replace( /\\n/g, "\n" );
 			descriptionLabel.visible = Boolean( value );
 			setPositions();
 		}

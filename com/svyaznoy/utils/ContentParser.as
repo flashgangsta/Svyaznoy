@@ -7,8 +7,8 @@ package com.svyaznoy.utils {
 	public class ContentParser {
 		
 		static const TEMPLATE_TAG:RegExp =			/!\[(\w+)\]\(([^)]+)\s?\[?([^]\]*)?\]?\)/m; ///!\[(\w+)\]\(([\w:.\/@%\s]+)\s?\[?([\w:@.]*)?\]?\)/;
-		static const TEMPLATE_LINK:RegExp = 		/!\[(link)\]\(([^\[)]+)\s?\[?([^\]]*)?\]?\)/m; ///!\[(link)\]\(([\w:\/.@]+)\s?\[?([\w:@.]*)?\]?\)/;
-		static const TEMPLATE_BOLD_TEXT:RegExp = 	/\Q**\E(.+)\Q**\E/g; //**Жирный текст**
+		static const TEMPLATE_LINK:RegExp = 		/!\[(link)\]\(([^\[)]+)\s?\[?([^\]]*)?\]?\)/g; ///!\[(link)\]\(([\w:\/.@]+)\s?\[?([\w:@.]*)?\]?\)/;
+		static const TEMPLATE_BOLD_TEXT:RegExp = 	/\*\*(.+)\*\*/gm; //**Жирный текст**
 		
 		/**
 		 * 
@@ -28,7 +28,8 @@ package com.svyaznoy.utils {
 			var result:Vector.<ContentTag> = new Vector.<ContentTag>();
 			var tag:ContentTag = getTag( text );
 			var lastTag:ContentTag;
-			var text:String = text.replace( TEMPLATE_LINK, replaceLinksTags ).replace( TEMPLATE_BOLD_TEXT, replaceBoldTextTags );
+			var text:String = replaceBoldTextTags( text );
+			text = text.replace( TEMPLATE_LINK, replaceLinksTags );
 			
 			if ( tag ) {
 				while( tag ) {
@@ -97,8 +98,23 @@ package com.svyaznoy.utils {
 		 * @param	text
 		 */
 		
-		static private function replaceBoldTextTags( tag:String, tagValue:String, ...params ):String {
-			return "<b>" + tagValue + "</b>";
+		static private function replaceBoldTextTags( text:String ):String {
+			var result:String = "" + text;
+			var openedBoldIndex:int;
+			var closedBoldIndex:int;
+			var tag:String = "**";
+			
+			openedBoldIndex = text.indexOf( tag, 0 );
+			closedBoldIndex = text.indexOf( tag, tag.length );
+			
+			while ( openedBoldIndex !== closedBoldIndex && (openedBoldIndex !== -1 && closedBoldIndex !== -1) ) {
+				result = result.replace( tag, "<b>" );
+				result = result.replace( tag, "</b>" );
+				openedBoldIndex = result.indexOf( tag, 0 );
+				closedBoldIndex = result.indexOf( tag, openedBoldIndex + tag.length );
+			}
+			
+			return result;
 		}
 		
 		/**

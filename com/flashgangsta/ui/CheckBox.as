@@ -8,7 +8,7 @@ package com.flashgangsta.ui {
 	/**
 	 * ...
 	 * @author Sergey Krivtsov
-	 * @version 1.00.08
+	 * @version 1.00.09
 	 */
 	
 	
@@ -23,6 +23,7 @@ package com.flashgangsta.ui {
 		private var icon:Sprite;
 		private var hit:Sprite;
 		private var _id:String;
+		private var label:Label;
 		
 		/**
 		 * Constructor
@@ -31,6 +32,7 @@ package com.flashgangsta.ui {
 		public function CheckBox() {
 			icon = getChildByName( "icon_mc" ) as Sprite;
 			hit = getChildByName( "hit_mc" ) as Sprite;
+			label = getChildByName( "label_mc" ) as Label;
 			
 			icon.mouseEnabled = false;
 			icon.mouseChildren = false;
@@ -99,6 +101,19 @@ package com.flashgangsta.ui {
 		public function get id():String {
 			return _id;
 		}
+		
+		/**
+		 * 
+		 */
+		
+		public function set value( value:String ):void {
+			label.text = value;
+		}
+		
+		public function get value():String {
+			return label.text;
+		}
+		
 		
 		/**
 		 * Обработка нажатия на чекбокс

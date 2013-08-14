@@ -25,6 +25,7 @@ package com.svyaznoy.events {
 		static public const ON_VIDEO_REPORT:String = "onVideoReport";
 		static public const ON_DEPARTURE:String = "onDeparture";
 		static public const ON_GALLERY_PHOTOS:String = "onGalleryPhotos";
+		static public const ON_RANDOM_SURVEYS:String = "onRandomSurveys";
 		
 		public var data:Object;
 		
