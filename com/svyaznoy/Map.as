@@ -78,11 +78,13 @@ package com.svyaznoy {
 			var result:Dictionary = new Dictionary();
 			var data:Object;
 			var currentID:int;
+			
 			for ( var i:int = 0; i < mapDatasList.length; i++ ) {
 				data = mapDatasList[ i ];
 				currentID = data.id;
 				result[ currentID ] = data;
 			}
+			
 			return result;
 		}
 		
