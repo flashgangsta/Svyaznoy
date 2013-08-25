@@ -26,6 +26,11 @@ package com.svyaznoy.events {
 		static public const ON_DEPARTURE:String = "onDeparture";
 		static public const ON_GALLERY_PHOTOS:String = "onGalleryPhotos";
 		static public const ON_RANDOM_SURVEYS:String = "onRandomSurveys";
+		static public const ON_LOTTERIES:String = "onLotteries";
+		static public const ON_LOTTERY:String = "onLottery";
+		static public const ON_EMPLOYEE_DATA:String = "onEmployeeData";
+		static public const ON_RATINGS:String = "onRatings";
+		static public const ON_RATINGS_SEARCHED:String = "onRatingsSearched";
 		
 		public var data:Object;
 		

@@ -23,6 +23,8 @@ package com.svyaznoy {
 		private var newsButton:MovieClip;
 		private var legendButton:MovieClip;
 		private var aboutButton:MovieClip;
+		private var contestsButton:MovieClip;
+		private var ratingsButton:MovieClip;
 		private var radioButton:MovieClip;
 		
 		private var buttons:Array = [];
@@ -38,14 +40,18 @@ package com.svyaznoy {
 			newsButton = getChildByName( "news_mc" ) as MovieClip;
 			legendButton = getChildByName( "legend_mc" ) as MovieClip;
 			aboutButton = getChildByName( "about_mc" ) as MovieClip;
+			contestsButton = getChildByName( "contests_mc" ) as MovieClip;
+			ratingsButton = getChildByName( "ratings_mc" ) as MovieClip;
 			radioButton = getChildByName( "radio_mc" ) as MovieClip;
 			
-			buttons.push( deaparturesButton, newsButton, legendButton, aboutButton );
+			buttons.push( deaparturesButton, newsButton, legendButton, aboutButton, contestsButton, ratingsButton );
 			
 			eventTypes[ deaparturesButton ] = NavigationEvent.NAVIGATE_TO_DEPARTURES;
 			eventTypes[ newsButton ] = NavigationEvent.NAVIGATE_TO_NEWS;
 			eventTypes[ legendButton ] = NavigationEvent.NAVIGATE_TO_LEGEND;
 			eventTypes[ aboutButton ] = NavigationEvent.NAVIGATE_TO_ABOUT;
+			eventTypes[ contestsButton ] = NavigationEvent.NAVIGATE_TO_CONTESTS;
+			eventTypes[ ratingsButton ] = NavigationEvent.NAVIGATE_TO_RATINGS;
 			
 			ButtonManager.addButtonGroup( buttons, true, deaparturesButton, false, ButtonManager.STATE_PRESSED, onClick );
 			ButtonManager.addButton( radioButton, null, onRadioClicked );
