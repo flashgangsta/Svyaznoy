@@ -75,14 +75,25 @@ package com.svyaznoy {
 			var params:Object = {};
 			params.user_ids = vkID;
 			params.fields = "photo_200_orig";
-			Helper.getInstance().vkAPI.api( "users.get", params, onVkUserData, errors.vkUsersGet );
+			if ( Helper.getInstance().isDebug ) {
+				var data:Object = {
+					uid:7010535,
+					first_name: "Иван",
+					last_name: "Победоносец",
+					photo_200_orig: "http:\/\/cs320931.vk.me\/v320931535\/f94\/_f8sr7_XxLs.jpg"
+				}
+				onVkUserData( [data] );
+			} else {
+				Helper.getInstance().vkAPI.api( "users.get", params, onVkUserData, errors.vkUsersGet );
+			}
 		}
 		
 		/**
 		 * 
 		 */
 		
-		private function onVkUserData():void {
+		private function onVkUserData( datas:Array ):void {
+			var data:Object = datas[ 0 ];
 			contentLoader.addEventListener( Event.COMPLETE, onAvatarLoaded );
 			contentLoader.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
 			contentLoader.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
@@ -117,6 +128,7 @@ package com.svyaznoy {
 		private function onAvatarLoaded( event:Event ):void {
 			removeListeners();
 			bitmap = contentLoader.getContent() as Bitmap;
+			bitmap.smoothing = true;
 			MappingManager.setScaleOnlyReduce( bitmap, avatarArea.width, avatarArea.height );
 			MappingManager.setAlign( bitmap, avatarArea.getBounds( this ) );
 			addChild( bitmap );

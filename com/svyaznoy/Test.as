@@ -1,6 +1,8 @@
 package com.svyaznoy {
 	import com.flashgangsta.net.ContentLoader;
+	import com.svyaznoy.events.LoginSectionEvent;
 	import com.svyaznoy.events.ProviderEvent;
+	import com.svyaznoy.gui.Paging;
 	import com.svyaznoy.modules.Voting;
 	import com.svyaznoy.utils.ContentParser;
 	import flash.display.Sprite;
@@ -23,21 +25,9 @@ package com.svyaznoy {
 			//Provider
 			provider.init();
 			
-			provider.getRandomSurveys();
-			provider.addEventListener( ProviderEvent.ON_RANDOM_SURVEYS, onSurveys );
+			var paging:Paging = getChildByName( "paging_mc" ) as Paging;
+			paging.init( 7 );
 			
-			
-			
-		}
-		
-		private function onSurveys( event:ProviderEvent ):void {
-			var surveyData:Object = event.data[ 0 ];
-			provider.removeEventListener( ProviderEvent.ON_RANDOM_SURVEYS, onSurveys );
-			
-			var voting:Voting = new Voting();
-			voting.init( surveyData );
-			
-			addChild( voting );
 		}
 		
 	}

@@ -31,6 +31,8 @@ package com.svyaznoy.events {
 		static public const ON_EMPLOYEE_DATA:String = "onEmployeeData";
 		static public const ON_RATINGS:String = "onRatings";
 		static public const ON_RATINGS_SEARCHED:String = "onRatingsSearched";
+		static public const ON_EMPLOYEES_LENGTH:String = "onEmployeesLength";
+		static public const ON_OWNER_RATING:String = "onOwnerRating";
 		
 		public var data:Object;
 		
