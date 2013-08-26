@@ -2,6 +2,7 @@ package com.svyaznoy {
 	import com.flashgangsta.managers.MappingManager;
 	import com.flashgangsta.media.video.YoutubePlayer;
 	import com.svyaznoy.events.DynamicItemEvent;
+	import com.svyaznoy.events.IconsListEvent;
 	import com.svyaznoy.events.ProviderEvent;
 	import flash.text.TextField;
 	/**
@@ -27,13 +28,17 @@ package com.svyaznoy {
 			player = getChildByName( "player_mc" ) as YoutubePlayer;
 			winner = getChildByName( "winner_mc" ) as LotteryWinnerPreview;
 			
-			setElementsForVisibleControll( player, winner );
+			setElementsForVisibleControll( player, winner, dynamicContentViewer );
 			setVisibleForElements( false );
 			lotteriesList.visible = false;
+			lotteriesList.addEventListener( IconsListEvent.ICON_SELECTED, onItemSelected );
 			
 			dynamicContentViewer.width =  titleLabel.width;
 			addEventListener( DynamicItemEvent.SIZE_CHANGED, onSizeChanged );
 			addChild( dynamicContentViewer );
+			
+			provider.addEventListener( ProviderEvent.ON_LOTTERY, onData );
+			provider.addEventListener( ProviderEvent.ON_LOTTERIES, onLotteries );
 		}
 		
 		/**
@@ -44,10 +49,11 @@ package com.svyaznoy {
 		public function showLottery( lotteryData:Object ):void {
 			if ( data && data.id === lotteryData.id ) return;
 			data = lotteryData;
+			addPreloader();
 			titleLabel.text = data.title;
 			winner.showWinner( data.winner );
 			provider.getLotteryByID( data.id );
-			provider.addEventListener( ProviderEvent.ON_LOTTERY, onData );
+			provider.getLotteries( LotteriesList.DISPLAYED_LENGTH + 2 );
 		}
 		
 		/**
@@ -69,6 +75,7 @@ package com.svyaznoy {
 			super.displayData();
 			player.setVideo( data.video );
 			dynamicContentViewer.displayData( data.content );
+			titleLabel.text = data.title;
 			setPositions();
 			setVisibleForElements( true );
 		}
@@ -80,6 +87,8 @@ package com.svyaznoy {
 		private function setPositions():void {
 			dynamicContentViewer.y = MappingManager.getBottom( titleLabel, this );
 			player.y = winner.y = MappingManager.getBottom( dynamicContentViewer, this ) + MARGIN;
+			lotteriesList.y = MappingManager.getBottom( player, this ) + (MARGIN * 2);
+			dispatchHeighUpdated();
 		}
 		
 		/**
@@ -97,10 +106,29 @@ package com.svyaznoy {
 		 */
 		
 		private function onLotteries( event:ProviderEvent ):void {
-			var listToShow:Array = [];
-			fullDatasList = event.data as Array;
-			listToShow = fullDatasList.slice( 1 );
+			var datasList:Array = event.data as Array;
+			var listToShow:Array;
+			var data:Object;
+			for ( var i:int = 0; i < datasList.length; i++ ) {
+				data = datasList[ i ];
+				if ( data.id === super.data.id ) {
+					listToShow = datasList.slice( 0, i ).concat( datasList.slice( i + 1 ) );
+					break;
+				}
+			}
 			lotteriesList.showList( listToShow );
+			lotteriesList.visible = true;
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onItemSelected( event:IconsListEvent ):void {
+			showLottery( event.data );
+			setVisibleForElements( false );
+			lotteriesList.visible = false;
 		}
 		
 	}

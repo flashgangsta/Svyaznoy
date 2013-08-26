@@ -16,6 +16,7 @@ package com.svyaznoy {
 			var outputEvent:LotteryEvent = new LotteryEvent( LotteryEvent.LOTTERY_SELECTED );
 			outputEvent.lotteryData = event.data[ 0 ];
 			Dispatcher.getInstance().dispatchEvent( outputEvent );
+			provider.removeEventListener( ProviderEvent.ON_LOTTERIES, onLottery );
 		}
 		
 	}
