@@ -8,6 +8,7 @@ package com.svyaznoy.modules {
 	import flash.display.TriangleCulling;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	
@@ -36,6 +37,9 @@ package com.svyaznoy.modules {
 		private var miniPreloader:MiniPreloader;
 		private var background:DisplayObject;
 		private var answeredList:Array = [];
+		private var popupPreviewQuestionLabel:TextField;
+		private var defaultBgHeight:int;
+		private var isPopupMode:Boolean;
 		
 		/**
 		 * 
@@ -45,9 +49,15 @@ package com.svyaznoy.modules {
 			visible = false;
 			
 			background = getChildAt( 0 ) as DisplayObject;
+			defaultBgHeight = background.height;
 			
 			questionLabel = getChildByName( "question_txt" ) as TextField;
+			popupPreviewQuestionLabel = getChildByName( "popupPreviewQuestion_txt" ) as TextField;
+			
 			questionLabel.autoSize = TextFieldAutoSize.LEFT;
+			popupPreviewQuestionLabel.autoSize = TextFieldAutoSize.LEFT;
+			
+			popupPreviewQuestionLabel.visible = false;
 			
 			answersContainer.x = 10; 
 			addChild( answersContainer );
@@ -83,8 +93,45 @@ package com.svyaznoy.modules {
 				addAnswers();
 				voteButton.y = MappingManager.getBottom( answersContainer, this ) + MARGIN_BOTTOM_ANSWERS;
 				background.height = MappingManager.getBottom( voteButton, this ) + MARGIN_BOTTOM_VOTE_BUTTON;
+				
+				
+				addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			}
+		}
+		
+		private function onAddedToStage( event:Event ):void {
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			
+			var bounds:Rectangle = getBounds( stage );
+			
+			if ( bounds.bottom > stage.stageHeight ) {
+				initAsPopupMode();
+			} else {
 				visible = true;
 			}
+			
+		}
+		
+		/**
+		 * 
+		 */
+		
+		private function initAsPopupMode():void {
+			trace( "makePopupMode" );
+			var titleBottom:int;
+			isPopupMode = true;
+			removeAnswers();
+			visible = true;
+			background.height = defaultBgHeight;
+			voteButton.y =  MappingManager.getBottom( background, this ) - voteButton.height - MARGIN_BOTTOM_VOTE_BUTTON;
+			popupPreviewQuestionLabel.text = questionLabel.text;
+			questionLabel.text = "ОПРОСЫ";
+			
+			titleBottom = MappingManager.getBottom( questionLabel, this );
+			popupPreviewQuestionLabel.y = titleBottom + MappingManager.getCentricPoint( voteButton.y - titleBottom, popupPreviewQuestionLabel.height );
+			popupPreviewQuestionLabel.visible = true;
+			
+			voteButton.enabled = true;
 		}
 		
 		/**
@@ -118,7 +165,7 @@ package com.svyaznoy.modules {
 			for ( var i:int = 0; i < answersList.length; i++ ) {
 				var answer:Answer = new answersClass();
 				answer.value = answersList[ i ];
-				answer.y = Math.round( answer.height * i );
+				answer.y = answersContainer.height;
 				answersContainer.addChild( answer );
 			}
 		}
@@ -129,7 +176,7 @@ package com.svyaznoy.modules {
 		
 		private function removeAnswers():void {
 			while ( answersContainer.numChildren ) {
-				var answer:Answer = getChildAt( 0 ) as Answer;
+				var answer:Answer = answersContainer.getChildAt( 0 ) as Answer;
 				answer.dispose();
 				answersContainer.removeChild( answer );
 			}
@@ -141,6 +188,11 @@ package com.svyaznoy.modules {
 		 */
 		
 		private function voteButtonClicked( event:MouseEvent ):void {
+			if ( isPopupMode ) {
+				callPopup();
+				return;
+			}
+			
 			if ( type === TYPE_MULTI ) {
 				var selectedAnswers:Vector.<String> = new Vector.<String>();
 				var answer:Answer;
@@ -148,7 +200,8 @@ package com.svyaznoy.modules {
 					answer = answersContainer.getChildAt( answeredList[ i ] ) as Answer;
 					selectedAnswers.push( answer.value );
 				}
-				trace( "send answers:", selectedAnswers );
+				sendAnswers( selectedAnswers );
+				
 			} else {
 				trace( "send answer:", selectedAnswer.value );
 			}
@@ -159,6 +212,29 @@ package com.svyaznoy.modules {
 			answersContainer.visible = false;
 			addChild( miniPreloader );
 			
+		}
+		
+		/**
+		 * 
+		 */
+		
+		private function callPopup():void {
+			trace( "callPopup" );
+		}
+		
+		/**
+		 * 
+		 * @param	...answers
+		 */
+		
+		private function sendAnswers( ...answers ):void {
+			var answer:String;
+			if ( answers[ 0 ] is Vector.<String> ) {
+				answer = Vector.<String>( answers[ 0 ] ).toString();
+			} else {
+				answer = answers.toString();
+			}
+			trace( "send answers:", answer );
 		}
 		
 		/**

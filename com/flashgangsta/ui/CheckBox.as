@@ -108,6 +108,7 @@ package com.flashgangsta.ui {
 		
 		public function set value( value:String ):void {
 			label.text = value;
+			hit.height = label.height + label.y * 2;
 		}
 		
 		public function get value():String {
