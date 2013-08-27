@@ -1,5 +1,7 @@
 package com.svyaznoy {
+	import com.flashgangsta.managers.MappingManager;
 	import com.svyaznoy.events.ProviderEvent;
+	import com.svyaznoy.modules.Voting;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	
@@ -21,6 +23,7 @@ package com.svyaznoy {
 			video = getChildByName( "video_mc" ) as PreviewVideo;
 			
 			var imageTemp:PreviewImage = getChildByName( "image_mc" ) as PreviewImage;
+			trace( imageTemp.width );
 			
 			image.width = imageTemp.width;
 			image.height = imageTemp.height;
@@ -33,6 +36,7 @@ package com.svyaznoy {
 			
 			provider.addEventListener( ProviderEvent.ON_RANDOM_GALLERIES, onRandomGalleries );
 			provider.addEventListener( ProviderEvent.ON_RANDOM_VIDEOS, onRandomVideos );
+			provider.addEventListener( ProviderEvent.ON_RANDOM_SURVEYS, onSurveys );
 		}
 		
 		/**
@@ -42,6 +46,7 @@ package com.svyaznoy {
 		public function init():void {
 			provider.getRandomGalleries();
 			provider.getRandomVideos();
+			provider.getRandomSurveys();
 		}
 		
 		/**
@@ -78,6 +83,23 @@ package com.svyaznoy {
 			video.displayData( event.data[ 0 ] );
 			video.removeTextFields();
 			video.makeNavigationToVideoReport();
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onSurveys( event:ProviderEvent ):void {
+			var surveyData:Object = event.data[ 0 ];
+			provider.removeEventListener( ProviderEvent.ON_RANDOM_SURVEYS, onSurveys );
+			
+			var voting:Voting = new Voting();
+			voting.y = MappingManager.getBottom( video, this ) + ( video.y - MappingManager.getBottom( image, this ) );
+			voting.init( surveyData );
+			
+			addChild( voting );
+			provider.removeEventListener( ProviderEvent.ON_RANDOM_SURVEYS, onSurveys );
 		}
 		
 	}

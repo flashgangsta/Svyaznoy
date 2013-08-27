@@ -54,6 +54,12 @@ package com.svyaznoy.gui {
 			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 		
+		/**
+		 * 
+		 * @param	value
+		 * @return
+		 */
+		
 		private function getButtonByValue( value:int ):PagingButton {
 			var result:PagingButton;
 			var button:PagingButton;

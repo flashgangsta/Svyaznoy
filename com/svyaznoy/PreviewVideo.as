@@ -34,6 +34,11 @@ package com.svyaznoy {
 			clock.mouseChildren = clock.mouseEnabled = false;
 			clock.visible = false;
 			
+			width = super.width;
+			height = super.height;
+			
+			scaleX = scaleY = 1;
+			
 			previewImage.removePreloader();
 			
 			setElementsPositions();

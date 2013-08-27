@@ -45,16 +45,16 @@ package com.svyaznoy {
                     "Фонарик",
                     "Сухофрукты",
                     "Топор",
-                    "Гранатомёт",
+                    "Гранатомёт"/*,
                     "Санки",
                     "Коржик",
                     "Яйцеклетку",
                     "Слюни",
                     "Батон",
                     "Девок",
-                    "Водку"
+                    "Водку"*/
                 ],
-                "is_answered": false
+                "is_answered": true
 			}];
 			
 			var dataSingle:Array = [
@@ -77,12 +77,12 @@ package com.svyaznoy {
                     "Mitsubishi A6M Zero",
                     "Тигр"
                 ],
-                "is_answered": false
+                "is_answered": true
             }
         ];
 			
 			var event:ProviderEvent = new ProviderEvent( ProviderEvent.ON_RANDOM_SURVEYS );
-			event.data = dataSingle;
+			event.data = dataMulty;
 			onSurveys( event );
 			
 		}

@@ -7,7 +7,7 @@ package com.svyaznoy.modules {
 	public class AnswerSingle extends SelectableAnswer {
 		
 		public function AnswerSingle() {
-			trace( getChildAt( 0 ) );
+			
 		}
 		
 	}

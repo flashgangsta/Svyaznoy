@@ -16,7 +16,7 @@ package com.svyaznoy {
 		 */
 		
 		public function PreviewItem() {
-			scaleX = scaleY = 1;
+			//scaleX = scaleY = 1;
 		}
 		
 		/**

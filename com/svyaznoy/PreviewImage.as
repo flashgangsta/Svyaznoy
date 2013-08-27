@@ -166,6 +166,11 @@ package com.svyaznoy {
 			setPositions();
 		}
 		
+		/**
+		 * 
+		 * @param	data
+		 */
+		
 		override public function displayData( data:Object ):void {
 			super.displayData( data );
 		}
@@ -180,6 +185,11 @@ package com.svyaznoy {
 			titleLabel.visible = descriptionLabel.visible = false;
 			descriptionLabel.y = titleLabel.y = 0;
 		}
+		
+		/**
+		 * 
+		 * @return
+		 */
 		
 		public function getZoomIcon():MovieClip {
 			return zoomIcon;

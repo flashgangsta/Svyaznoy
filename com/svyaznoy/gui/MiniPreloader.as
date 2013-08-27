@@ -6,6 +6,8 @@ package com.svyaznoy.gui {
 	import flash.events.TimerEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	import flash.utils.Timer;
 	
 	/**
@@ -34,19 +36,11 @@ package com.svyaznoy.gui {
 			animation = getChildByName( "animation_mc" ) as MovieClip;
 			label = getChildByName( "label_txt" ) as TextField;
 			background = getChildAt( 0 );
-			messageText = message;
+			background.visible = false;
 			
 			label.autoSize = TextFieldAutoSize.LEFT;
 			
-			label.text = messageText + "...";
-			
-			
-			var baseObject:DisplayObject = animation.width > label.width ? animation : label;
-			
-			background.width = baseObject.x * 2 + baseObject.width;
-			
-			animation.x = MappingManager.getCentricPoint( background.width, animation.width );
-			label.x = MappingManager.getCentricPoint( background.width, label.width );
+			this.message = message + "...";
 			
 			timer.addEventListener( TimerEvent.TIMER, onTimer );
 			timer.start();
@@ -60,6 +54,48 @@ package com.svyaznoy.gui {
 			timer.removeEventListener( TimerEvent.TIMER, onTimer );
 			timer.stop();
 			animation.stop();
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function resume():void {
+			if ( !timer.hasEventListener( TimerEvent.TIMER ) ) {
+				timer.addEventListener( TimerEvent.TIMER, onTimer );
+			}
+			
+			if ( !timer.running ) {
+				timer.start();
+			}
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function set message( value:String ):void {
+			if ( value !== messageText ) {
+				messageText = value;
+				label.text = value + "...";
+				updatePosition();
+			}
+		}
+		
+		/**
+		 * 
+		 */
+		
+		private function updatePosition():void {
+			var baseObject:DisplayObject = animation.width > label.width ? animation : label;
+			
+			background.width = baseObject.x * 2 + baseObject.width;
+			
+			animation.x = MappingManager.getCentricPoint( background.width, animation.width );
+			label.x = MappingManager.getCentricPoint( background.width, label.width );
+			
+			animation.y = MappingManager.getBottom( label, this ) + 7;
+			background.height = MappingManager.getBottom( animation, this ) + label.y;
 		}
 		
 		/**

@@ -1,7 +1,9 @@
 package com.svyaznoy.modules {
 	import com.flashgangsta.managers.ButtonManager;
 	import com.flashgangsta.managers.MappingManager;
+	import com.svyaznoy.events.ProviderEvent;
 	import com.svyaznoy.gui.MiniPreloader;
+	import com.svyaznoy.Provider;
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
@@ -32,6 +34,7 @@ package com.svyaznoy.modules {
 		private var type:String;
 		private var answersList:Vector.<String>;
 		private var answersContainer:Sprite = new Sprite();
+		private var answersResultContainer:Sprite = new Sprite();
 		private var selectedAnswer:Answer;
 		private var questionLabel:TextField;
 		private var miniPreloader:MiniPreloader;
@@ -40,6 +43,7 @@ package com.svyaznoy.modules {
 		private var popupPreviewQuestionLabel:TextField;
 		private var defaultBgHeight:int;
 		private var isPopupMode:Boolean;
+		private var provider:Provider = Provider.getInstance();
 		
 		/**
 		 * 
@@ -59,7 +63,10 @@ package com.svyaznoy.modules {
 			
 			popupPreviewQuestionLabel.visible = false;
 			
-			answersContainer.x = 10; 
+			answersContainer.x = 10;
+			answersResultContainer.x = answersContainer.x;
+			
+			addChild( answersResultContainer );
 			addChild( answersContainer );
 			answersContainer.addEventListener( Event.CHANGE, onAnswerSelected );
 			
@@ -77,31 +84,42 @@ package com.svyaznoy.modules {
 		
 		public function init( data:Object ):void {
 			this.data = data;
+			answersList = Vector.<String>( data.options_array );
+			questionLabel.text = data.title.toUpperCase();
 			
 			if ( data.is_answered ) {
 				trace( "show results" );
+				loadResults();
+				voteButton.visible = false;
 			} else {
-				if ( int( data.allow_multiple ) ) {
-					type = TYPE_MULTI;
+				if ( int( data.own_answer ) ) {
+					isPopupMode = true;
 				} else {
-					type = TYPE_SINGLE;
+					if ( int( data.allow_multiple ) ) {
+						type = TYPE_MULTI;
+					} else {
+						type = TYPE_SINGLE;
+					}
 				}
 				
-				questionLabel.text = data.title.toUpperCase();
+				
 				answersContainer.y = MappingManager.getBottom( questionLabel, this ) + MARGIN_BOTTOM_LABEL;
-				answersList = Vector.<String>( data.options_array );
+				
 				addAnswers();
 				voteButton.y = MappingManager.getBottom( answersContainer, this ) + MARGIN_BOTTOM_ANSWERS;
 				background.height = MappingManager.getBottom( voteButton, this ) + MARGIN_BOTTOM_VOTE_BUTTON;
-				
-				
-				addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+				voteButton.visible = true;
 			}
+			
+			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
 		private function onAddedToStage( event:Event ):void {
-			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			
 			var bounds:Rectangle = getBounds( stage );
 			
 			if ( bounds.bottom > stage.stageHeight ) {
@@ -109,7 +127,7 @@ package com.svyaznoy.modules {
 			} else {
 				visible = true;
 			}
-			
+			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 		
 		/**
@@ -182,7 +200,6 @@ package com.svyaznoy.modules {
 			}
 		}
 		
-		
 		/**
 		 * 
 		 */
@@ -203,15 +220,42 @@ package com.svyaznoy.modules {
 				sendAnswers( selectedAnswers );
 				
 			} else {
-				trace( "send answer:", selectedAnswer.value );
+				sendAnswers( selectedAnswer.value );
 			}
 			
 			voteButton.visible = false;
-			miniPreloader = new MiniPreloader( "Отправка" );
-			MappingManager.setAlign( miniPreloader, background.getBounds( this ) );
-			answersContainer.visible = false;
-			addChild( miniPreloader );
 			
+			showPreloader( "Отправка" );
+			
+			removeAnswers();
+			
+		}
+		
+		/**
+		 * 
+		 */
+		
+		private function showPreloader( message:String ):void {
+			if( !miniPreloader ) {
+				miniPreloader = new MiniPreloader( message );
+			} else {
+				miniPreloader.message = message;
+				miniPreloader.visible = true;
+				miniPreloader.resume();
+			}
+			
+			MappingManager.setAlign( miniPreloader, background.getBounds( this ) );
+			
+			addChild( miniPreloader );
+		}
+		
+		/**
+		 * 
+		 */
+		
+		private function hidePreloader():void {
+			miniPreloader.stop();
+			miniPreloader.visible = false;
 		}
 		
 		/**
@@ -235,6 +279,92 @@ package com.svyaznoy.modules {
 				answer = answers.toString();
 			}
 			trace( "send answers:", answer );
+			provider.sendAnswer( data.id, answer );
+			provider.addEventListener( ProviderEvent.ON_ANSWER_SENT, onAnswerSent );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onAnswerSent( event:ProviderEvent ):void {
+			loadResults();
+		}
+		
+		/**
+		 * 
+		 */
+		
+		private function loadResults():void {
+			provider.removeEventListener( ProviderEvent.ON_ANSWER_SENT, onAnswerSent );
+			provider.addEventListener( ProviderEvent.ON_ANSWERS, onAnswers );
+			provider.getAnswers( data.id );
+			showPreloader( "Загрузка\nрезультатов" );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onAnswers( event:ProviderEvent ):void {
+			provider.removeEventListener( ProviderEvent.ON_ANSWERS, onAnswers );
+			hidePreloader();
+			addAnswersResults( event.data as Array );
+		}
+		
+		/**
+		 * 
+		 */
+		
+		private function addAnswersResults( list:Array ):void {
+			var totalVotes:int = 0;
+			var answerResult:AnswerResult;
+			var answerData:Object;
+			var options:String = "" + data.options;
+			var notAnsweredNamesList:Array;
+			
+			removeAnswersResults();
+			
+			for each( var param:Object in list ) {
+				totalVotes += int( param.votes );
+				options = options.replace( "\n" + param.answer, "" );
+				options = options.replace( param.answer, "" );
+			}
+			
+			notAnsweredNamesList = options.split( "\n" );
+			
+			for ( var j:int = 0; j < notAnsweredNamesList.length; j++ ) {
+				list.push( { votes: 0, answer: notAnsweredNamesList[ j ] } );
+			}
+			
+			for ( var i:int = 0; i < answersList.length; i++ ) {
+				answerResult = new AnswerResult();
+				answerData = list[ i ];
+				answerResult.showAnswer( answerData.answer, answerData.votes, totalVotes, i );
+				answerResult.y = answersResultContainer.height + 7;
+				answersResultContainer.addChild( answerResult );
+			}
+			
+			
+			answersResultContainer.y = MappingManager.getBottom( questionLabel, this ) + MARGIN_BOTTOM_LABEL;
+			voteButton.y = 0 ;
+			voteButton.visible = false;
+			background.height = MappingManager.getBottom( answersResultContainer, this ) + MARGIN_BOTTOM_VOTE_BUTTON;
+		}
+		
+		/**
+		 * 
+		 */
+		
+		private function removeAnswersResults():void {
+			var answerResult:AnswerResult;
+			while ( answersContainer.numChildren ) {
+				answerResult = answersContainer.getChildAt( 0 ) as AnswerResult;
+				answerResult.dispose();
+				answersContainer.removeChild( answerResult );
+			}
 		}
 		
 		/**
