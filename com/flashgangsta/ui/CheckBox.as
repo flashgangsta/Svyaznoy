@@ -1,5 +1,6 @@
 package com.flashgangsta.ui {
 	import com.flashgangsta.managers.ButtonManager;
+	import com.flashgangsta.utils.getChildByType;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -20,7 +21,7 @@ package com.flashgangsta.ui {
 	
 	public class CheckBox extends MovieClip {
 		
-		private var icon:Sprite;
+		private var icon:Icon;
 		private var hit:Sprite;
 		private var _id:String;
 		private var label:Label;
@@ -30,14 +31,20 @@ package com.flashgangsta.ui {
 		 */
 		
 		public function CheckBox() {
-			icon = getChildByName( "icon_mc" ) as Sprite;
-			hit = getChildByName( "hit_mc" ) as Sprite;
-			label = getChildByName( "label_mc" ) as Label;
+			icon = getChildByType( this, Icon ) as Icon;
+			hit = getChildAt( numChildren - 1 ) as Sprite;
+			label = getChildByType( this, Label ) as Label;
 			
 			icon.mouseEnabled = false;
 			icon.mouseChildren = false;
 			
 			ButtonManager.addButton( this, null, onClick );
+		}
+		
+		public function dispose():void {
+			removeEventListener( Event.REMOVED_FROM_STAGE, removed );
+			ButtonManager.removeButton( this );
+			icon = null;
 		}
 		
 		/**
@@ -46,9 +53,7 @@ package com.flashgangsta.ui {
 		 */
 		
 		private function removed( event:Event ):void {
-			removeEventListener( Event.REMOVED_FROM_STAGE, removed );
-			ButtonManager.removeButton( this );
-			icon = null;
+			dispose();
 		}
 		
 		/**

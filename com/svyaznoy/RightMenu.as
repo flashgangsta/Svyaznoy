@@ -23,7 +23,6 @@ package com.svyaznoy {
 			video = getChildByName( "video_mc" ) as PreviewVideo;
 			
 			var imageTemp:PreviewImage = getChildByName( "image_mc" ) as PreviewImage;
-			trace( imageTemp.width );
 			
 			image.width = imageTemp.width;
 			image.height = imageTemp.height;

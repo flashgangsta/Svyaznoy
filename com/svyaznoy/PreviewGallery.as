@@ -25,9 +25,7 @@ package com.svyaznoy {
 		 */
 		
 		override public function displayData( data:Object ):void {
-			//trace( "LAST GALLERY: ", JSON.stringify( data ) );
 			if ( !data ) {
-				trace( "op" );
 				visible = false;
 				return;
 			} else {

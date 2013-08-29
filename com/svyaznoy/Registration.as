@@ -36,6 +36,7 @@ package com.svyaznoy {
 			codeLabel = getChildByName( "code_mc" ) as InputTextfield;
 			emailLabel = getChildByName( "email_mc" ) as InputTextfield;
 			
+			registerButton.setLabel( "ЗАРЕГИСТРИРОВАТЬСЯ" );
 			codeLabel.setErrorMessage( CODE_ERROR_MESSAGE_DEFAULT );
 			emailLabel.setErrorMessage( "E-mail не указан, либо указан неверно" );
 			

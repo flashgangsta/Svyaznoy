@@ -1,11 +1,13 @@
 package com.svyaznoy {
 	import com.flashgangsta.net.ContentLoader;
+	import com.flashgangsta.utils.PopupsController;
 	import com.svyaznoy.events.LoginSectionEvent;
 	import com.svyaznoy.events.ProviderEvent;
 	import com.svyaznoy.gui.Paging;
 	import com.svyaznoy.modules.Voting;
 	import com.svyaznoy.utils.ContentParser;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	
@@ -17,8 +19,25 @@ package com.svyaznoy {
 		
 		private var provider:Provider = Provider.getInstance();
 		private var helper:Helper = Helper.getInstance();
+		private var popupsController:PopupsController;
+		
+		/**
+		 * 
+		 */
 		
 		public function Test() {
+			addEventListener( Event.ADDED_TO_STAGE, init );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function init( event:Event ):void {
+			removeEventListener( Event.ADDED_TO_STAGE, init );
+			
+			
 			//Helper
 			helper.isDebug = ( loaderInfo.url.indexOf( "http" ) !== 0 );
 			ContentLoader.context = helper.loaderContext;
@@ -27,6 +46,10 @@ package com.svyaznoy {
 			
 			//provider.getRandomSurveys();
 			//provider.addEventListener( ProviderEvent.ON_RANDOM_SURVEYS, onSurveys );
+			
+			// PopupsController
+			popupsController = PopupsController.getInstance();
+			popupsController.init( stage, 0x2b2927, .85 );
 			
 			var dataMulty:Array = [
             {
@@ -45,14 +68,14 @@ package com.svyaznoy {
                     "Фонарик",
                     "Сухофрукты",
                     "Топор",
-                    "Гранатомёт"/*,
+                    "Гранатомёт",
                     "Санки",
                     "Коржик",
                     "Яйцеклетку",
                     "Слюни",
                     "Батон",
                     "Девок",
-                    "Водку"*/
+                    "Водку"
                 ],
                 "is_answered": true
 			}];
@@ -79,11 +102,41 @@ package com.svyaznoy {
                 ],
                 "is_answered": true
             }
-        ];
+			];
 			
-			var event:ProviderEvent = new ProviderEvent( ProviderEvent.ON_RANDOM_SURVEYS );
-			event.data = dataMulty;
-			onSurveys( event );
+			var dataSingle2:Array = [
+            {
+                "id": "4",
+                "title": "Слушай, а… Сколько сейчас времени-то, не знаешь? Так, примерно, можешь почувствовать?",
+                "options": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10",
+                "allow_multiple": "1",
+                "own_answer": "1",
+                "vote_required": "0",
+                "secured": "0",
+                "status": "1",
+                "created_at": "2013-08-28 12:48:08",
+                "updated_at": "2013-08-28 12:51:35",
+                "options_array": [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "9",
+                    "10"
+                ],
+                "is_answered": false
+            }
+			];
+			
+			var e:ProviderEvent = new ProviderEvent( ProviderEvent.ON_RANDOM_SURVEYS );
+			e.data = dataSingle2;
+			onSurveys( e );
+			
+			
 			
 		}
 		

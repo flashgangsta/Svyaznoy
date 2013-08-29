@@ -19,7 +19,7 @@ package com.flashgangsta.utils {
 	
 	public class PopupsController extends EventDispatcher {
 		
-		static public var instance:PopupsController;
+		static private var instance:PopupsController;
 		
 		private var stage:Stage;
 		private var blockRectColor:uint;

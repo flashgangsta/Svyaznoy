@@ -18,6 +18,8 @@ package com.svyaznoy {
 		public var isModal:Boolean = false;
 		private var closeButton:Button;
 		
+		protected var background:DisplayObject;
+		
 		
 		/**
 		 * 
@@ -26,6 +28,7 @@ package com.svyaznoy {
 		public function Popup() {
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			closeButton = getChildByName( "closeButton_mc" ) as Button;
+			background = getChildAt( 0 );
 			if ( closeButton ) {
 				closeButton.addEventListener( MouseEvent.CLICK, onCloseButtonClicked );
 			}
@@ -53,7 +56,7 @@ package com.svyaznoy {
 				closeButton.removeEventListener( MouseEvent.CLICK, onCloseButtonClicked );
 			}
 			
-			stage.removeEventListener( KeyboardEvent.KEY_DOWN, onKeyDown );
+			if( stage ) stage.removeEventListener( KeyboardEvent.KEY_DOWN, onKeyDown );
 		}
 		
 		/**

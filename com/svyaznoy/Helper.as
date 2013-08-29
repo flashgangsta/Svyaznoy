@@ -10,7 +10,6 @@ package com.svyaznoy {
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
 	 */
 	public class Helper {
-		
 		private static var instance:Helper;
 		
 		private var _loaderContext:LoaderContext = null; 
