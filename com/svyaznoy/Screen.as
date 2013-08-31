@@ -38,7 +38,7 @@ package com.svyaznoy {
 		 */
 		
 		protected function onData( event:ProviderEvent ):void {
-			this.data = event.data;
+			data = event.data;
 			removePreloader();
 		}
 		

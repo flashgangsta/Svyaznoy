@@ -40,7 +40,7 @@ package com.svyaznoy.gui {
 			
 			label.autoSize = TextFieldAutoSize.LEFT;
 			
-			this.message = message + "...";
+			this.message = message;
 			
 			timer.addEventListener( TimerEvent.TIMER, onTimer );
 			timer.start();
@@ -77,9 +77,20 @@ package com.svyaznoy.gui {
 		public function set message( value:String ):void {
 			if ( value !== messageText ) {
 				messageText = value;
-				label.text = value + "...";
+				dots = "";
+				setLabel( messageText + "..." );
 				updatePosition();
 			}
+			
+		}
+		
+		/**
+		 * 
+		 * @param	message
+		 */
+		
+		private function setLabel( message:String ):void {
+			label.text = message;
 		}
 		
 		/**
@@ -113,7 +124,7 @@ package com.svyaznoy.gui {
 				} else {
 					dots += ".";
 				}
-				label.text = messageText + dots;
+				setLabel( messageText + dots );
 			}
 		}
 		

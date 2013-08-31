@@ -61,6 +61,15 @@ package com.svyaznoy {
 		
 		/**
 		 * 
+		 */
+		
+		public function close():void {
+			if ( !parent ) return;
+			PopupsController.getInstance().hidePopup();
+		}
+		
+		/**
+		 * 
 		 * @param	event
 		 */
 		
@@ -86,7 +95,7 @@ package com.svyaznoy {
 		 */
 		
 		private function onCloseButtonClicked( event:MouseEvent ):void {
-			PopupsController.getInstance().hidePopup();
+			close();
 		}
 		
 	}

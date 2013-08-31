@@ -31,6 +31,8 @@ package com.svyaznoy {
 			
 			ColorChanger.setColorByIndex( progressbar.getChildAt( 0 ), colorIndex );
 			
+			progressbar.width = 0;
+			
 			if ( votes ) {
 				calculateObject.votesTempValue = 0;
 				Tweener.addTween( progressbar, { scaleX: votes / totalVotes, time: 1, transition: "easeInOutCubic", onComplete: onComplete } );
@@ -42,6 +44,10 @@ package com.svyaznoy {
 			
 		}
 		
+		/**
+		 * 
+		 */
+		
 		private function onComplete():void {
 			if ( progressbar.width > resultLabel.width ) {
 				resultLabel.alpha = 0;
@@ -50,9 +56,17 @@ package com.svyaznoy {
 			}
 		}
 		
+		/**
+		 * 
+		 */
+		
 		private function onTweenUpdate():void {
 			resultLabel.text = Math.round( calculateObject.votesTempValue ).toString();
 		}
+		
+		/**
+		 * 
+		 */
 		
 		public function dispose():void {
 			

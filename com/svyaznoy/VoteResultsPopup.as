@@ -74,7 +74,7 @@ package com.svyaznoy {
 		 */
 		
 		private function onCancelClicked( event:MouseEvent ):void {
-			
+			close();
 		}
 		
 	}

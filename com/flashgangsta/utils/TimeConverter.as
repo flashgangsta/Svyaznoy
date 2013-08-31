@@ -3,7 +3,7 @@
  * Utility to convert and display seconds in time format.
  *
  * @author		Sergei Krivtsov
- * @version		1.00.02
+ * @version		1.00.03
  * @e-mail		flashgangsta@gmail.com
  *
 */

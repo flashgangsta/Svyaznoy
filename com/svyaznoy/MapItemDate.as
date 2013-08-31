@@ -10,13 +10,8 @@ package com.svyaznoy {
 	 */
 	public class MapItemDate extends Sprite {
 		
-		private const MOSCOW_TIMEZONE_OFFSET:Number = -240;
-		private const MILLISECONDS_MULTIPLER:Number = 60 * 1000;
 		private var label:TextField;
-		private var targetDateInMoscow:Date;
 		private var targetDateHere:Date;
-		private var thisTimezoneOffset:Number;
-		private var timeOffset:Number;
 		private var daysRemaining:int;
 		
 		/**
@@ -25,10 +20,7 @@ package com.svyaznoy {
 		 */
 		
 		public function MapItemDate( startDate:String ) {
-			targetDateInMoscow = DateParser.parse( startDate );
-			thisTimezoneOffset = targetDateInMoscow.timezoneOffset;
-			timeOffset = ( thisTimezoneOffset - MOSCOW_TIMEZONE_OFFSET ) * MILLISECONDS_MULTIPLER;
-			targetDateHere = new Date( targetDateInMoscow.time - timeOffset );
+			targetDateHere = DateParser.parseAndConcertToLocalTime( startDate ); 
 			
 			label = getChildAt( 0 ) as TextField;
 			daysRemaining = calculateDaysRemaining();

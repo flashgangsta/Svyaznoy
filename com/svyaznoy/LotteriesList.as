@@ -64,6 +64,8 @@ package com.svyaznoy {
 			}
 			
 			moreButton.y = MappingManager.getBottom( iconsContainer, this ) + MARGIN;
+			
+			//TODO: сделать дозагрузку лоттерей по нажатию кнопки
 		}
 		
 		/**
