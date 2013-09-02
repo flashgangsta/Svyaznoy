@@ -1,4 +1,5 @@
 package com.flashgangsta.ui {
+	import com.flashgangsta.utils.getChildByType;
 	import flash.display.Sprite;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -15,6 +16,7 @@ package com.flashgangsta.ui {
 		
 		public function Label() {
 			label = getChildByName( "label_txt" ) as TextField;
+			if ( !label ) label = getChildByType( this, TextField ) as TextField;
 			label.mouseEnabled = false;
 			label.mouseWheelEnabled = false;
 			label.autoSize = TextFieldAutoSize.LEFT;

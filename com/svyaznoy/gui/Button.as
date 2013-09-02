@@ -17,6 +17,7 @@ package com.svyaznoy.gui {
 		private var labelMessage:String;
 		private var hit:Sprite;
 		private var _disabledAlpha:Number = .5;
+		protected var isEased:Boolean = false;
 		
 		/**
 		 * 
@@ -33,7 +34,11 @@ package com.svyaznoy.gui {
 				}
 			}
 			
-			ButtonManager.addButton( this );
+			if ( isEased ) {
+				ButtonManager.addEasedButton( this );
+			} else {
+				ButtonManager.addButton( this );
+			}
 		}
 		
 		/**

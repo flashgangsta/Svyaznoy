@@ -4,6 +4,8 @@ package com.svyaznoy.gui {
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.TimerEvent;
+	import flash.filters.BitmapFilterQuality;
+	import flash.filters.GlowFilter;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -26,13 +28,15 @@ package com.svyaznoy.gui {
 		private var dots:String = "";
 		private var currentDotsDelay:Number = 0;
 		private var background:DisplayObject;
+		private var useDots:Boolean;
 		
 		/**
 		 * 
 		 * @param	message
 		 */
 		
-		public function MiniPreloader( message:String = "Загрузка" ) {
+		public function MiniPreloader( message:String = "Загрузка", useDots:Boolean = true ) {
+			this.useDots = useDots;
 			animation = getChildByName( "animation_mc" ) as MovieClip;
 			label = getChildByName( "label_txt" ) as TextField;
 			background = getChildAt( 0 );
@@ -42,8 +46,10 @@ package com.svyaznoy.gui {
 			
 			this.message = message;
 			
-			timer.addEventListener( TimerEvent.TIMER, onTimer );
-			timer.start();
+			if( useDots ) {
+				timer.addEventListener( TimerEvent.TIMER, onTimer );
+				timer.start();
+			}
 		}
 		
 		/**
@@ -70,6 +76,10 @@ package com.svyaznoy.gui {
 			}
 		}
 		
+		public function addGlow( color:uint = 0xFFFFFF ):void {
+			filters = [ new GlowFilter( color, 1, 3, 3, 4, BitmapFilterQuality.HIGH ) ];
+		}
+		
 		/**
 		 * 
 		 */
@@ -78,10 +88,20 @@ package com.svyaznoy.gui {
 			if ( value !== messageText ) {
 				messageText = value;
 				dots = "";
-				setLabel( messageText + "..." );
+				setLabel( messageText + (useDots ? "..." : "") );
 				updatePosition();
 			}
 			
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function set textColor( value:uint ):void {
+			var textFormat:TextFormat = label.getTextFormat();
+			textFormat.color = value;
+			label.setTextFormat( textFormat );
 		}
 		
 		/**

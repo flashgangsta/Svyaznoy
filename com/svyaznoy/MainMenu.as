@@ -76,6 +76,14 @@ package com.svyaznoy {
 		
 		/**
 		 * 
+		 */
+		
+		public function resetSelection():void {
+			ButtonManager.resetSelectionOnGroup( buttons[ 0 ] );
+		}
+		
+		/**
+		 * 
 		 * @param	target
 		 */
 		

@@ -54,6 +54,7 @@
     <element path="lib\tweener.swc" />
     <element path="lib\tlfRuntime.swc" />
     <element path="lib\textLayout.swc" />
+    <element path="lib\blooddy_crypto.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>
