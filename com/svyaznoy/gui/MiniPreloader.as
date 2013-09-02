@@ -77,7 +77,7 @@ package com.svyaznoy.gui {
 		}
 		
 		public function addGlow( color:uint = 0xFFFFFF ):void {
-			filters = [ new GlowFilter( color, 1, 3, 3, 4, BitmapFilterQuality.HIGH ) ];
+			filters = [ new GlowFilter( color, 1, 4, 4, 4, BitmapFilterQuality.HIGH ) ];
 		}
 		
 		/**

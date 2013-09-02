@@ -3,6 +3,7 @@ package com.svyaznoy {
 	import com.flashgangsta.managers.ButtonManager;
 	import com.flashgangsta.managers.MappingManager;
 	import com.flashgangsta.ui.Scrollbar;
+	import com.flashgangsta.utils.PopupsController;
 	import com.svyaznoy.events.ProviderEvent;
 	import com.svyaznoy.gui.Button;
 	import com.svyaznoy.gui.InputTextfield;
@@ -28,6 +29,7 @@ package com.svyaznoy {
 		private var departuresMask:Sprite;
 		private var departuresButtonsList:Array = [];
 		private var preloader:MiniPreloader;
+		private var uploadedPhotoData:Object;
 		
 		/**
 		 * 
@@ -101,7 +103,7 @@ package com.svyaznoy {
 				}
 			}
 			
-			ButtonManager.addButtonGroup( departuresButtonsList, true, departuresButtonsList[ 0 ], false, null, onDepartureSelected );
+			ButtonManager.addButtonGroup( departuresButtonsList, true, departuresButtonsList[ 0 ] );
 			
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStageAfterDeparturesSet );
 		}
@@ -124,6 +126,14 @@ package com.svyaznoy {
 		
 		/**
 		 * 
+		 */
+		
+		public function getUploadedPhotoData():Object {
+			return uploadedPhotoData;
+		}
+		
+		/**
+		 * 
 		 * @param	event
 		 */
 		
@@ -131,15 +141,6 @@ package com.svyaznoy {
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStageAfterDeparturesSet );
 			Scrollbar.setVertical( departuresContainer, departuresMask.getBounds( this ), scrollbar.getUpBtn(), scrollbar.getDownBtn(), scrollbar.getCarret(), scrollbar.getBounds( scrollbar ), departuresContainer );
 			scrollbar.visible = Scrollbar.isNeeded( scrollbar.getCarret() );
-		}
-		
-		/**
-		 * 
-		 * @param	target
-		 */
-		
-		private function onDepartureSelected( target:DepartureListButton ):void {
-			trace( target.id );
 		}
 		
 		/**
@@ -159,7 +160,7 @@ package com.svyaznoy {
 				scrollbar.mouseEnabled = scrollbar.mouseChildren = false;
 				scrollbar.alpha = submitButton.alpha;
 				if ( !preloader ) {
-					preloader = new MiniPreloader( "Загружено 1%", false );
+					preloader = new MiniPreloader( "Загрузка фото", false );
 					preloader.textColor = 0x232323;
 					preloader.addGlow();
 					MappingManager.setAlign( preloader, imageArea.getBounds( this ) );
@@ -175,8 +176,18 @@ package com.svyaznoy {
 			}
 		}
 		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
 		private function onPhotoUploaded( event:ProviderEvent ):void {
-			trace( "uploaded dispatched" );
+			var popupsController:PopupsController = PopupsController.getInstance();
+			if ( popupsController.getCurrentPopup() === this ) {
+				popupsController.hidePopup();
+			}
+			uploadedPhotoData = event.data;
+			dispatchEvent( new Event( Event.COMPLETE ) );
 		}
 		
 		/**
