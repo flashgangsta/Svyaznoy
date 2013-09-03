@@ -106,8 +106,10 @@ package com.svyaznoy {
 		private function onLoaded( event:Event ):void {
 			bitmap = loader.getContent() as Bitmap;
 			bitmap.smoothing = true;
-			MappingManager.setScaleOnlyReduce( bitmap, avatarArea.width, avatarArea.height );
-			MappingManager.setAlign( bitmap, avatarArea.getBounds( this ) );
+			MappingManager.setScaleFillArea( bitmap, avatarArea.getBounds( this ) );
+			bitmap.x = MappingManager.getCentricPoint( avatarArea.width, bitmap.width );
+			//MappingManager.setScaleOnlyReduce( bitmap, avatarArea.width, avatarArea.height );
+			//MappingManager.setAlign( bitmap, avatarArea.getBounds( this ) );
 			bitmap.mask = avatarArea;
 			addChild( bitmap );
 			preloader.hide();

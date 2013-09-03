@@ -14,6 +14,10 @@ package com.flashgangsta.ui {
 		
 		private var label:TextField;
 		
+		/**
+		 * 
+		 */
+		
 		public function Label() {
 			label = getChildByName( "label_txt" ) as TextField;
 			if ( !label ) label = getChildByType( this, TextField ) as TextField;
@@ -31,8 +35,12 @@ package com.flashgangsta.ui {
 			return label.text;
 		}
 		
-		public function set text(value:String):void {
+		public function set text( value:String ):void {
 			label.text = value;
+		}
+		
+		public function get textField():TextField {
+			return label;
 		}
 		
 		/**

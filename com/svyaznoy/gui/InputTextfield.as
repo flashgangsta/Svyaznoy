@@ -53,6 +53,10 @@ package com.svyaznoy.gui {
 		
 		public function set text( value:String ):void {
 			label.text = value;
+			if ( !label.length && titleLabel.length ) {
+				titleLabel.visible = true;
+				label.textFlow.flowComposer.updateAllControllers();
+			}
 		}
 		
 		/**
@@ -105,8 +109,6 @@ package com.svyaznoy.gui {
 		
 		public function dispose():void {
 			if ( !label || !_autoDispose ) return;
-			trace( "dispose input" );
-			
 			if ( label.hasEventListener( Event.CHANGE ) ) {
 				label.removeEventListener( Event.CHANGE, onChangedAfterError );
 			}

@@ -2,6 +2,7 @@ package com.svyaznoy {
 	import caurina.transitions.Tweener;
 	import com.flashgangsta.managers.MappingManager;
 	import com.flashgangsta.net.ContentLoader;
+	import com.svyaznoy.events.PreviewEvent;
 	import flash.display.Bitmap;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
@@ -199,6 +200,14 @@ package com.svyaznoy {
 		 * 
 		 */
 		
+		public function getBitmap():Bitmap {
+			return bitmap;
+		}
+		
+		/**
+		 * 
+		 */
+		
 		private function setPositions():void {
 			if ( titleLabel.visible ) {
 				titleLabel.y = MappingManager.getBottom( background, this ) + BACKGROUND_BOTTOM_MARGIN;
@@ -234,10 +243,12 @@ package com.svyaznoy {
 			bitmap = loader.getContent() as Bitmap;
 			bitmap.smoothing = true;
 			MappingManager.setScaleFillArea( bitmap, background.getBounds( this ) );
+			bitmap.x = MappingManager.getCentricPoint( background.width, bitmap.width );
 			bitmap.mask = background;
 			addChildAt( bitmap, 0 );
 			removePreloader();
 			removeListeners();
+			dispatchEvent( new PreviewEvent( PreviewEvent.ON_PREVIEW_LOADED, true ) );
 		}
 		
 		/**
