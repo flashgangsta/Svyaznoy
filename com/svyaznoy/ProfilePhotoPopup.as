@@ -1,4 +1,5 @@
 package com.svyaznoy {
+	import com.flashgangsta.events.PopupsControllerEvent;
 	import com.flashgangsta.managers.ButtonManager;
 	import com.flashgangsta.managers.MappingManager;
 	import com.flashgangsta.ui.Scrollbar;
@@ -8,6 +9,7 @@ package com.svyaznoy {
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.utils.Dictionary;
 	/**
 	 * ...
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
@@ -21,8 +23,10 @@ package com.svyaznoy {
 		protected var departuresContainer:MovieClip;
 		protected var departuresMask:Sprite;
 		protected var departuresButtonsList:Array = [];
+		protected var departuresButtonsByID:Dictionary = new Dictionary();
 		protected var _enabled:Boolean;
 		protected var preloader:MiniPreloader;
+		protected var provider:Provider = Provider.getInstance();
 		
 		/**
 		 * 
@@ -51,6 +55,7 @@ package com.svyaznoy {
 			
 			var year:String = "";
 			var data:Object;
+			var departureID:String;
 			var yearLabel:DepartureListYearLabel;
 			var button:DepartureListButton;
 			
@@ -58,6 +63,7 @@ package com.svyaznoy {
 			
 			for ( var i:int = 0; i < list.length; i++ ) {
 				data = list[ i ];
+				departureID = data.id;
 				if( int( data.status ) ) {
 					if ( year !== data.year ) {
 						year = data.year;
@@ -67,17 +73,19 @@ package com.svyaznoy {
 						departuresContainer.addChild( yearLabel );
 					}
 					button = new DepartureListButton();
-					button.id = data.id;
+					button.id = departureID;
 					button.label = data.title;
 					button.y = departuresContainer.height;
 					departuresContainer.addChild( button );
 					departuresButtonsList.push( button );
+					departuresButtonsByID[ departureID ] = button;
 				}
 			}
 			
-			ButtonManager.addButtonGroup( departuresButtonsList, true, departuresButtonsList[ 0 ] );
+			ButtonManager.addButtonGroup( departuresButtonsList, true, departuresButtonsList[ 0 ], false, ButtonManager.STATE_PRESSED );
 			
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStageAfterDeparturesSet );
+			addEventListener( PopupsControllerEvent.CLOSED, onPopupClosed );
 		}
 		
 		/**
@@ -124,13 +132,62 @@ package com.svyaznoy {
 		 * 
 		 */
 		
-		private function removeBitmap():void {
+		protected function removeBitmap():void {
 			if ( !bitmap ) return;
 			bitmap.bitmapData.dispose();
-			if( bitmap.loaderInfo && bitmap.loaderInfo.loader ) bitmap.loaderInfo.loader.unloadAndStop();
+			if ( bitmap.loaderInfo && bitmap.loaderInfo.loader ) {
+				bitmap.loaderInfo.loader.unloadAndStop();
+			}
 			bitmap.mask = null;
 			removeChild( bitmap );
 			bitmap = null;
+		}
+		
+		/**
+		 * 
+		 * @return
+		 */
+		
+		protected function getSelectedDeparture():String {
+			var selectedDepartureButton:DepartureListButton = ButtonManager.getSelectedButtonOfGroup( departuresButtonsList[ 0 ] ) as DepartureListButton;
+			return selectedDepartureButton.id;
+		}
+		
+		/**
+		 * 
+		 */
+		
+		protected function addPreloader():void {
+			if ( !preloader ) {
+				preloader = new MiniPreloader( "Загрузка фото", false );
+				preloader.textColor = 0x232323;
+				preloader.addGlow();
+				MappingManager.setAlign( preloader, imageArea.getBounds( this ) );
+			} else {
+				preloader.visible = true;
+				preloader.resume()
+			}
+			
+			addChild( preloader );
+		}
+		
+		/**
+		 * 
+		 */
+		
+		protected function removePreloader():void {
+			if ( !preloader ) return;
+			preloader.stop();
+			preloader.visible = false;
+		}
+		
+		/**
+		 * 
+		 * @param	data
+		 */
+		
+		protected function selectDepartureByID( departureID:String ):void {
+			ButtonManager.setSelectionOnGroup( departuresButtonsByID[ departureID ] );
 		}
 		
 		/**
@@ -142,6 +199,15 @@ package com.svyaznoy {
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStageAfterDeparturesSet );
 			Scrollbar.setVertical( departuresContainer, departuresMask.getBounds( this ), scrollbar.getUpBtn(), scrollbar.getDownBtn(), scrollbar.getCarret(), scrollbar.getBounds( scrollbar ), departuresContainer );
 			scrollbar.visible = Scrollbar.isNeeded( scrollbar.getCarret() );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onPopupClosed( event:PopupsControllerEvent ):void {
+			removePreloader();
 		}
 		
 	}

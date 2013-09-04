@@ -1,6 +1,5 @@
 package com.svyaznoy {
 	import by.blooddy.crypto.image.JPEGEncoder;
-	import com.flashgangsta.managers.ButtonManager;
 	import com.flashgangsta.managers.MappingManager;
 	import com.svyaznoy.events.ProviderEvent;
 	import com.svyaznoy.gui.Button;
@@ -75,21 +74,13 @@ package com.svyaznoy {
 			if ( !titleInput.length ) {
 				titleInput.showError();
 			} else {
-				enabled = false;
-				if ( !preloader ) {
-					preloader = new MiniPreloader( "Загрузка фото", false );
-					preloader.textColor = 0x232323;
-					preloader.addGlow();
-					MappingManager.setAlign( preloader, imageArea.getBounds( this ) );
-					addChild( preloader );
-				}
-				
-				var provider:Provider = Provider.getInstance();
 				var photo:ByteArray = JPEGEncoder.encode( bitmap.bitmapData, 100 );
-				var selectedDepartureButton:DepartureListButton = ButtonManager.getSelectedButtonOfGroup( departuresButtonsList[ 0 ] ) as DepartureListButton;
+				
+				enabled = false;
+				addPreloader();
 				
 				provider.addEventListener( ProviderEvent.ON_PHOTO_UPLOADED, onPhotoUploaded );
-				provider.uploadPhoto( photo, titleInput.text, selectedDepartureButton.id );
+				provider.uploadPhoto( photo, titleInput.text, getSelectedDeparture() );
 			}
 		}
 		

@@ -21,6 +21,7 @@ package com.svyaznoy.gui {
 		private var queue:Queue;
 		private var titleLabel:TextField;
 		private var _autoDispose:Boolean = true;
+		private var value:String = "";
 		
 		/**
 		 * 
@@ -35,7 +36,7 @@ package com.svyaznoy.gui {
 			addEventListener( FocusEvent.FOCUS_IN, onFocusIn );
 			addEventListener( FocusEvent.FOCUS_OUT, onFocusOut );
 			
-			title = "";
+			title = value;
 			titleLabel.mouseEnabled = titleLabel.mouseWheelEnabled = false;
 		}
 		
@@ -52,11 +53,15 @@ package com.svyaznoy.gui {
 		 */
 		
 		public function set text( value:String ):void {
+			if ( text === value ) return;
+			this.value = value;
 			label.text = value;
 			if ( !label.length && titleLabel.length ) {
 				titleLabel.visible = true;
-				label.textFlow.flowComposer.updateAllControllers();
+			} else if( titleLabel.visible && value.length ) {
+				titleLabel.visible = false;
 			}
+			label.textFlow.flowComposer.updateAllControllers();
 		}
 		
 		/**
@@ -155,7 +160,7 @@ package com.svyaznoy.gui {
 		
 		private function onAddedToStage( event:Event ):void {
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
-			text = "";
+			text = value;
 			if ( queue ) {
 				queue.applyAll();
 				queue = null;

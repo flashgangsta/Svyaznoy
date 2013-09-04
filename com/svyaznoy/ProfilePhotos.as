@@ -1,118 +1,1 @@
-package com.svyaznoy {
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.utils.Dictionary;
-	
-	/**
-	 * ...
-	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
-	 */
-	public class ProfilePhotos extends Sprite {
-		
-		private var photosDataByDeparture:Dictionary;
-		private var departuresDatasList:Array;
-		private var photosDataList:Array;
-		
-		public function ProfilePhotos() {
-			
-		}
-		
-		/**
-		 * 
-		 * @param	photosDataList
-		 */
-		
-		public function init( photosDataList:Array, departuresDatasList:Array ):void {
-			var data:Object;
-			var departureID:String;
-			
-			this.photosDataList = photosDataList;
-			this.departuresDatasList = departuresDatasList;
-			
-			// Сортируем фотографии по выездам
-			photosDataByDeparture = new Dictionary();
-			
-			for ( var i:int = 0; i < photosDataList.length; i++ ) {
-				data = photosDataList[ i ];
-				departureID = data.departure_id;
-				data.departureName = getDepartureNameByID( departureID );
-				if ( !photosDataByDeparture[ departureID ] ) {
-					photosDataByDeparture[ departureID ] = new Vector.<Object>();
-				}
-				photosDataByDeparture[ departureID ].push( data );
-			}
-			
-			showPhotos();
-			
-		}
-		
-		/**
-		 * 
-		 * @param	id
-		 */
-		
-		private function getDepartureNameByID( id:String ):String {
-			var result:String = id;
-			if ( departuresDatasList ) {
-				for each( var data:Object in departuresDatasList ) {
-					if ( data.id === id ) {
-						result = data.title;
-						break;
-					}
-				}
-			}
-			return result;
-		}
-		
-		/**
-		 * 
-		 * @param	departuresDatasList
-		 */
-		
-		public function setDepartures( departuresDatasList:Array ):void {
-			var departureBar:ProfilePhotosDepartureBar; 
-			var data:Object;
-			var departureID:String;
-			
-			this.departuresDatasList = departuresDatasList;
-			
-			if ( photosDataByDeparture ) {
-				for ( var i:int = 0; i < photosDataList.length; i++ ) {
-					data = photosDataList[ i ];
-					departureID = data.departure_id;
-					data.departureName = getDepartureNameByID( departureID );
-				}
-				
-				for ( i = 0; i < numChildren; i++ ) {
-					departureBar = getChildAt( i ) as ProfilePhotosDepartureBar;
-					departureBar.setLabel();
-					departureBar.visible = true;
-				}
-				dispatchEvent( new Event( Event.RESIZE ) );
-			}
-		}
-		
-		/**
-		 * 
-		 */
-		
-		private function showPhotos():void {
-			for each( var departureList:Vector.<Object> in photosDataByDeparture ) {
-				var departureBar:ProfilePhotosDepartureBar = new ProfilePhotosDepartureBar( departureList );
-				if( height ) {
-					departureBar.y = height + 30;
-				}
-				departureBar.visible = Boolean( departuresDatasList );
-				addChild( departureBar );
-			}
-			
-			if ( departuresDatasList ) {
-				dispatchEvent( new Event( Event.RESIZE ) );
-			}
-		}
-		
-		
-		
-	}
-
-}
+package com.svyaznoy {	import flash.display.Sprite;	import flash.events.Event;	import flash.utils.Dictionary;		/**	 * ...	 * @author Sergey Krivtsov (flashgangsta@gmail.com)	 */	public class ProfilePhotos extends Sprite {				private const MARGIN:int = 30;				/// Список списков данных о фотографиях отсортированный по идентификатору выезда		private var photosDataByDepartureID:Dictionary = new Dictionary();		/// Список блоков с выездами отсортированный по идентификатору выезда		private var departuresBarsByID:Dictionary = new Dictionary();		/// Список данных о всех существующих выездах		private var departuresDatasList:Array;		/// Список данных о всех существующих у пользователя фотографиях		private var photosDataList:Array;				public function ProfilePhotos() {					}				/**		 * 		 * @param	photosDataList		 */				public function init( photosDataList:Array, departuresDatasList:Array ):void {			var data:Object;			var departureID:String;						this.photosDataList = photosDataList;			this.departuresDatasList = departuresDatasList;						// Сортируем фотографии по выездам			for ( var i:int = 0; i < photosDataList.length; i++ ) {				data = photosDataList[ i ];				departureID = data.departure_id;				data.departureName = getDepartureNameByID( departureID );				if ( !photosDataByDepartureID[ departureID ] ) {					photosDataByDepartureID[ departureID ] = new Vector.<Object>();				}				photosDataByDepartureID[ departureID ].push( data );			}						showPhotos();		}				/**		 * 		 * @param	departuresDatasList		 */				public function setDepartures( departuresDatasList:Array ):void {			var departureBar:ProfilePhotosDepartureBar; 			var data:Object;			var departureID:String;						this.departuresDatasList = departuresDatasList;						if ( photosDataByDepartureID ) {				for ( var i:int = 0; i < photosDataList.length; i++ ) {					data = photosDataList[ i ];					departureID = data.departure_id;					data.departureName = getDepartureNameByID( departureID );				}								for ( i = 0; i < numChildren; i++ ) {					departureBar = getChildAt( i ) as ProfilePhotosDepartureBar;					departureBar.setLabel();					departureBar.visible = true;				}				dispatchEvent( new Event( Event.RESIZE ) );			}		}				/**		 * Перемещает фото из одного выезда в другой		 * @param	editedPhotoPreview		 */				public function changePhotoDeparture( editedPhotoPreview:PreviewDepartureImage ):void {			var data:Object = editedPhotoPreview.getData();			var newDepartureID:String = data.departure_id;			var newDepartureName:String = getDepartureNameByID( newDepartureID );			var newDepartureBar:ProfilePhotosDepartureBar =  departuresBarsByID[ newDepartureID ];			var newPhotosDataList:Vector.<Object> = photosDataByDepartureID[ newDepartureID ];						var oldDepartureBar:ProfilePhotosDepartureBar = getBarByPhoto( editedPhotoPreview );			var oldDepartureID:String = oldDepartureBar.getDepartureID();			var oldPhotosDataList:Vector.<Object> = photosDataByDepartureID[ oldDepartureID ];						trace( "move photo from", data.departureName, "to", newDepartureName );						// меняем старое имя выезда на новое			data.departureName = newDepartureName;						// удаляем данные о фото из списка с предыдущим выездом			trace( oldPhotosDataList.length );			oldPhotosDataList.splice( oldPhotosDataList.indexOf( data ), 1 );			trace( oldPhotosDataList.length );						// удаляем фото из раздела с предыдущим выездом			removePhotoFromBar( editedPhotoPreview );						// проверяем существует ли раздел с новым выездом			if ( !newDepartureBar ) {				// Если раздела не существует, создаем его				trace( "newDepartureBar" );				newPhotosDataList = new Vector.<Object>();				newPhotosDataList.push( data );				photosDataByDepartureID[ newDepartureID ] = newPhotosDataList;				newDepartureBar = createDepartureBar( newPhotosDataList );				addChild( newDepartureBar );			} else {				trace( "oldDepartureBar" );				newPhotosDataList.push( data );				newDepartureBar.movePhoto( editedPhotoPreview );			}						alignBars();					}				/**		 * Позиционирует блоки с выездами		 */				private function alignBars():void {			trace( "alignBars()" );			var bar:ProfilePhotosDepartureBar;			var lastBarY:int = 0;			for ( var i:int = 0; i < numChildren; i++ ) {				bar = getChildAt( i ) as ProfilePhotosDepartureBar;				bar.y = lastBarY;				trace( "	bar.height =", bar.height );				lastBarY += bar.height + MARGIN;			}			dispatchEvent( new Event( Event.RESIZE ) );		}				/**		 * 		 */				private function removePhotoFromBar( photo:PreviewDepartureImage ):void {			var bar:ProfilePhotosDepartureBar = getBarByPhoto( photo );			bar.removePhoto( photo );			if( !bar.numPhotos ) {				//Если список пуст, удаляем его за ненаобностью				removeBar( bar );			}		}				/**		 * 		 * @param	photo		 * @return		 */				private function getBarByPhoto( photo:PreviewDepartureImage ):ProfilePhotosDepartureBar {			return photo.parent.parent as ProfilePhotosDepartureBar;		}				/**		 * 		 * @param	bar		 */				private function removeBar( bar:ProfilePhotosDepartureBar ):void {			var barDepartureID:String = bar.getDepartureID();			delete photosDataByDepartureID[ barDepartureID ];			delete departuresBarsByID[ barDepartureID ];			bar.dispose();			removeChild( bar );			bar = null;		}				/**		 * 		 * @param	id		 */				private function getDepartureNameByID( id:String ):String {			var result:String = id;			if ( departuresDatasList ) {				for each( var data:Object in departuresDatasList ) {					if ( data.id === id ) {						result = data.title;						break;					}				}			}			return result;		}				/**		 * 		 */				private function showPhotos():void {			for each( var departureList:Vector.<Object> in photosDataByDepartureID ) {				var departureBar:ProfilePhotosDepartureBar = createDepartureBar( departureList );				addChild( departureBar );			}						trace( "showPhotos" );			trace( hasEventListener( Event.ADDED_TO_STAGE ) );						if ( !hasEventListener( Event.ADDED_TO_STAGE ) ) {				trace( "addEventListener(ADDED_TO_STAGE)" );				addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );			}						if ( stage ) {				trace( "stage" );				alignBars();			}		}				/**		 * 		 * @param	event		 */				private function onAddedToStage( event:Event ):void {			trace( "onProfilePhotosAddedToStage" );			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );			alignBars();		}				/**		 * 		 * @return		 */				private function createDepartureBar( photosDataList:Vector.<Object> ):ProfilePhotosDepartureBar {			var bar:ProfilePhotosDepartureBar = new ProfilePhotosDepartureBar( photosDataList );			departuresBarsByID[ bar.getDepartureID() ] = bar;			bar.visible = Boolean( departuresDatasList );			return bar;		}			}}

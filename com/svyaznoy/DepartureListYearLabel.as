@@ -9,7 +9,7 @@ package com.svyaznoy {
 	public class DepartureListYearLabel extends Label {
 		
 		public function DepartureListYearLabel() {
-			trace( getChildAt( 0 ) );
+			
 		}
 		
 	}

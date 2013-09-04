@@ -11,9 +11,9 @@ package com.svyaznoy {
 		
 		public function PreviewDepartureImage( data:Object ) {
 			super.data = data;
-			previewImage.loadImage( data.photo_with_path );
+			previewImage.loadImage( data.thumbnail_medium_with_path );
 			previewImage.title = data.anonce;
-			
+			updateAnonce();
 			buttonMode = true;
 			
 			addEventListener( MouseEvent.CLICK, onMouseClicked );
@@ -23,13 +23,36 @@ package com.svyaznoy {
 		 * 
 		 */
 		
+		override public function get height():Number {
+			return super.height;
+		}
+		
+		/**
+		 * 
+		 */
+		
 		override public function dispose():void {
+			trace( "PreviewDepartureImage.dispose()" );
 			super.dispose();
 			removeEventListener( MouseEvent.CLICK, onMouseClicked );
 		}
 		
+		/**
+		 * 
+		 * @return
+		 */
+		
 		public function getBitmap():Bitmap {
 			return previewImage.getBitmap();
+		}
+		
+		/**
+		 * Обновляет подпись под фото
+		 * @param	anonce текст подписи, если не передать, текст будет взят из data.anonce объекта
+		 */
+		
+		public function updateAnonce( anonce:String = null ):void {
+			previewImage.title = anonce ? anonce : data.anonce;
 		}
 		
 		/**

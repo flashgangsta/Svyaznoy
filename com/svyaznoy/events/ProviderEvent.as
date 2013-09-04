@@ -37,6 +37,8 @@ package com.svyaznoy.events {
 		static public const ON_ANSWERS:String = "onAnswers";
 		static public const ON_OWNER_ALBUMS:String = "onOwnerAlbums";
 		static public const ON_PHOTO_UPLOADED:String = "onPhotoUploaded";
+		static public const ON_PHOTO_UPDATED:String = "onPhotoUpdated";
+		static public const ON_PHOTO_DELETED:String = "onPhotoDeleted";
 		
 		public var data:Object;
 		

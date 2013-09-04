@@ -29,6 +29,7 @@ package com.svyaznoy.gui {
 		private var currentDotsDelay:Number = 0;
 		private var background:DisplayObject;
 		private var useDots:Boolean;
+		private var glow:GlowFilter = new GlowFilter( 0xFFFFFF, 1, 4, 4, 4, BitmapFilterQuality.HIGH );
 		
 		/**
 		 * 
@@ -71,13 +72,20 @@ package com.svyaznoy.gui {
 				timer.addEventListener( TimerEvent.TIMER, onTimer );
 			}
 			
-			if ( !timer.running ) {
+			animation.play();
+			
+			if ( !timer.running && !filters.length ) {
 				timer.start();
 			}
 		}
 		
+		/**
+		 * 
+		 * @param	color
+		 */
+		
 		public function addGlow( color:uint = 0xFFFFFF ):void {
-			filters = [ new GlowFilter( color, 1, 4, 4, 4, BitmapFilterQuality.HIGH ) ];
+			filters = [ glow ];
 		}
 		
 		/**
