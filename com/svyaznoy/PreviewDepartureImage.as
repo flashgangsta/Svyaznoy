@@ -23,14 +23,6 @@ package com.svyaznoy {
 		 * 
 		 */
 		
-		override public function get height():Number {
-			return super.height;
-		}
-		
-		/**
-		 * 
-		 */
-		
 		override public function dispose():void {
 			trace( "PreviewDepartureImage.dispose()" );
 			super.dispose();
@@ -53,6 +45,10 @@ package com.svyaznoy {
 		
 		public function updateAnonce( anonce:String = null ):void {
 			previewImage.title = anonce ? anonce : data.anonce;
+		}
+		
+		override public function get width():Number {
+			return previewImage.width;
 		}
 		
 		/**

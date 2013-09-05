@@ -141,6 +141,8 @@ package com.svyaznoy {
 		
 		private function onDeleteButtonClick( event:MouseEvent ):void {
 			provider.deletePhoto( photoPreview.getData().id );
+			dispatchEvent( new EditPhotoEvent( EditPhotoEvent.ON_PHOTO_DELETED ) );
+			close();
 		}
 		
 	}

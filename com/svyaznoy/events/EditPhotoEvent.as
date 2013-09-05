@@ -8,6 +8,7 @@ package com.svyaznoy.events {
 	public class EditPhotoEvent extends Event {
 		static public const ON_ANONCE_CHANGED:String = "onAnonceChanged";
 		static public const ON_DEPARTURE_CHANGED:String = "onDepartureChanged";
+		static public const ON_PHOTO_DELETED:String = "onPhotoDeleted";
 		
 		public function EditPhotoEvent( type:String, bubbles:Boolean = false, cancelable:Boolean = false ) { 
 			super( type, bubbles, cancelable );
