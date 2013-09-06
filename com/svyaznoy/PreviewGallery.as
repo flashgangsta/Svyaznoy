@@ -7,6 +7,7 @@ package com.svyaznoy {
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
 	 */
 	public dynamic class PreviewGallery extends PreviewItemWithImage {
+		private var _isPreviewEmployesPhotos:Boolean;
 		
 		/**
 		 * 
@@ -70,12 +71,29 @@ package com.svyaznoy {
 		
 		/**
 		 * 
+		 */
+		
+		public function get isPreviewEmployesPhotos():Boolean {
+			return _isPreviewEmployesPhotos;
+		}
+		
+		public function set isPreviewEmployesPhotos( value:Boolean ):void {
+			_isPreviewEmployesPhotos = value;
+		}
+		
+		/**
+		 * 
 		 * @param	event
 		 */
 		
 		private function onClicked( target:MouseEvent ):void {
 			if ( !data ) return;
-			var outputEvent:PreviewEvent = new PreviewEvent( PreviewEvent.ON_PHOTO_REPORT_CALLED );
+			var outputEvent:PreviewEvent;
+			if ( isPreviewEmployesPhotos ) {
+				outputEvent = new PreviewEvent( PreviewEvent.ON_EMPLOYES_PHOTOS_CALLED );
+			} else {
+				outputEvent = new PreviewEvent( PreviewEvent.ON_PHOTO_REPORT_CALLED );
+			}
 			outputEvent.previewData = getData();
 			Dispatcher.getInstance().dispatchEvent( outputEvent );
 		}

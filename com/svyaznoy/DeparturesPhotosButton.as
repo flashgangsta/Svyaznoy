@@ -2,6 +2,7 @@ package com.svyaznoy {
 	import com.svyaznoy.gui.Button;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
 	/**

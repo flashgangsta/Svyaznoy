@@ -11,6 +11,7 @@ package com.svyaznoy.events {
 		static public const ON_PHOTO_REPORT_CALLED:String = "onPhotoReportCalled";
 		static public const ON_PROFILE_PHOTO_EDIT_CALLED:String = "onProfilePhotoEditCalled";
 		static public const ON_PREVIEW_LOADED:String = "onPreviewLoaded";
+		static public const ON_EMPLOYES_PHOTOS_CALLED:String = "onEmployesPhotosCalled";
 		
 		public var previewData:Object;
 		

@@ -97,8 +97,19 @@ package com.svyaznoy {
 			removeBitmap();
 			this.bitmap = bitmap;
 			bitmap.smoothing = true;
-			MappingManager.setScaleOnlyReduce( bitmap, imageArea.width, imageArea.height );
-			MappingManager.setAlign( bitmap, imageArea.getBounds( this ) );
+			
+			if ( bitmap.height > bitmap.width ) {
+				MappingManager.setScaleOnlyReduce( bitmap, imageArea.width, imageArea.height );
+				bitmap.y = imageArea.y;
+				bitmap.x = imageArea.x + MappingManager.getCentricPoint( imageArea.width, bitmap.width );
+			} else {
+				MappingManager.setScaleFillArea( bitmap, imageArea.getBounds( this ) );
+				if ( bitmap.scaleX > 1 ) {
+					MappingManager.setScaleOnlyReduce( bitmap, imageArea.width, imageArea.height );
+				}
+				MappingManager.setAlign( bitmap, imageArea.getBounds( this ) );
+			}
+			
 			bitmap.mask = imageArea;
 			addChild( bitmap );
 		}
