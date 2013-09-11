@@ -98,7 +98,6 @@ package com.svyaznoy {
 			super.dispose();
 			previewImage.dispose();
 			playButton.dispose();
-			ButtonManager.removeButton( playButton, this );
 			previewImage = null;
 			playButton = null;
 		}

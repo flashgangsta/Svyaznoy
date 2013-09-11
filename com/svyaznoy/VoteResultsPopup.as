@@ -41,7 +41,7 @@ package com.svyaznoy {
 			for ( var i:int = 0; i < list.length; i++ ) {
 				data = list[ i ];
 				answer = new VoteResultsPopupResult( data.answer, data.votes, totalVotes, i );
-				answer.y = answersContainer.height + 7;
+				answer.y = Math.round( answersContainer.height + 7 );
 				answersContainer.addChild( answer );
 			}
 			

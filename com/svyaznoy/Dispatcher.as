@@ -6,7 +6,7 @@ package com.svyaznoy {
 	 */
 	public class Dispatcher extends EventDispatcher {
 		
-		static public var instance:Dispatcher;
+		static private var instance:Dispatcher;
 		
 		/**
 		 * 

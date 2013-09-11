@@ -40,6 +40,9 @@ package com.svyaznoy.events {
 		static public const ON_PHOTO_UPDATED:String = "onPhotoUpdated";
 		static public const ON_PHOTO_DELETED:String = "onPhotoDeleted";
 		static public const ON_EMPLOYEES_PHOTOS:String = "onEmployeesPhotos";
+		static public const ON_SETTINGS:String = "onSettings";
+		static public const ON_LAST_ANNOUNCEMENT:String = "onLastAnnouncement";
+		static public const ON_ANNOUNCEMENT:String = "onAnnouncement";
 		
 		public var data:Object;
 		

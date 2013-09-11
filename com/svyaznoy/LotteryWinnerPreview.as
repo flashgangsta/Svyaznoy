@@ -129,8 +129,9 @@ package com.svyaznoy {
 			removeListeners();
 			bitmap = contentLoader.getContent() as Bitmap;
 			bitmap.smoothing = true;
-			MappingManager.setScaleOnlyReduce( bitmap, avatarArea.width, avatarArea.height );
-			MappingManager.setAlign( bitmap, avatarArea.getBounds( this ) );
+			MappingManager.setScaleFillArea( bitmap, avatarArea.getBounds( this ) );
+			bitmap.y = avatarArea.y;
+			bitmap.x = avatarArea.x + MappingManager.getCentricPoint( avatarArea.width, bitmap.width );
 			addChild( bitmap );
 			bitmap.mask = avatarArea;
 			hidePreloader();

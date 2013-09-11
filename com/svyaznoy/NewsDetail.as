@@ -16,7 +16,6 @@ package com.svyaznoy {
 	public class NewsDetail extends ScreenWithBottomButton {
 		
 		private const MARGIN:int = 10;
-		
 		private var id:int;
 		
 		

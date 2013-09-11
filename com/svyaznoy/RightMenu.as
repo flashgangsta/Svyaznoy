@@ -11,9 +11,15 @@ package com.svyaznoy {
 	 */
 	public class RightMenu extends Sprite {
 		
+		private var ANNOUNCEMENT_Y:int = 282;
+		private var VOTING_Y:int = 434;
+		
 		private var provider:Provider = Provider.getInstance();
 		private var image:PreviewGallery = new PreviewGallery();
 		private var video:PreviewVideo;
+		private var helper:Helper = Helper.getInstance();
+		private var settings:SettingsData;
+		private var announcement:Announcement;
 		
 		/**
 		 * 
@@ -43,15 +49,64 @@ package com.svyaznoy {
 		 */
 		
 		public function init():void {
-			provider.getRandomGalleries();
-			provider.getRandomVideos();
 			provider.getRandomSurveys();
+			settings = helper.getSettings();
+			if ( settings ) {
+				onSettings();
+			} else {
+				provider.addEventListener( ProviderEvent.ON_SETTINGS, onSettings );
+			}
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function getAnnouncement():Announcement {
+			return announcement;
 		}
 		
 		/**
 		 * 
 		 * @param	event
-		 * event.data сожержит массив с галереями, каждый элемент сожержит поля,
+		 */
+		
+		private function onSettings( event:ProviderEvent = null ):void {
+			if ( settings.showAnnouncementNeeded ) {
+				provider.addEventListener( ProviderEvent.ON_LAST_ANNOUNCEMENT, onLastAnnouncement );
+				provider.getLastAnnouncement();
+				provider.getRandomGalleries();
+				provider.getRandomVideos();
+			} else {
+				trace( "!showAnnouncementNeeded" );
+				if ( Math.random() > 8) {
+					//photo
+					trace( "!photo" );
+					provider.getRandomGalleries( 2 );
+					provider.getRandomVideos();
+				} else {
+					//video
+					provider.getRandomGalleries();
+					provider.getRandomVideos( 2 );
+				}
+			}
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onLastAnnouncement( event:ProviderEvent ):void {
+			announcement = new Announcement( event.data[ 0 ] );
+			announcement.y = ANNOUNCEMENT_Y;
+			addChild( announcement );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 * event.data содержит массив с галереями, каждый элемент сожержит поля,
 		 *
            "id": "3",
            "departure_id": "13",
@@ -67,9 +122,18 @@ package com.svyaznoy {
 		 */
 		
 		private function onRandomGalleries( event:ProviderEvent ):void {
+			var datas:Array = event.data as Array;
 			provider.removeEventListener( ProviderEvent.ON_RANDOM_GALLERIES, onRandomGalleries );
-			image.displayData( event.data[ 0 ] );
+			image.displayData( datas[ 0 ] );
 			image.removeTextFields();
+			
+			if ( datas.length > 1 ) {
+				var secondGallery:PreviewGallery = new PreviewGallery();
+				secondGallery.displayData( datas[ 1 ] );
+				secondGallery.removeTextFields();
+				secondGallery.y = ANNOUNCEMENT_Y;
+				addChild( secondGallery );
+			}
 		}
 		
 		/**
@@ -78,10 +142,19 @@ package com.svyaznoy {
 		 */
 		
 		private function onRandomVideos( event:ProviderEvent ):void {
+			var datas:Array = event.data as Array;
 			provider.removeEventListener( ProviderEvent.ON_RANDOM_VIDEOS, onRandomVideos );
-			video.displayData( event.data[ 0 ] );
+			video.displayData( datas[ 0 ] );
 			video.removeTextFields();
 			video.makeNavigationToVideoReport();
+			
+			if ( datas.length > 1 ) {
+				var secondVideo:PreviewVideo = new PreviewVideo();
+				secondVideo.displayData( datas[ 1 ] );
+				secondVideo.removeTextFields();
+				secondVideo.y = ANNOUNCEMENT_Y;
+				addChild( secondVideo );
+			}
 		}
 		
 		/**
@@ -94,7 +167,7 @@ package com.svyaznoy {
 			provider.removeEventListener( ProviderEvent.ON_RANDOM_SURVEYS, onSurveys );
 			
 			var voting:Voting = new Voting();
-			voting.y = MappingManager.getBottom( video, this ) + ( video.y - MappingManager.getBottom( image, this ) );
+			voting.y = VOTING_Y;
 			voting.init( surveyData );
 			
 			addChild( voting );
