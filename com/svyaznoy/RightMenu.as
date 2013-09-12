@@ -12,7 +12,7 @@ package com.svyaznoy {
 	public class RightMenu extends Sprite {
 		
 		private var ANNOUNCEMENT_Y:int = 282;
-		private var VOTING_Y:int = 434;
+		private var VOTING_Y:int = 423;
 		
 		private var provider:Provider = Provider.getInstance();
 		private var image:PreviewGallery = new PreviewGallery();
@@ -129,6 +129,7 @@ package com.svyaznoy {
 			
 			if ( datas.length > 1 ) {
 				var secondGallery:PreviewGallery = new PreviewGallery();
+				secondGallery.width = image.width;
 				secondGallery.displayData( datas[ 1 ] );
 				secondGallery.removeTextFields();
 				secondGallery.y = ANNOUNCEMENT_Y;
@@ -150,6 +151,7 @@ package com.svyaznoy {
 			
 			if ( datas.length > 1 ) {
 				var secondVideo:PreviewVideo = new PreviewVideo();
+				secondVideo.width = video.width;
 				secondVideo.displayData( datas[ 1 ] );
 				secondVideo.removeTextFields();
 				secondVideo.y = ANNOUNCEMENT_Y;

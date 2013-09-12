@@ -22,7 +22,6 @@ package com.svyaznoy {
 		
 		public function Announcement( data:Object ) {
 			this.data = data;
-			trace( "Announcement" );
 			if ( !data ) {
 				trace( "Announcement data is null" );
 				visible = false;
