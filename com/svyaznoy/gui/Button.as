@@ -128,6 +128,14 @@ package com.svyaznoy.gui {
 			}
 		}
 		
+		/**
+		 * 
+		 */
+		
+		public function setDefaultState():void {
+			ButtonManager.setButtonState( this, ButtonManager.STATE_NORMAL );
+		}
+		
 	}
 
 }

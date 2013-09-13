@@ -92,6 +92,7 @@ package com.svyaznoy {
 		private function onPhotoUploaded( event:ProviderEvent ):void {
 			close();
 			uploadedPhotoData = event.data;
+			trace( "onPhotoUploaded", JSON.stringify( uploadedPhotoData ) );
 			dispatchEvent( new Event( Event.COMPLETE ) );
 		}
 		

@@ -84,6 +84,14 @@ package com.svyaznoy {
 		
 		/**
 		 * 
+		 */
+		
+		public function selectDepartures():void {
+			ButtonManager.setSelectionOnGroup( deaparturesButton );
+		}
+		
+		/**
+		 * 
 		 * @param	target
 		 */
 		
