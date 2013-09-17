@@ -57,10 +57,8 @@ package com.svyaznoy {
 			popupsController.init( stage, 0x2b2927, .85 );
 			
 			comments = new NewsComments( 1 );
+			comments.width = 515;
 			comments.addEventListener( CommentsEvent.ON_COMMENTS_READY, onCommentsReady );
-			
-			trace( comments );
-			
 		}
 		
 		private function onCommentsReady( event:Event ):void {

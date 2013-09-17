@@ -46,10 +46,11 @@ package com.svyaznoy {
 		private function setPositions():void {
 			var lastItem:DisplayObject = dynamicContentViewer;
 			if ( comments && contains( comments.view ) ) {
-				comments.view.y = Math.ceil( MappingManager.getBottom( lastItem, this ) + MARGIN );
-				lastItem = comments.view;
+				comments.view.y = Math.ceil( MappingManager.getBottom( dynamicContentViewer, this ) + MARGIN );
+				bottomButton.y = comments.bottom + MARGIN;
+			} else {
+				bottomButton.y = Math.ceil( MappingManager.getBottom( dynamicContentViewer, this ) + MARGIN );
 			}
-			bottomButton.y = Math.ceil( MappingManager.getBottom( lastItem, this ) + MARGIN );
 		}
 		
 		/**

@@ -17,7 +17,16 @@ package com.svyaznoy {
 		 * @param	data
 		 */
 		
-		public function CommentItem( data:Object ) {
+		public function CommentItem( data:Object, width:int = 0 ) {
+			
+			if ( !width ) {
+				width = _view.width;
+			} else if( width !== _view.width ) {
+				view.background.width = width;
+				view.nameLabel.width = width - view.nameLabel.x - 1;
+				view.messageLabel.width = view.dateLabel.width = view.nameLabel.width;
+			}
+			
 			view.nameLabel.autoSize = TextFieldAutoSize.LEFT;
 			view.messageLabel.autoSize = TextFieldAutoSize.LEFT;
 			view.dateLabel.autoSize = TextFieldAutoSize.LEFT;

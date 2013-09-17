@@ -105,6 +105,7 @@ package com.flashgangsta.media.video {
 					} else {
 						player.cueVideoById( videoID );
 					}
+					player.setSize( width, height );
 				} else {
 					if ( !queue ) queue = new Queue();
 					queue.add( setVideo, id, autoplay );

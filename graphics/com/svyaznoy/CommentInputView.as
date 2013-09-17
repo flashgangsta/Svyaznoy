@@ -40,6 +40,14 @@ package com.svyaznoy {
 			return _addCommentButton;
 		}
 		
+		public function get background():DisplayObject {
+			return _background;
+		}
+		
+		public function get inputBackground():DisplayObject {
+			return _inputBackground;
+		}
+		
 	}
 
 }

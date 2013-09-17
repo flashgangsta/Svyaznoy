@@ -352,6 +352,7 @@ package com.flashgangsta.media.video {
 		 */
 		
 		public function setSize( width:Number, height:Number ):void {
+			trace( "player.setSize(", width, height, ");" );
 			player.setSize( width, height );
 		}
 		

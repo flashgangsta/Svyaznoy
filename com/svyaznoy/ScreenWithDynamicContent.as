@@ -53,7 +53,7 @@ package com.svyaznoy {
 		 */
 		
 		private function onSizeChanged( event:DynamicItemEvent ):void {
-			if ( !(this is ScreenWithBottomButton) && !(this is ScreenWithBottomButtonAndComments ) ) event.stopImmediatePropagation();
+			//if ( !(this is ScreenWithBottomButton) && !(this is ScreenWithBottomButtonAndComments ) ) event.stopImmediatePropagation();
 			dynamicContentViewer.y = MappingManager.getBottom( header, this );
 			updatePositions( DynamicContentViewer.MARGIN, dynamicContentViewer );
 		}

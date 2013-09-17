@@ -45,17 +45,20 @@ package com.svyaznoy {
 				provider.getNewsDetail( id );
 				setVisible( false );
 				this.id = id;
-				if ( comments ) {
-					removeChild( comments.view );
-					comments.dispose();
-					comments = null;
-				}
-				comments = new NewsComments( id );
-				comments.addEventListener( CommentsEvent.ON_COMMENTS_READY, onCommentsReady );
 			} else if ( savedNewsData && this.id !== id ) {
 				data = savedNewsData;
 				displayData();
 			}
+			
+			if ( comments ) {
+				removeChild( comments.view );
+				comments.dispose();
+				comments = null;
+			}
+			
+			comments = new NewsComments( id );
+			comments.width = header.width;
+			comments.addEventListener( CommentsEvent.ON_COMMENTS_READY, onCommentsReady );
 			
 		}
 		

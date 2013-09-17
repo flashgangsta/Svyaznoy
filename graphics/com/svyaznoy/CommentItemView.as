@@ -63,6 +63,14 @@ package com.svyaznoy {
 			return _dateLabel;
 		}
 		
+		/**
+		 * 
+		 */
+		
+		public function get background():DisplayObject {
+			return _background;
+		}
+		
 	}
 
 }

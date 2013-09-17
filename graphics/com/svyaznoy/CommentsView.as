@@ -12,6 +12,7 @@ package com.svyaznoy {
 		private var _contentMask:DisplayObject;
 		private var _contentContainer:MovieClip;
 		private var _scrollbarView:ScrollbarView;
+		private var _background:DisplayObject;
 		
 		/**
 		 * 
@@ -21,6 +22,7 @@ package com.svyaznoy {
 			_contentMask = getChildByName( "mask_mc" ) as DisplayObject;
 			_contentContainer = getChildByName( "content_mc" ) as MovieClip;
 			_scrollbarView = getChildByName( "scrollbar_mc" ) as ScrollbarView;
+			_background = getChildAt( 0 );
 			
 			_contentContainer.mask = _contentMask;
 		}
@@ -47,6 +49,10 @@ package com.svyaznoy {
 		
 		public function get scrollbarView():ScrollbarView {
 			return _scrollbarView;
+		}
+		
+		public function get background():DisplayObject {
+			return _background;
 		}
 		
 	}
