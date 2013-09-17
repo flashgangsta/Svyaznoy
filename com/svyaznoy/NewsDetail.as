@@ -1,9 +1,11 @@
 package com.svyaznoy {
 	import com.flashgangsta.managers.MappingManager;
+	import com.svyaznoy.events.CommentsEvent;
 	import com.svyaznoy.events.DynamicItemEvent;
 	import com.svyaznoy.events.NewsEvent;
 	import com.svyaznoy.events.ProviderEvent;
 	import com.svyaznoy.gui.Button;
+	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -13,10 +15,11 @@ package com.svyaznoy {
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
 	 */
 	
-	public class NewsDetail extends ScreenWithBottomButton {
+	public class NewsDetail extends ScreenWithBottomButtonAndComments {
 		
 		private const MARGIN:int = 10;
 		private var id:int;
+		
 		
 		
 		/**
@@ -42,11 +45,24 @@ package com.svyaznoy {
 				provider.getNewsDetail( id );
 				setVisible( false );
 				this.id = id;
+				if ( comments ) {
+					removeChild( comments.view );
+					comments.dispose();
+					comments = null;
+				}
+				comments = new NewsComments( id );
+				comments.addEventListener( CommentsEvent.ON_COMMENTS_READY, onCommentsReady );
 			} else if ( savedNewsData && this.id !== id ) {
 				data = savedNewsData;
 				displayData();
 			}
 			
+		}
+		
+		private function onCommentsReady( event:CommentsEvent ):void {
+			addChild( comments.view );
+			setPositions();
+			dispatchHeighUpdated();
 		}
 		
 		/**
@@ -75,7 +91,12 @@ package com.svyaznoy {
 		 */
 		
 		private function setPositions():void {
-			bottomButton.y = Math.ceil( MappingManager.getBottom( dynamicContentViewer, this ) + MARGIN );
+			var lastItem:DisplayObject = dynamicContentViewer;
+			if ( comments && contains( comments.view ) ) {
+				comments.view.y = Math.ceil( MappingManager.getBottom( lastItem, this ) + MARGIN );
+				lastItem = comments.view;
+			}
+			bottomButton.y = Math.ceil( MappingManager.getBottom( lastItem, this ) + MARGIN );
 		}
 		
 		/**

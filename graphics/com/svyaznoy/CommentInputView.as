@@ -1,4 +1,5 @@
 package com.svyaznoy {
+	import com.svyaznoy.gui.Button;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.text.TextField;
@@ -13,6 +14,7 @@ package com.svyaznoy {
 		private var _inputBackground:DisplayObject;
 		private var _background:DisplayObject;
 		private var _inputLabel:TextField;
+		private var _addCommentButton:Button;
 		
 		/**
 		 * 
@@ -23,6 +25,19 @@ package com.svyaznoy {
 			_inputLabel = getChildByName( "inputLabel_txt" ) as TextField;
 			_background = getChildByName( "background_mc" );
 			_inputBackground = getChildByName( "inputBackground_mc" );
+			_addCommentButton = getChildByName( "addComment_mc" ) as Button;
+		}
+		
+		public function get inputLabel():TextField {
+			return _inputLabel;
+		}
+		
+		public function get avatarContainer():AvatarContainer {
+			return _avatarContainer;
+		}
+		
+		public function get addCommentButton():Button {
+			return _addCommentButton;
 		}
 		
 	}

@@ -55,6 +55,7 @@
     <element path="lib\tlfRuntime.swc" />
     <element path="lib\textLayout.swc" />
     <element path="lib\blooddy_crypto.swc" />
+    <element path="lib\graphics.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

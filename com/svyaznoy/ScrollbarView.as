@@ -15,6 +15,7 @@ package com.svyaznoy {
 		
 		public function ScrollbarView() {
 			_carret = getChildByName( "carret_mc" ) as MovieClip;
+			_carret.gotoAndStop( 1 );
 		}
 		
 		public function getCarret():MovieClip {

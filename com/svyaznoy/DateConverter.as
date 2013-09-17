@@ -30,6 +30,14 @@ package com.svyaznoy {
 			return result;
 		}
 		
+		public static function getFormattedDateAndTimeInNumbers( date:String ):String {
+			var result:String = date.substr( 8, 2 ) + ".";
+			result += date.substr( 5, 2 ) + ".";
+			result += date.substr( 0, 4 ) + " ";
+			result += date.substr( 11 );
+			return result;
+		}
+		
 	}
 
 }

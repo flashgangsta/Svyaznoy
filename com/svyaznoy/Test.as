@@ -3,6 +3,7 @@ package com.svyaznoy {
 	import com.flashgangsta.ui.Scrollbar;
 	import com.flashgangsta.utils.PopupsController;
 	import com.flashgangsta.utils.ScreenController;
+	import com.svyaznoy.events.CommentsEvent;
 	import com.svyaznoy.events.LoginSectionEvent;
 	import com.svyaznoy.events.ProviderEvent;
 	import com.svyaznoy.events.ScreenEvent;
@@ -26,6 +27,7 @@ package com.svyaznoy {
 		private var provider:Provider = Provider.getInstance();
 		private var helper:Helper = Helper.getInstance();
 		private var popupsController:PopupsController;
+		private var comments:NewsComments;
 		
 		/**
 		 * 
@@ -43,9 +45,9 @@ package com.svyaznoy {
 		private function init( event:Event ):void {
 			removeEventListener( Event.ADDED_TO_STAGE, init );
 			
-			
 			//Helper
 			helper.isDebug = ( loaderInfo.url.indexOf( "http" ) !== 0 );
+			helper.isEmployeeMode = true;
 			ContentLoader.context = helper.loaderContext;
 			//Provider
 			provider.init();
@@ -54,10 +56,15 @@ package com.svyaznoy {
 			popupsController = PopupsController.getInstance();
 			popupsController.init( stage, 0x2b2927, .85 );
 			
-			var comments:Comments = new Comments();
-			addChild( comments.view );
+			comments = new NewsComments( 1 );
+			comments.addEventListener( CommentsEvent.ON_COMMENTS_READY, onCommentsReady );
+			
 			trace( comments );
 			
+		}
+		
+		private function onCommentsReady( event:Event ):void {
+			addChild( comments.view );
 		}
 	}
 
