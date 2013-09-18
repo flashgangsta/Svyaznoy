@@ -46,6 +46,9 @@ package com.svyaznoy.events {
 		static public const ON_COMMENTS_LIST:String = "onCommentsList";
 		static public const ON_COMMENTS_COUNT:String = "onCommentsCount";
 		static public const ON_COMMENT_ADDED:String = "onCommentAdded";
+		static public const ON_TESTS_LIST:String = "onTestsList";
+		static public const ON_TEST:String = "onTest";
+		static public const ON_TEST_RESULT_SENT:String = "onTestResultSent";
 		
 		public var data:Object;
 		

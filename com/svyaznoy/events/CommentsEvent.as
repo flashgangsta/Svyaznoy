@@ -10,6 +10,8 @@ package com.svyaznoy.events {
 		static public const ADD_COMMENT_CALLED:String = "addCommentCalled";
 		static public const ON_COMMENTS_READY:String = "onCommentsReady";
 		
+		private;
+		
 		public function CommentsEvent( type:String, bubbles:Boolean = false, cancelable:Boolean = false ) { 
 			super( type, bubbles, cancelable );
 			
