@@ -17,7 +17,8 @@ package com.svyaznoy {
 		 */
 		
 		public function News() {
-			provider.getNewsList();
+			//TODO: сделать дозагрузску
+			provider.getNewsList( 30 );
 			provider.addEventListener( ProviderEvent.ON_NEWS_LIST, onData );
 		}
 		

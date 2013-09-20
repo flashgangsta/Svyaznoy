@@ -21,7 +21,6 @@ package com.svyaznoy {
 		private var id:int;
 		
 		
-		
 		/**
 		 * 
 		 */
@@ -50,7 +49,7 @@ package com.svyaznoy {
 				displayData();
 			}
 			
-			if ( comments ) {
+			/*if ( comments ) {
 				removeChild( comments.view );
 				comments.dispose();
 				comments = null;
@@ -58,9 +57,14 @@ package com.svyaznoy {
 			
 			comments = new NewsComments( id );
 			comments.width = header.width;
-			comments.addEventListener( CommentsEvent.ON_COMMENTS_READY, onCommentsReady );
+			comments.addEventListener( CommentsEvent.ON_COMMENTS_READY, onCommentsReady );*/
 			
 		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
 		
 		private function onCommentsReady( event:CommentsEvent ):void {
 			addChild( comments.view );

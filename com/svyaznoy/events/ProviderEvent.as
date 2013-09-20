@@ -49,6 +49,7 @@ package com.svyaznoy.events {
 		static public const ON_TESTS_LIST:String = "onTestsList";
 		static public const ON_TEST:String = "onTest";
 		static public const ON_TEST_RESULT_SENT:String = "onTestResultSent";
+		static public const ON_MY_ACHIEVEMENTS:String = "onMyAchievements";
 		
 		public var data:Object;
 		

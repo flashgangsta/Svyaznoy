@@ -56,7 +56,7 @@ package com.svyaznoy {
 			popupsController = PopupsController.getInstance();
 			popupsController.init( stage, 0x2b2927, .85 );
 			
-			comments = new NewsComments( 1 );
+			comments = new NewsComments( 3 );
 			comments.width = 515;
 			comments.addEventListener( CommentsEvent.ON_COMMENTS_READY, onCommentsReady );
 		}

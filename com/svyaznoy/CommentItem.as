@@ -41,6 +41,8 @@ package com.svyaznoy {
 			
 			view.messageLabel.y = MappingManager.getBottom( view.nameLabel, this );
 			view.dateLabel.y = MappingManager.getBottom( view.messageLabel, this );
+			
+			view.background.height = Math.round( view.dateLabel.y + view.dateLabel.height + view.nameLabel.y );
 		}
 		
 		/**

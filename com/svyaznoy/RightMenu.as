@@ -79,7 +79,7 @@ package com.svyaznoy {
 				provider.getRandomVideos();
 			} else {
 				trace( "!showAnnouncementNeeded" );
-				if ( Math.random() > 8) {
+				if ( Math.random() > 8 ) {
 					//photo
 					trace( "!photo" );
 					provider.getRandomGalleries( 2 );
@@ -155,6 +155,7 @@ package com.svyaznoy {
 				secondVideo.displayData( datas[ 1 ] );
 				secondVideo.removeTextFields();
 				secondVideo.y = ANNOUNCEMENT_Y;
+				secondVideo.makeNavigationToVideoReport();
 				addChild( secondVideo );
 			}
 		}

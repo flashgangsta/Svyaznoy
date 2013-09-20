@@ -9,8 +9,10 @@ package com.svyaznoy.events {
 		
 		static public const ADD_COMMENT_CALLED:String = "addCommentCalled";
 		static public const ON_COMMENTS_READY:String = "onCommentsReady";
+		static public const ON_OLD_COMMENTS_CALLED:String = "onOldCommentsCalled";
 		
-		private;
+		
+		private var _lastCommentID:int;
 		
 		public function CommentsEvent( type:String, bubbles:Boolean = false, cancelable:Boolean = false ) { 
 			super( type, bubbles, cancelable );
@@ -23,6 +25,14 @@ package com.svyaznoy.events {
 		
 		public override function toString():String { 
 			return formatToString( "CommentsEvent", "type", "bubbles", "cancelable", "eventPhase" ); 
+		}
+		
+		public function get lastCommentID():int {
+			return _lastCommentID;
+		}
+		
+		public function set lastCommentID(value:int):void {
+			_lastCommentID = value;
 		}
 		
 	}
