@@ -24,6 +24,14 @@ package com.svyaznoy {
 		private var loader:ContentLoader;
 		private var bitmap:Bitmap;
 		
+		/**
+		 * 
+		 * @param	titleMessage
+		 * @param	signMessage
+		 * @param	imagePath
+		 * @param	vkIDForAvatarLoad
+		 */
+		
 		public function IconListItem( titleMessage:String = null, signMessage:String = null, imagePath:String = null, vkIDForAvatarLoad:int = 0 ) {
 			titleLabel = getChildByName( "titleLabel_txt" ) as TextField;
 			signLabel = getChildByName( "nameLabel_txt" ) as TextField;
@@ -33,11 +41,20 @@ package com.svyaznoy {
 			
 			signLabel.autoSize = TextFieldAutoSize.LEFT;
 			
-			if ( titleMessage.indexOf( " " ) === titleMessage.lastIndexOf( " " ) ) {
-				titleMessage = titleMessage.replace( " ", "\n" );
+			if( titleMessage ) {
+				if ( titleMessage.indexOf( " " ) === titleMessage.lastIndexOf( " " ) ) {
+					titleMessage = titleMessage.replace( " ", "\n" );
+				}
+				titleLabel.text = titleMessage.toUpperCase();
+				titleLabel.mouseEnabled = titleLabel.mouseWheelEnabled = false;
+			} else {
+				titleLabel.text = "";
+				titleLabel.visible = false;
+				prelaoder.y -= imageArea.y;
+				signLabel.y -= imageArea.y;
+				imageArea.y = 0;
 			}
 			
-			titleLabel.text = titleMessage.toUpperCase();
 			signLabel.text = signMessage.toUpperCase();
 			
 			hit.height = MappingManager.getBottom( signLabel, this );
@@ -49,6 +66,8 @@ package com.svyaznoy {
 				} else {
 					onVkUserData( [{photo_100:'http://cs320931.vk.me/v320931535/f97/WDynbN3YWYU.jpg'}] );
 				}
+			} else if ( imagePath ) {
+				loadImage( imagePath );
 			}
 		}
 		
@@ -78,11 +97,20 @@ package com.svyaznoy {
 		 */
 		
 		private function onVkUserData( data:Array ):void {
+			loadImage( data[ 0 ].photo_100 );
+		}
+		
+		/**
+		 * 
+		 * @param	array
+		 */
+		
+		private function loadImage( path:String ):void {
 			loader = new ContentLoader();
 			loader.addEventListener( Event.COMPLETE, onAvatarLoaded );
 			loader.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
 			loader.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError )
-			loader.load( data[ 0 ].photo_100 );
+			loader.load( path );
 		}
 		
 		/**
