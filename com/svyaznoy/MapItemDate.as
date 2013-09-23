@@ -20,7 +20,7 @@ package com.svyaznoy {
 		 */
 		
 		public function MapItemDate( startDate:String ) {
-			targetDateHere = DateParser.parseAndConcertToLocalTime( startDate ); 
+			targetDateHere = DateParser.parseAndConvertToLocalTime( startDate ); 
 			
 			label = getChildAt( 0 ) as TextField;
 			daysRemaining = calculateDaysRemaining();

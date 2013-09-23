@@ -1,5 +1,6 @@
 package com.svyaznoy {
 	import com.flashgangsta.managers.MappingManager;
+	import com.svyaznoy.events.ProviderEvent;
 	import flash.display.Sprite;
 	import flash.text.TextFieldAutoSize;
 	
@@ -10,6 +11,7 @@ package com.svyaznoy {
 	public class CommentItem extends Sprite {
 		
 		private var _view:CommentItemView = new CommentItemView();
+		private var loader:ProviderURLLoader;
 		
 		
 		/**
@@ -18,6 +20,14 @@ package com.svyaznoy {
 		 */
 		
 		public function CommentItem( data:Object, width:int = 0 ) {
+			
+			var userData:UserData = Helper.getInstance().getUserData();
+			if ( userData.employeeID === data.employee_id ) {
+				view.avatarContainer.loadByPath( userData.photo100 );
+			} else {
+				loader = Provider.getInstance().getEmployeeByID( data.employee_id );
+				loader.addEventListener( ProviderEvent.ON_EMPLOYEE_DATA, onUserData );
+			}
 			
 			if ( !width ) {
 				width = _view.width;
@@ -43,6 +53,18 @@ package com.svyaznoy {
 			view.dateLabel.y = MappingManager.getBottom( view.messageLabel, this );
 			
 			view.background.height = Math.round( view.dateLabel.y + view.dateLabel.height + view.nameLabel.y );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onUserData( event:ProviderEvent ):void {
+			var userData:Object = event.data;
+			trace( view.avatarContainer is AvatarContainer );
+			view.avatarContainer.loadByVkID( userData.user.username );
+			loader.removeEventListener( ProviderEvent.ON_EMPLOYEE_DATA, onUserData );
 		}
 		
 		/**

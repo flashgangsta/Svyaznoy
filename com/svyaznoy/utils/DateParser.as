@@ -49,7 +49,7 @@ package com.svyaznoy.utils {
 		 * @return
 		 */
 		
-		static public function parseAndConcertToLocalTime( dateString:String ):Date {
+		static public function parseAndConvertToLocalTime( dateString:String ):Date {
 			var targetDateInMoscow:Date;
 			var thisTimezoneOffset:Number;
 			var timeOffset:Number;

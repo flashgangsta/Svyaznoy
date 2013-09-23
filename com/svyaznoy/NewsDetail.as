@@ -49,15 +49,17 @@ package com.svyaznoy {
 				displayData();
 			}
 			
-			/*if ( comments ) {
+			if ( comments ) {
 				removeChild( comments.view );
 				comments.dispose();
 				comments = null;
 			}
 			
-			comments = new NewsComments( id );
-			comments.width = header.width;
-			comments.addEventListener( CommentsEvent.ON_COMMENTS_READY, onCommentsReady );*/
+			if( Helper.getInstance().isEmployeeMode ) {
+				comments = new NewsComments( id );
+				comments.width = header.width;
+				comments.addEventListener( CommentsEvent.ON_COMMENTS_READY, onCommentsReady );
+			}
 			
 		}
 		

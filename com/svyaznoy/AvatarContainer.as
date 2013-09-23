@@ -14,14 +14,16 @@ package com.svyaznoy {
 	 */
 	public class AvatarContainer extends Sprite {
 		
-		static public const PHOTO_50:String = "photo50";
-		static public const PHOTO_100:String = "photo100";
-		static public const PHOTO_200:String = "photo200";
+		static public const PHOTO_50:String = "photo_50";
+		static public const PHOTO_100:String = "photo_100";
+		static public const PHOTO_200:String = "photo_200_orig";
 		
 		private var loader:ContentLoader;
 		private var bitmap:Bitmap;
 		private var avatarArea:Sprite;
 		private var preloader:PreloaderAnimation = new PreloaderAnimation();
+		private var helper:Helper = Helper.getInstance();
+		private var size:String;
 		
 		/**
 		 * 
@@ -34,6 +36,11 @@ package com.svyaznoy {
 			avatarArea.height = height;
 			
 			scaleX = scaleY = 1;
+			
+			if ( preloader.width > width ) {
+				preloader.width = Math.round( width - 10 );
+				preloader.scaleY = preloader.scaleX;
+			}
 			
 			MappingManager.setAlign( preloader, this.getBounds( this ) );
 			addChild( preloader );
@@ -63,7 +70,12 @@ package com.svyaznoy {
 		 */
 		
 		public function loadByVkID( vkID:String, size:String = PHOTO_50 ):void {
-			
+			this.size = size;
+			if( !helper.isDebug ) {
+				helper.vkAPI.api( "users.get", { user_ids: vkID, fields: size }, onVkUserData, Errors.getInstance().vkUsersGet );
+			} else {
+				onVkUserData( [{photo_50:'http://cs402330.vk.me/v402330401/9760/pV6sZ5wRGxE.jpg',photo_100:'http://cs320931.vk.me/v320931535/f97/WDynbN3YWYU.jpg',photo_200_orig:'http://cs402330.vk.me/v402330401/9760/pV6sZ5wRGxE.jpg'}] );
+			}
 		}
 		
 		/**
@@ -84,6 +96,14 @@ package com.svyaznoy {
 			bitmap.mask = null;
 			bitmap.bitmapData.dispose();
 			bitmap = null;
+		}
+		
+		/**
+		 * 
+		 */
+		
+		private function onVkUserData( data:Array ):void {
+			loadByPath( data[ 0 ][ size ] );
 		}
 		
 		/**

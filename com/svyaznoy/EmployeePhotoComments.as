@@ -1,28 +1,22 @@
 package com.svyaznoy {
 	import com.svyaznoy.events.CommentsEvent;
-	import com.svyaznoy.events.ProviderErrorEvent;
 	import com.svyaznoy.events.ProviderEvent;
-	import com.svyaznoy.utils.DateParser;
 	/**
 	 * ...
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
 	 */
-	public class NewsComments extends Comments {
+	public class EmployeePhotoComments extends Comments {
+		private var departureID:int;
+		private var photoID:int;
 		
-		private var id:int;
-		
-		/**
-		 * 
-		 * @param	id
-		 */
-		
-		public function NewsComments( id:int ) {
-			this.id = id;
+		public function EmployeePhotoComments( departureID:int, photoID:int ) {
+			this.photoID = photoID;
+			this.departureID = departureID;
 			
 			addEventListener( CommentsEvent.ADD_COMMENT_CALLED, onAddCalled );
 			addEventListener( CommentsEvent.ON_OLD_COMMENTS_CALLED, onOldCommentsCalled );
 			
-			countLoader = provider.getNewsCommentsCount( id );
+			countLoader = provider.getEmployeePhotosCommentsCount( departureID, photoID );
 			countLoader.addEventListener( ProviderEvent.ON_COMMENTS_COUNT, onCount );
 		}
 		
@@ -35,7 +29,7 @@ package com.svyaznoy {
 			countLoader.removeEventListener( ProviderEvent.ON_COMMENTS_COUNT, onCount );
 			super.onCount( event );
 			if ( count ) {
-				listLoader = provider.getNewsCommentsList( id );
+				listLoader = provider.getEmployeePhotosCommentsList( departureID, photoID );
 				listLoader.addEventListener( ProviderEvent.ON_COMMENTS_LIST, onComments );
 			}
 		}
@@ -99,7 +93,7 @@ package com.svyaznoy {
 		
 		private function onAddCalled( event:CommentsEvent ):void {
 			trace( "addComment:", getMessage() );
-			addLoader = provider.addNewsComment( id, getMessage() );
+			addLoader = provider.addEmployeePhotosComment( departureID, photoID, getMessage() );
 			addLoader.addEventListener( ProviderEvent.ON_COMMENT_ADDED, onAdded );
 		}
 		
@@ -109,7 +103,7 @@ package com.svyaznoy {
 		 */
 		
 		private function onOldCommentsCalled( event:CommentsEvent ):void {
-			listLoader = provider.getNewsCommentsList( id, 10, 0, 0, event.lastCommentID );
+			listLoader = provider.getEmployeePhotosCommentsList( departureID, photoID, 10, 0, 0, event.lastCommentID );
 			listLoader.addEventListener( ProviderEvent.ON_COMMENTS_LIST, onOldCommentsList );
 		}
 		

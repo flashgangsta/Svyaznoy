@@ -78,10 +78,8 @@ package com.svyaznoy {
 				provider.getRandomGalleries();
 				provider.getRandomVideos();
 			} else {
-				trace( "!showAnnouncementNeeded" );
 				if ( Math.random() > 8 ) {
 					//photo
-					trace( "!photo" );
 					provider.getRandomGalleries( 2 );
 					provider.getRandomVideos();
 				} else {

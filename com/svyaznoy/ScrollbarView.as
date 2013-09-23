@@ -33,6 +33,10 @@ package com.svyaznoy {
 			return _downBtn;
 		}
 		
+		override public function set height(value:Number):void {
+			_line.height = value;
+		}
+		
 	}
 
 }
