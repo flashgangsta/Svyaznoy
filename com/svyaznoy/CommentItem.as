@@ -62,7 +62,6 @@ package com.svyaznoy {
 		
 		private function onUserData( event:ProviderEvent ):void {
 			var userData:Object = event.data;
-			trace( view.avatarContainer is AvatarContainer );
 			view.avatarContainer.loadByVkID( userData.user.username );
 			loader.removeEventListener( ProviderEvent.ON_EMPLOYEE_DATA, onUserData );
 		}

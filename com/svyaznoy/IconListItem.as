@@ -69,6 +69,7 @@ package com.svyaznoy {
 			} else if ( imagePath ) {
 				loadImage( imagePath );
 			}
+			
 		}
 		
 		/**
@@ -111,6 +112,8 @@ package com.svyaznoy {
 			loader.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
 			loader.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError )
 			loader.load( path );
+			
+			dispatchEvent( new Event( Event.COMPLETE ) );
 		}
 		
 		/**
@@ -126,6 +129,7 @@ package com.svyaznoy {
 			bitmap.mask = imageArea;
 			addChild( bitmap );
 			removeLoader();
+			dispatchEvent( new Event( Event.COMPLETE ) );
 		}
 		
 		/**
