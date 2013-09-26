@@ -13,6 +13,8 @@ package com.svyaznoy {
 	import flash.display.MovieClip;
 	import flash.display.Shape;
 	import flash.display.Sprite;
+	import flash.display.StageAlign;
+	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -28,6 +30,7 @@ package com.svyaznoy {
 		private var helper:Helper = Helper.getInstance();
 		private var popupsController:PopupsController;
 		private var contestsList:Array;
+		private var contest:ContestDetailed;
 		
 		/**
 		 * 
@@ -43,6 +46,9 @@ package com.svyaznoy {
 		 */
 		
 		private function init( event:Event ):void {
+			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.align = StageAlign.TOP_LEFT;
+			
 			removeEventListener( Event.ADDED_TO_STAGE, init );
 			
 			//Helper
@@ -59,6 +65,15 @@ package com.svyaznoy {
 			
 			provider.login();
 			provider.addEventListener( ProviderEvent.ON_LOGGED_IN, onLoggedIn );
+			
+			Dispatcher.getInstance().addEventListener( ScreenEvent.GO_BACK, goBack );
+		}
+		
+		private function goBack( event:ScreenEvent ):void {
+			removeChildAt( numChildren - 1 );
+			for ( var i:int = 0; i < contestsList.length; i++ ) {
+				getChildAt( i ).visible = true;
+			}
 		}
 		
 		/**
@@ -79,9 +94,36 @@ package com.svyaznoy {
 		private function onContestsList( event:ProviderEvent ):void {
 			contestsList = event.data as Array;
 			
+			var contestListItem:ContestListItem;
+			var lastY:int = 0;
+			
 			for ( var i:int = 0; i < contestsList.length; i++ ) {
-				trace( "contest:", i + 1 );
+				contestListItem = new ContestListItem( contestsList[ i ] );
+				contestListItem.y = lastY;
+				lastY = Math.round( contestListItem.height + lastY );
+				addChild( contestListItem );
 			}
+			
+			addEventListener( Event.SELECT, onContestSelect );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onContestSelect( event:Event ):void {
+			var contestData:Object = ContestListItem( event.target ).getData();
+			event.stopImmediatePropagation();
+			
+			for ( var i:int = 0; i < contestsList.length; i++ ) {
+				getChildAt( i ).visible = false;
+			}
+			
+			if( !contest ) contest = new ContestDetailed();
+			contest.showContest( contestData.id );
+			addChild( contest );
+			
 		}
 		
 		

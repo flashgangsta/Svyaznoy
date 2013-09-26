@@ -53,6 +53,8 @@ package com.svyaznoy.events {
 		static public const ON_ENTRY_BY_INVITE_CONFIRMED:String = "onEntryByInviteConfirmed";
 		static public const ON_LAST_SEEN_ACHIEVEMENT_SET:String = "onLastSeenAchievementSet";
 		static public const ON_CONTESTS_LIST:String = "onContestsList";
+		static public const ON_CONTEST_WORKS_LIST:String = "onContestWorksList";
+		static public const ON_CONTEST:String = "onContest";
 		
 		public var data:Object;
 		

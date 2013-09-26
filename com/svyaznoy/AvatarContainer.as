@@ -37,8 +37,8 @@ package com.svyaznoy {
 			
 			scaleX = scaleY = 1;
 			
-			if ( preloader.width > width ) {
-				preloader.width = Math.round( width - 10 );
+			if ( preloader.width > width - 20 ) {
+				preloader.width = Math.round( width - 20 );
 				preloader.scaleY = preloader.scaleX;
 			}
 			
