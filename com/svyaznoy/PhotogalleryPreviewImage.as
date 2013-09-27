@@ -39,7 +39,7 @@ package com.svyaznoy {
 			loader.addEventListener( Event.COMPLETE, onLoaded );
 			loader.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
 			loader.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
-			loader.load( data.thumbnail_with_path );
+			loader.load( data.thumbnail_with_path ? data.thumbnail_with_path : data.photo_thumbnails_with_path );
 		}
 		
 		/**

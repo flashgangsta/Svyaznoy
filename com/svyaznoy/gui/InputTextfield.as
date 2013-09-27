@@ -1,4 +1,5 @@
 package com.svyaznoy.gui {
+	import com.flashgangsta.utils.getChildByType;
 	import com.flashgangsta.utils.Queue;
 	import com.svyaznoy.events.InputTextfieldEvent;
 	import com.svyaznoy.InputError;
@@ -28,9 +29,10 @@ package com.svyaznoy.gui {
 		 */
 		
 		public function InputTextfield() {
-			label = getChildByName( "label_txt" ) as TLFTextField;
-			error = getChildByName( "error_mc" ) as InputError;
-			titleLabel = getChildByName( "title_txt" ) as TextField;
+			label = getChildByType( this, TLFTextField ) as TLFTextField;
+			error = getChildByType( this, InputError ) as InputError;
+			titleLabel = getChildByType( this, TextField ) as TextField;
+			
 			label.setSelection( 0, label.text.length );
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			addEventListener( FocusEvent.FOCUS_IN, onFocusIn );
@@ -151,6 +153,30 @@ package com.svyaznoy.gui {
 		
 		public function set autoDispose(value:Boolean):void {
 			_autoDispose = value;
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function get maxChars():int {
+			return label.maxChars;
+		}
+		
+		public function set maxChars(value:int):void {
+			label.maxChars = value;
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function set enabled( value:Boolean ):void {
+			mouseEnabled = mouseChildren = value;
+		}
+		
+		public function get enabled():Boolean {
+			return mouseEnabled;
 		}
 		
 		/**

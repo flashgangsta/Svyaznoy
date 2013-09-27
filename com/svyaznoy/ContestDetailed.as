@@ -16,6 +16,8 @@ package com.svyaznoy {
 	 */
 	public class ContestDetailed extends Screen {
 		
+		private const TYPE_PHOTOS:String = "photos";
+		
 		private var worksListContainer:Sprite = new Sprite();
 		private var titleLabel:TextField;
 		private var messageLabel:TextField;
@@ -49,6 +51,8 @@ package com.svyaznoy {
 			addChild( worksListContainer );
 			provider.addEventListener( ProviderEvent.ON_CONTEST, onData );
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			provider.addEventListener( ProviderEvent.ON_PHOTO_UPLOADED_TO_CONTEST, onPhotoUploaded );
+			provider.addEventListener( ProviderEvent.ON_STORY_ADDED, onStortAdded );
 		}
 		
 		/**
@@ -100,20 +104,17 @@ package com.svyaznoy {
 			super.displayData();
 			
 			if ( addWorkButton ) {
-				if( (data.type === "photos" && addWorkButton is AddStoryButton) || (data.type !== "photos" && addWorkButton is AddWorkButton) ) {
-					worksListContainer.removeChild( addWorkButton );
-					addWorkButton.removeEventListener( MouseEvent.CLICK, onAddWorkClicked );
-					addWorkButton.dispose();
-					addWorkButton = null;
-				}
+				worksListContainer.removeChild( addWorkButton );
+				addWorkButton.removeEventListener( MouseEvent.CLICK, onAddWorkClicked );
+				addWorkButton.dispose();
+				addWorkButton = null;
 			}
 			
-			if ( !addWorkButton ) {
-				addWorkButton = data.type === "photos" ? new AddWorkButton() : new AddStoryButton();
+			if ( !addWorkButton && !data.is_participated ) {
+				addWorkButton = data.type === TYPE_PHOTOS ? new AddWorkButton() : new AddStoryButton();
 				addWorkButton.addEventListener( MouseEvent.CLICK, onAddWorkClicked );
+				worksListContainer.addChildAt( addWorkButton, 0 );
 			}
-			
-			worksListContainer.addChildAt( addWorkButton, 0 );
 			
 			titleLabel.text = "КОНКУРС: " + String( data.title ).toUpperCase();
 			messageLabel.text = data.content;
@@ -136,19 +137,10 @@ package com.svyaznoy {
 			ProviderURLLoader( event.target ).removeEventListener( ProviderEvent.ON_CONTEST_WORKS_LIST, onContestWorksList );
 			var newList:Array = event.data as Array;
 			
-			for each( var workData:Object in newList ) {
-				if ( workData.photo_with_path.indexOf( workData.photo ) === -1 ) {
-					workData.photo_with_path += "/" + workData.photo;
-				}
-				
-				if ( !workData.hasOwnProperty( "thumbnail_with_path" ) ) {
-					workData.thumbnail_with_path  = workData.photo_with_path;
-				}
-			}
 			
 			worksList = worksList.concat( newList );
 			
-			if ( data.type === "photos" ) {
+			if ( data.type === TYPE_PHOTOS ) {
 				for ( var i:int = 0; i < newList.length; i++ ) {
 					var image:PreviewImage = new PreviewImage();
 					var imageData:Object = newList[ i ];
@@ -181,9 +173,17 @@ package com.svyaznoy {
 		 */
 		
 		private function onWorkSelected( event:MouseEvent ):void {
-			var gallery:Photogallery = new Photogallery( true );
-			gallery.loadByDatasList( worksList );
-			PopupsController.getInstance().showPopup( gallery, true );
+			var index:int = worksPreviews.indexOf( event.currentTarget );
+			var workData:Object = worksList[ index ];
+			if( data.type === TYPE_PHOTOS ) {
+				var photoGallery:Photogallery = new Photogallery( true );
+				photoGallery.loadByDatasList( worksList );
+				PopupsController.getInstance().showPopup( photoGallery, true );
+			} else {
+				var storyGallery:StorysGallery = new StorysGallery( worksList, index );
+				PopupsController.getInstance().showPopup( storyGallery, true );
+			}
+			
 		}
 		
 		/**
@@ -225,6 +225,13 @@ package com.svyaznoy {
 		
 		private function onAddWorkClicked( event:MouseEvent ):void {
 			trace( "add work" );
+			var addWorkPopup:AddWorkToContestPopup;
+			if ( data.type === TYPE_PHOTOS ) {
+				addWorkPopup = new AddWorkToPhotoContest( data.id );
+			} else {
+				addWorkPopup = new AddWorkToStoryContest( data.id );
+			}
+			PopupsController.getInstance().showPopup( addWorkPopup, true );
 		}
 		
 		/**
@@ -234,6 +241,23 @@ package com.svyaznoy {
 		
 		private function onBackClicked( event:MouseEvent ):void {
 			Dispatcher.getInstance().dispatchEvent( new ScreenEvent( ScreenEvent.GO_BACK ) );
+		}
+		
+		/**
+		 * 
+		 */
+		
+		private function onPhotoUploaded( event:ProviderEvent ):void {
+			showContest( data.id );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onStortAdded( event:ProviderEvent ):void {
+			showContest( data.id );
 		}
 		
 	}

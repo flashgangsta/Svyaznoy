@@ -122,7 +122,6 @@ package com.svyaznoy {
 		 */
 		
 		private function addPrelaoder():void {
-			trace( "addPreloader" );
 			preloader = new MiniPreloader();
 			MappingManager.setAlign( preloader, background.getBounds( parent ) );
 			parent.addChild( preloader );

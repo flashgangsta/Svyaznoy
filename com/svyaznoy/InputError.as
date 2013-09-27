@@ -1,5 +1,6 @@
 package com.svyaznoy {
 	import caurina.transitions.Tweener;
+	import com.flashgangsta.utils.getChildByType;
 	import flash.display.Sprite;
 	import flash.text.TextField;
 	
@@ -21,7 +22,7 @@ package com.svyaznoy {
 		public function InputError() {
 			visible = false;
 			alpha = 0;
-			label = getChildByName( "label_txt" ) as TextField;
+			label = getChildByType( this, TextField ) as TextField;
 			label.text = "";
 		}
 		
