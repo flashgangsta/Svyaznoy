@@ -1,4 +1,5 @@
 package com.svyaznoy {
+	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	
 	/**
@@ -10,6 +11,7 @@ package com.svyaznoy {
 		///
 		private var _data:Object;
 		protected var isLinkToReport:Boolean = false;
+		protected var hit:DisplayObject;
 		
 		/**
 		 * 
@@ -17,6 +19,7 @@ package com.svyaznoy {
 		
 		public function PreviewItem() {
 			//scaleX = scaleY = 1;
+			hit = getChildByName( "hit_mc" );
 		}
 		
 		/**
@@ -60,6 +63,18 @@ package com.svyaznoy {
 			_data = value;
 			if ( !visible && data ) visible = true;
 		}
+		
+		/**
+		 * 
+		 */
+		
+		protected function updateHitSize():void {
+			if ( !hit ) return;
+			hit.width = hit.height = 0;
+			hit.width = width;
+			hit.height = height;
+		}
+		
 		
 	}
 

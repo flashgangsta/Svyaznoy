@@ -1,4 +1,6 @@
 package com.svyaznoy {
+	import caurina.transitions.properties.ColorShortcuts;
+	import caurina.transitions.properties.FilterShortcuts;
 	import com.flashgangsta.net.ContentLoader;
 	import com.flashgangsta.ui.Scrollbar;
 	import com.flashgangsta.utils.PopupsController;
@@ -51,6 +53,10 @@ package com.svyaznoy {
 			
 			removeEventListener( Event.ADDED_TO_STAGE, init );
 			
+			//Tweener
+			ColorShortcuts.init();
+			FilterShortcuts.init();
+			
 			//Helper
 			helper.isDebug = ( loaderInfo.url.indexOf( "http" ) !== 0 );
 			helper.isEmployeeMode = true;
@@ -82,6 +88,7 @@ package com.svyaznoy {
 		 */
 		
 		private function onLoggedIn( event:ProviderEvent ):void {
+			helper.setUserData( event.data );
 			provider.addEventListener( ProviderEvent.ON_CONTESTS_LIST, onContestsList );
 			provider.getContestsList();
 		}

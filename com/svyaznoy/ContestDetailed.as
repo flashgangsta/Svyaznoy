@@ -1,5 +1,6 @@
 package com.svyaznoy {
 	import com.flashgangsta.managers.MappingManager;
+	import com.flashgangsta.utils.PopupsController;
 	import com.svyaznoy.events.ProviderEvent;
 	import com.svyaznoy.events.ScreenEvent;
 	import com.svyaznoy.gui.Button;
@@ -26,8 +27,9 @@ package com.svyaznoy {
 		private var backButton:Button;
 		private var cupIcon:DisplayObject;
 		private var batteryIcon:DisplayObject;
-		private var worksList:Vector.<Object> = new Vector.<Object>();
+		private var worksList:Array = [];
 		private var containerCurrentRowY:int = 0;
+		private var worksPreviews:Vector.<PreviewItem> = new Vector.<PreviewItem>();
 		
 		/**
 		 * 
@@ -64,79 +66,20 @@ package com.svyaznoy {
 		 */
 		
 		public function showContest( id:int ):void {
-			for ( var i:int = 1; i < worksListContainer.numChildren; i++ ) {
-				
+			for ( var i:int = 0; i < worksPreviews.length; i++ ) {
+				var item:PreviewItem = worksPreviews[ i ] as PreviewItem;
+				worksListContainer.removeChild( item );
+				item.removeEventListener( MouseEvent.CLICK, onWorkSelected );
+				item.dispose();
+				item = null;
 			}
-			worksList = new Vector.<Object>();
+			
+			worksList = [];
+			worksPreviews = new Vector.<PreviewItem>();
 			containerCurrentRowY = 0;
 			provider.getContest( id );
 			backButton.addEventListener( MouseEvent.CLICK, onBackClicked );
 			setVisibleForElements( false );
-		}
-		
-		/**
-		 * 
-		 * @param	event
-		 */
-		
-		private function onContestWorksList( event:ProviderEvent ):void {
-			ProviderURLLoader( event.target ).removeEventListener( ProviderEvent.ON_CONTEST_WORKS_LIST, onContestWorksList );
-			var newList:Vector.<Object> = Vector.<Object>( event.data as Array );
-			
-			worksList = worksList.concat( Vector.<Object>( newList ) );
-			
-			if ( data.type === "photos" ) {
-				for ( var i:int = 0; i < newList.length; i++ ) {
-					var image:PreviewImage = new PreviewImage();
-					var imageData:Object = newList[ i ];
-					image.loadImage( imageData.photo_with_path + "/" + imageData.photo );
-					image.title = imageData.title;
-					image.description = imageData.employee.last_name + " " + imageData.employee.first_name;
-					addWorkToContainer( image );
-				}
-			} else {
-				for ( var j:int = 0; j < newList.length; j++ ) {
-					var story:PreviewStory = new PreviewStory();
-					var storyData:Object = newList[ i ];
-					story.message = storyData.title;
-					story.description = storyData.employee.last_name + " " + storyData.employee.first_name;
-					addWorkToContainer( story );
-					story.updateColor();
-				}
-			}
-			
-			alignItems();
-		}
-		
-		/**
-		 * 
-		 * @param	work
-		 */
-		
-		private function addWorkToContainer( work:DisplayObject ):void {
-			var numWorks:int = worksListContainer.numChildren;
-			work.x = ( work.width + 20 ) * ( numWorks % 3 );
-			work.y = containerCurrentRowY;
-			worksListContainer.addChild( work );
-			
-			numWorks = worksListContainer.numChildren;
-			
-			if ( numWorks / 3 is int ) {
-				var maxHeight:Number = Math.max( worksListContainer.getChildAt( numWorks - 1 ).height, worksListContainer.getChildAt( numWorks - 2 ).height, worksListContainer.getChildAt( numWorks - 3 ).height );
-				containerCurrentRowY = Math.ceil( worksListContainer.getChildAt( numWorks - 1 ).y + maxHeight ) + MARGIN;
-			}
-		}
-		
-		/**
-		 * 
-		 */
-		
-		private function alignItems():void {
-			var lastItem:DisplayObject = messageLabel.y + messageLabel.height > batterysLabel.y + batterysLabel.height ? messageLabel : batterysLabel;
-			divider.y = MappingManager.getBottom( lastItem, this ) + MARGIN;
-			worksListContainer.y = divider.y + MARGIN;
-			backButton.y = worksListContainer.y + worksListContainer.height + MARGIN * 2;
-			dispatchHeighUpdated();
 		}
 		
 		/**
@@ -182,6 +125,97 @@ package com.svyaznoy {
 			
 			alignItems();
 			setVisibleForElements( true );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onContestWorksList( event:ProviderEvent ):void {
+			ProviderURLLoader( event.target ).removeEventListener( ProviderEvent.ON_CONTEST_WORKS_LIST, onContestWorksList );
+			var newList:Array = event.data as Array;
+			
+			for each( var workData:Object in newList ) {
+				if ( workData.photo_with_path.indexOf( workData.photo ) === -1 ) {
+					workData.photo_with_path += "/" + workData.photo;
+				}
+				
+				if ( !workData.hasOwnProperty( "thumbnail_with_path" ) ) {
+					workData.thumbnail_with_path  = workData.photo_with_path;
+				}
+			}
+			
+			worksList = worksList.concat( newList );
+			
+			if ( data.type === "photos" ) {
+				for ( var i:int = 0; i < newList.length; i++ ) {
+					var image:PreviewImage = new PreviewImage();
+					var imageData:Object = newList[ i ];
+					image.loadImage( imageData.photo_with_path );
+					image.title = imageData.title;
+					image.description = imageData.employee.last_name + " " + imageData.employee.first_name;
+					image.buttonMode = true;
+					image.addEventListener( MouseEvent.CLICK, onWorkSelected );
+					addWorkToContainer( image );
+				}
+			} else {
+				for ( var j:int = 0; j < newList.length; j++ ) {
+					var story:PreviewStory = new PreviewStory();
+					var storyData:Object = newList[ i ];
+					story.message = storyData.title;
+					story.description = storyData.employee.last_name + " " + storyData.employee.first_name;
+					story.buttonMode = true;
+					story.addEventListener( MouseEvent.CLICK, onWorkSelected );
+					addWorkToContainer( story );
+					story.updateColor();
+				}
+			}
+			
+			alignItems();
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onWorkSelected( event:MouseEvent ):void {
+			var gallery:Photogallery = new Photogallery( true );
+			gallery.loadByDatasList( worksList );
+			PopupsController.getInstance().showPopup( gallery, true );
+		}
+		
+		/**
+		 * 
+		 * @param	work
+		 */
+		
+		private function addWorkToContainer( work:PreviewItem ):void {
+			var numWorks:int = worksListContainer.numChildren;
+			work.x = ( work.width + 20 ) * ( numWorks % 3 );
+			work.y = containerCurrentRowY;
+			worksListContainer.addChild( work );
+			worksPreviews.push( work );
+			
+			numWorks = worksListContainer.numChildren;
+			
+			if ( numWorks / 3 is int ) {
+				var maxHeight:Number = Math.max( worksListContainer.getChildAt( numWorks - 1 ).height, worksListContainer.getChildAt( numWorks - 2 ).height, worksListContainer.getChildAt( numWorks - 3 ).height );
+				containerCurrentRowY = Math.ceil( worksListContainer.getChildAt( numWorks - 1 ).y + maxHeight ) + MARGIN;
+			}
+		}
+		
+		/**
+		 * 
+		 */
+		
+		private function alignItems():void {
+			var lastItem:DisplayObject = messageLabel.y + messageLabel.height > batterysLabel.y + batterysLabel.height ? messageLabel : batterysLabel;
+			divider.y = MappingManager.getBottom( lastItem, this ) + MARGIN;
+			worksListContainer.y = divider.y + MARGIN;
+			backButton.y = worksListContainer.y + worksListContainer.height + MARGIN * 2;
+			dispatchHeighUpdated();
 		}
 		
 		/**

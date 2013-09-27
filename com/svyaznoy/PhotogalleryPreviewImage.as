@@ -101,6 +101,7 @@ package com.svyaznoy {
 			bitmap = loader.getContent() as Bitmap;
 			bitmap.smoothing = true;
 			MappingManager.setScaleFillArea( bitmap, maskObject.getBounds( this ) );
+			bitmap.x = MappingManager.getCentricPoint( width, bitmap.width );
 			bitmap.mask = maskObject;
 			addChild( bitmap );
 			removeLoader();
