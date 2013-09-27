@@ -23,6 +23,11 @@ package com.svyaznoy {
 		protected var loader:ProviderURLLoader;
 		protected var divider:DisplayObject;
 		
+		/**
+		 * 
+		 * @param	data
+		 */
+		
 		public function ContestSectionListItem( data:Object ) {
 			this.data = data;
 			divider = getChildByName( "divider_mc" );
@@ -34,9 +39,23 @@ package com.svyaznoy {
 			
 			messageLabel.autoSize = TextFieldAutoSize.LEFT;
 			dateLabel.text = DateConverter.getFormattedDate( data.date );
-			previewIcon.loadByPath( data.image_with_path );
+			if( data.image_with_path  ) previewIcon.loadByPath( data.image_with_path );
+			messageLabel.text = data.anonce ? data.anonce : "Нет параметра anonce в API";
 			
 			detailsButton.addEventListener( MouseEvent.CLICK, onDetailsClicked );
+		}
+		
+		/**
+		 * 
+		 * @return
+		 */
+		
+		public function getData():Object {
+			return data;
+		}
+		
+		public function dispose():void {
+			//TODO: заебашить
 		}
 		
 		/**

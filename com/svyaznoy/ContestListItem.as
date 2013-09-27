@@ -26,7 +26,6 @@ package com.svyaznoy {
 			previews = getChildByName( "previews_mc" ) as Sprite;
 			
 			titleLabel.text = "КОНКУРС: " + String( data.title ).toUpperCase();
-			messageLabel.text = data.anonce;
 			batterysLabel.text = data.points;
 			
 			var lastItem:DisplayObject = messageLabel.y + messageLabel.height > batterysLabel.y + batterysLabel.height ? messageLabel : batterysLabel;
@@ -44,15 +43,6 @@ package com.svyaznoy {
 			
 			detailsButton.y = MappingManager.getBottom( lastItem, this ) + 20;
 			divider.y = MappingManager.getBottom( detailsButton, this ) + 17;
-		}
-		
-		/**
-		 * 
-		 * @return
-		 */
-		
-		public function getData():Object {
-			return data;
 		}
 		
 		/**
