@@ -1,4 +1,5 @@
 package com.svyaznoy {
+	import com.flashgangsta.managers.MappingManager;
 	import com.svyaznoy.gui.Button;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -39,9 +40,17 @@ package com.svyaznoy {
 			
 			messageLabel.autoSize = TextFieldAutoSize.LEFT;
 			dateLabel.text = DateConverter.getFormattedDate( data.date );
-			if( data.image_with_path  ) previewIcon.loadByPath( data.image_with_path );
-			messageLabel.text = data.anonce ? data.anonce : "Нет параметра anonce в API";
+			if ( data.image_with_path ) previewIcon.loadByPath( data.image_with_path );
+			else {
+				previewIcon.visible = false;
+				previewIcon.height = 0;
+				messageLabel.width += messageLabel.x;
+				messageLabel.x = 0;
+			}
+			messageLabel.text = data.hasOwnProperty( "anonce" ) ? data.anonce : "Нет параметра anonce в API";
 			
+			detailsButton.y = ( previewIcon.height > messageLabel.height ? MappingManager.getBottom( previewIcon, this ): MappingManager.getBottom( messageLabel, this ) ) + 20;
+			divider.y = MappingManager.getBottom( detailsButton, this ) + 15;
 			detailsButton.addEventListener( MouseEvent.CLICK, onDetailsClicked );
 		}
 		

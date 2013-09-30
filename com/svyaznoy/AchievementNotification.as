@@ -85,8 +85,7 @@ package com.svyaznoy {
 			timer.removeEventListener( Event.COMPLETE, onTimer );
 			timer.stop();
 			Tweener.addTween( this, { scaleX: 0, scaleY: 0, x: 0, y: 0, time: .65, transition: "easeInCubic", onComplete: onAchievementComplete } );
-			//Provider.getInstance().setLastSeenAchievement( data.updated_at );
-			//TODO: включить сохранение последней полученной ачивки
+			Provider.getInstance().setLastSeenAchievement( data.updated_at );
 		}
 		
 		/**

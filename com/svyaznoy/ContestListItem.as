@@ -35,7 +35,7 @@ package com.svyaznoy {
 				previews.y = MappingManager.getBottom( lastItem, this ) + 25;
 				previews.visible = false;
 				lastItem = previews;
-				loader = provider.getContestWorksList( data.id, previews.numChildren );
+				loader = provider.getContestWorksList( data.id, previews.numChildren, 0, false, "created_at:desc" );
 				loader.addEventListener( ProviderEvent.ON_CONTEST_WORKS_LIST, onWorks );
 			} else {
 				previews.visible = false;
