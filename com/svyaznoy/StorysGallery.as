@@ -45,8 +45,8 @@ package com.svyaznoy {
 			data = datasList[ index ];
 			titleLabel.text = data.title;
 			messageLabel.text = data.story;
-			
-			author.loadAvatar( data.employee.username );
+			trace( "data.employee.user.username", data.employee.user.username );
+			author.loadAvatar(  data.employee.user.username );
 			author.title = data.employee.full_title;
 			
 			comments = new ContestsComments( data.competition_id, data.id );
@@ -54,6 +54,7 @@ package com.svyaznoy {
 			comments.view.y = author.y + author.height;
 			
 			if ( data.is_can_be_voted ) {
+				trace( "LIKES" );
 				like = new LikeComponent( data );
 				like.x = author.x;
 				like.y = background.y + background.height - like.height;

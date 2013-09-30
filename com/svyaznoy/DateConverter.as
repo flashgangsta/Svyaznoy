@@ -24,7 +24,7 @@ package com.svyaznoy {
 		}
 		
 		public static function getFormattedDate( date:String ):String {
-			var result:String = date.substr( 8 ) + " ";
+			var result:String = date.substr( 8, 2 ) + " ";
 			var monthNum:String = date.substr( 5, 2 );
 			result += MONTHS[ "m" + monthNum ] + " " + date.substr( 0, 4 );
 			return result;

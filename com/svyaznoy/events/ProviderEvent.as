@@ -57,6 +57,7 @@ package com.svyaznoy.events {
 		static public const ON_CONTEST:String = "onContest";
 		static public const ON_PHOTO_UPLOADED_TO_CONTEST:String = "onPhotoUploadedToContest";
 		static public const ON_STORY_ADDED:String = "onStoryAdded";
+		static public const ON_COMPLETED_TEST_DATA:String = "onCompletedTestData";
 		
 		public var data:Object;
 		

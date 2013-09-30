@@ -92,6 +92,14 @@ package com.svyaznoy {
 		
 		/**
 		 * 
+		 */
+		
+		public function selectContests():void {
+			ButtonManager.setSelectionOnGroup( contestsButton );
+		}
+		
+		/**
+		 * 
 		 * @param	target
 		 */
 		

@@ -5,10 +5,9 @@ package com.svyaznoy {
 	 */
 	public class TestOrLotteryListItem extends ContestSectionListItem {
 		
-		public function TestOrLotteryListItem( data:Object, isTest:Boolean = false ) {
+		public function TestOrLotteryListItem( data:Object ) {
 			super( data );
-			
-			titleLabel.text = ( isTest ? "ТЕСТ: " : "ЛОТЕРЕЯ: " ) + String( data.title ).toUpperCase();
+			titleLabel.text = ( data.hasOwnProperty( "is_answered" ) ? "ТЕСТ: " : "ЛОТЕРЕЯ: " ) + String( data.title ).toUpperCase();
 		}
 		
 	}

@@ -1,9 +1,11 @@
-package com.svyaznoy {
+ package com.svyaznoy {
 	import com.flashgangsta.managers.ButtonManager;
 	import com.flashgangsta.utils.PopupsController;
 	import com.svyaznoy.events.LotteryEvent;
 	import com.svyaznoy.events.NavigationEvent;
 	import com.svyaznoy.events.ProviderEvent;
+	import com.svyaznoy.events.ScreenEvent;
+	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -37,11 +39,27 @@ package com.svyaznoy {
 			lotteryButton = getChildByName( "lottery_mc" ) as MovieClip;
 			testsButton = getChildByName( "tests_mc" ) as MovieClip;
 			buttons = [ contestButton, lotteryButton, testsButton ];
-			ButtonManager.addButtonGroup( buttons, false, buttons[ 0 ], false, null, onSelect );
+			ButtonManager.addButtonGroup( buttons, false, buttons[ 0 ], false, ButtonManager.STATE_PRESSED, onSelect );
 			ButtonManager.callReleaseHandler( buttons[ 0 ] );
 			
 			addEventListener( Event.SELECT, onItemSelect );
+			addEventListener( ScreenEvent.HEIGHT_UPDATED, onHeightUpdated );
 		}
+		
+		private function onHeightUpdated( event:ScreenEvent ):void {
+			var lastY:int = 0;
+			
+			for ( var i:int = 0; i < container.numChildren; i++ ) {
+				var item:DisplayObject = container.getChildAt( i );
+				item.y = lastY;
+				lastY = Math.ceil( item.height + lastY );
+			}
+		}
+		
+		/**
+		 * 
+		 * @return
+		 */
 		
 		public function getSelectedItemID():int {
 			return selectedItemID;
@@ -55,15 +73,22 @@ package com.svyaznoy {
 		private function onItemSelect( event:Event ):void {
 			event.stopImmediatePropagation();
 			
+			var selectedItem:ContestSectionListItem = event.target as ContestSectionListItem;
+			trace( selectedItem );
+			
 			switch( ButtonManager.getSelectedButtonOfGroup( contestButton ) ) {
 				case testsButton:
-					var testData:Object = TestOrLotteryListItem( event.target ).getData();
-					var popup:TestPopup = new TestPopup( testData.id );
-					PopupsController.getInstance().showPopup( popup, true );
+					var testData:Object = selectedItem.getData();
+					PopupsController.getInstance().showPopup( new TestPopup( testData.id ), true );
 					break;
 				case contestButton:
-					selectedItemID = ContestListItem( event.target ).getData().id;
+					selectedItemID = selectedItem.getData().id;
 					dispatcher.dispatchEvent( new NavigationEvent( NavigationEvent.NAVIGATE_TO_CONTEST_DETAILED ) );
+					break;
+				case lotteryButton:
+					var outputEvent:LotteryEvent = new LotteryEvent( LotteryEvent.LOTTERY_SELECTED );
+					outputEvent.lotteryData = selectedItem.getData();
+					Dispatcher.getInstance().dispatchEvent( outputEvent );
 					break;
 			}
 		}
@@ -77,6 +102,7 @@ package com.svyaznoy {
 			if ( loader ) {
 				loader.removeEventListener( eventType, onData );
 				loader.dispose();
+				addPreloader();
 			}
 			
 			while ( container.numChildren ) {
@@ -105,14 +131,22 @@ package com.svyaznoy {
 					loader = provider.getTestsList( ITEMS_LIMIT );
 					break;
 			}
-			
 			loader.addEventListener( eventType, onData );
 		}
 		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
 		override protected function onData(event:ProviderEvent):void {
-			super.onData(event);
+			super.onData( event );
 			displayData();
 		}
+		
+		/**
+		 * 
+		 */
 		
 		override protected function displayData():void {
 			super.displayData();

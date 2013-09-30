@@ -47,12 +47,15 @@ package com.svyaznoy {
 			backButton = getChildByName( "backButton_mc" ) as Button;
 			cupIcon = getChildByName( "cupIcon_mc" );
 			batteryIcon = getChildByName( "batteryIcon_mc" );
+			
 			setElementsForVisibleControll( divider, titleLabel, messageLabel, batterysLabel, previewIcon, worksListContainer, backButton, cupIcon, batteryIcon );
 			addChild( worksListContainer );
 			provider.addEventListener( ProviderEvent.ON_CONTEST, onData );
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			provider.addEventListener( ProviderEvent.ON_PHOTO_UPLOADED_TO_CONTEST, onPhotoUploaded );
 			provider.addEventListener( ProviderEvent.ON_STORY_ADDED, onStortAdded );
+			
+			backButton.addEventListener( MouseEvent.CLICK, onBackClicked );
 		}
 		
 		/**
@@ -82,7 +85,6 @@ package com.svyaznoy {
 			worksPreviews = new Vector.<PreviewItem>();
 			containerCurrentRowY = 0;
 			provider.getContest( id );
-			backButton.addEventListener( MouseEvent.CLICK, onBackClicked );
 			setVisibleForElements( false );
 		}
 		
@@ -121,7 +123,7 @@ package com.svyaznoy {
 			batterysLabel.text = data.points;
 			previewIcon.loadByPath( data.image_with_path );
 			
-			loader = provider.getContestWorksList( data.id, 9, 0, true ); //TODO: разобраться с отображением всех конкурсов
+			loader = provider.getContestWorksList( data.id, 9, 0, true, "created_at:desc" ); //TODO: разобраться с отображением всех конкурсов
 			loader.addEventListener( ProviderEvent.ON_CONTEST_WORKS_LIST, onContestWorksList );
 			
 			alignItems();
@@ -154,7 +156,7 @@ package com.svyaznoy {
 			} else {
 				for ( var j:int = 0; j < newList.length; j++ ) {
 					var story:PreviewStory = new PreviewStory();
-					var storyData:Object = newList[ i ];
+					var storyData:Object = newList[ j ];
 					story.message = storyData.title;
 					story.description = storyData.employee.last_name + " " + storyData.employee.first_name;
 					story.buttonMode = true;
@@ -240,7 +242,7 @@ package com.svyaznoy {
 		 */
 		
 		private function onBackClicked( event:MouseEvent ):void {
-			Dispatcher.getInstance().dispatchEvent( new ScreenEvent( ScreenEvent.GO_BACK ) );
+			dispatchEvent( new ScreenEvent( ScreenEvent.GO_BACK ) );
 		}
 		
 		/**

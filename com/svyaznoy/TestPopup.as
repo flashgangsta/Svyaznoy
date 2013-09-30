@@ -77,9 +77,18 @@ package com.svyaznoy {
 			loader = event.currentTarget as ProviderURLLoader;
 			loader.removeEventListener( ProviderEvent.ON_TEST, onTestData );
 			
-			hidePreloader();
 			
 			data = event.data;
+			
+			if ( data.is_answered ) {
+				trace( "Show answered test" );
+				showCompletedTest();
+				submit.visible = false;
+				return;
+			}
+			
+			hidePreloader();
+			
 			questions = data.questions;
 			title.text = data.title;
 			message.text = data.content;
@@ -96,6 +105,25 @@ package com.svyaznoy {
 			
 			title.visible = true;
 			message.visible = true;
+		}
+		
+		/**
+		 * 
+		 */
+		
+		private function showCompletedTest():void {
+			loader = provider.getCompletedTest( data.id );
+			loader.addEventListener( ProviderEvent.ON_COMPLETED_TEST_DATA, onCompletedTestData );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onCompletedTestData( event:ProviderEvent ):void {
+			loader.removeEventListener( ProviderEvent.ON_COMPLETED_TEST_DATA, onCompletedTestData );
+			trace( JSON.stringify( event.data ) );
 		}
 		
 		/**

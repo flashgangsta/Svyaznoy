@@ -1,6 +1,7 @@
 package com.svyaznoy {
 	import com.flashgangsta.managers.MappingManager;
 	import com.svyaznoy.events.ProviderEvent;
+	import com.svyaznoy.events.ScreenEvent;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -56,14 +57,23 @@ package com.svyaznoy {
 			loader = null;
 			
 			for ( var i:int = 0; i < works.length; i++ ) {
-				AvatarContainer( previews.getChildAt( i ) ).loadByPath( works[ i ].photo_with_path );
+				AvatarContainer( previews.getChildAt( i ) ).loadByPath( works[ i ].photo_thumbnails_with_path );
 			}
 			
 			for ( i; i < previews.numChildren; i++ ) {
 				previews.getChildAt( i ).visible = false;
 			}
 			
-			previews.visible = Boolean( works.length );
+			if ( works.length ) {
+				previews.visible = true;
+			} else {
+				var lastItem:DisplayObject = messageLabel.y + messageLabel.height > batterysLabel.y + batterysLabel.height ? messageLabel : batterysLabel;
+				previews.y = 0;
+				detailsButton.y = MappingManager.getBottom( lastItem, this ) + 20;
+				divider.y = MappingManager.getBottom( detailsButton, this ) + 17;
+				previews.visible = false;
+				dispatchEvent( new ScreenEvent( ScreenEvent.HEIGHT_UPDATED, true ) );
+			}
 		}
 		
 	}
