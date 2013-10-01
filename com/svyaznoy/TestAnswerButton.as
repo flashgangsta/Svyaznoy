@@ -42,6 +42,10 @@ package com.svyaznoy {
 		}
 		
 		override public function setLabel(message:String):void {
+			if ( !message ) {
+				visible = false;
+				return;
+			}
 			answerLabel.text = message;
 			answerLabel.y = MappingManager.getCentricPoint( background.height, answerLabel.height );
 		}

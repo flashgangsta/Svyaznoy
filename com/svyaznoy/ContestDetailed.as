@@ -1,14 +1,17 @@
 package com.svyaznoy {
 	import com.flashgangsta.managers.MappingManager;
+	import com.flashgangsta.ui.Label;
 	import com.flashgangsta.utils.PopupsController;
 	import com.svyaznoy.events.ProviderEvent;
 	import com.svyaznoy.events.ScreenEvent;
 	import com.svyaznoy.gui.Button;
+	import com.svyaznoy.gui.LabelWithIcon;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
 	
 	/**
 	 * ...
@@ -27,8 +30,7 @@ package com.svyaznoy {
 		private var divider:DisplayObject;
 		private var addWorkButton:Button;
 		private var backButton:Button;
-		private var cupIcon:DisplayObject;
-		private var batteryIcon:DisplayObject;
+		private var awardIcon:LabelWithIcon;
 		private var worksList:Array = [];
 		private var containerCurrentRowY:int = 0;
 		private var worksPreviews:Vector.<PreviewItem> = new Vector.<PreviewItem>();
@@ -42,13 +44,11 @@ package com.svyaznoy {
 			divider = getChildByName( "divider_mc" );
 			titleLabel = getChildByName( "titleLabel_txt" ) as TextField;
 			messageLabel = getChildByName( "messageLabel_txt" ) as TextField;
-			batterysLabel = getChildByName( "batterysLabel_txt" ) as TextField;
 			previewIcon = getChildByName( "preview_mc" ) as AvatarContainer;
 			backButton = getChildByName( "backButton_mc" ) as Button;
-			cupIcon = getChildByName( "cupIcon_mc" );
-			batteryIcon = getChildByName( "batteryIcon_mc" );
+			awardIcon = getChildByName( "award_mc" ) as LabelWithIcon;
 			
-			setElementsForVisibleControll( divider, titleLabel, messageLabel, batterysLabel, previewIcon, worksListContainer, backButton, cupIcon, batteryIcon );
+			setElementsForVisibleControll( divider, titleLabel, messageLabel, previewIcon, worksListContainer, backButton, awardIcon );
 			addChild( worksListContainer );
 			provider.addEventListener( ProviderEvent.ON_CONTEST, onData );
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
@@ -120,11 +120,22 @@ package com.svyaznoy {
 			
 			titleLabel.text = "КОНКУРС: " + String( data.title ).toUpperCase();
 			messageLabel.text = data.content;
-			batterysLabel.text = data.points;
-			previewIcon.loadByPath( data.image_with_path );
+			awardIcon.value = data.points;
+			messageLabel.autoSize = TextFieldAutoSize.LEFT;
+			
+			if ( data.image_with_path ) {
+				previewIcon.loadByPath( data.image_with_path );
+			} else {
+				previewIcon.visible = false;
+				previewIcon.height = 0;
+				messageLabel.width += messageLabel.x;
+				messageLabel.x = previewIcon.x;
+			}
 			
 			loader = provider.getContestWorksList( data.id, 9, 0, true, "created_at:desc" ); //TODO: разобраться с отображением всех конкурсов
 			loader.addEventListener( ProviderEvent.ON_CONTEST_WORKS_LIST, onContestWorksList );
+			
+			awardIcon.x = MappingManager.getCentricPoint( previewIcon.width, awardIcon.width );
 			
 			alignItems();
 			setVisibleForElements( true );
@@ -213,8 +224,8 @@ package com.svyaznoy {
 		 */
 		
 		private function alignItems():void {
-			var lastItem:DisplayObject = messageLabel.y + messageLabel.height > batterysLabel.y + batterysLabel.height ? messageLabel : batterysLabel;
-			divider.y = MappingManager.getBottom( lastItem, this ) + MARGIN;
+			awardIcon.y = Math.max( MappingManager.getBottom( previewIcon, this ), MappingManager.getBottom( messageLabel, this ) ) + 5;
+			divider.y = Math.max( MappingManager.getBottom( messageLabel, this ), MappingManager.getBottom( awardIcon, this ) ) + MARGIN;
 			worksListContainer.y = divider.y + MARGIN;
 			backButton.y = worksListContainer.y + worksListContainer.height + MARGIN * 2;
 			dispatchHeighUpdated();
