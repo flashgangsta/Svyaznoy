@@ -78,6 +78,10 @@ package com.svyaznoy {
 			background.visible = false;
 		}
 		
+		public function getBitmap():Bitmap {
+			return bitmap;
+		}
+		
 		/**
 		 * 
 		 * @param	event
@@ -165,7 +169,6 @@ package com.svyaznoy {
 			if ( !background.visible ) {
 				dispatchChange();
 			}
-			
 		}
 		
 		/**

@@ -1,6 +1,7 @@
 package com.svyaznoy {
 	import com.flashgangsta.managers.MappingManager;
 	import com.svyaznoy.events.DynamicItemEvent;
+	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -119,6 +120,10 @@ package com.svyaznoy {
 			titleHitObject.height = titleLabel.height;
 			
 			return titleHitObject;
+		}
+		
+		public function getBitmap():Bitmap {
+			return titleImage.getBitmap();
 		}
 		
 		/**

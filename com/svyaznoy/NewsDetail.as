@@ -1,5 +1,6 @@
 package com.svyaznoy {
 	import com.flashgangsta.managers.MappingManager;
+	import com.flashgangsta.vk.WallPostUtil;
 	import com.svyaznoy.events.CommentsEvent;
 	import com.svyaznoy.events.DynamicItemEvent;
 	import com.svyaznoy.events.NewsEvent;
@@ -19,16 +20,19 @@ package com.svyaznoy {
 		
 		private const MARGIN:int = 10;
 		private var id:int;
-		
+		private var shareButton:Button;
 		
 		/**
 		 * 
 		 */
 		
 		public function NewsDetail() {
-			setVisible( false );
 			bottomButton.addEventListener( MouseEvent.CLICK, onBackButtonClicked );
 			provider.addEventListener( ProviderEvent.ON_NEWS_DETAIL, onData );
+			shareButton = getChildByName( "shareButton_mc" ) as Button;
+			setVisible( false );
+			shareButton.addEventListener( MouseEvent.CLICK, onShareClicked );
+			addEventListener( DynamicItemEvent.SIZE_CHANGED, onSizeChanged );
 		}
 		
 		/**
@@ -68,20 +72,11 @@ package com.svyaznoy {
 		 * @param	event
 		 */
 		
-		private function onCommentsReady( event:CommentsEvent ):void {
-			addChild( comments.view );
-			setPositions();
-			dispatchHeighUpdated();
-		}
-		
-		/**
-		 * 
-		 * @param	event
-		 */
-		
 		override protected function onData( event:ProviderEvent ):void {
 			super.onData( event );
 			Helper.getInstance().setNewsData( data );
+			shareButton.enabled = Boolean( data.image_with_path );
+			shareButton.alpha = int( shareButton.enabled );
 			displayData();
 		}
 		
@@ -97,6 +92,27 @@ package com.svyaznoy {
 		
 		/**
 		 * 
+		 * @param	event
+		 */
+		
+		private function onShareClicked( event:MouseEvent ):void {
+			var shareUtil:WallPostUtil = new WallPostUtil( Helper.getInstance().vkAPI );
+			shareUtil.post( data.content, [ header.getBitmap() ] );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onCommentsReady( event:CommentsEvent ):void {
+			addChild( comments.view );
+			setPositions();
+			dispatchHeighUpdated();
+		}
+		
+		/**
+		 * 
 		 */
 		
 		private function setPositions():void {
@@ -105,7 +121,7 @@ package com.svyaznoy {
 				comments.view.y = Math.ceil( MappingManager.getBottom( lastItem, this ) + MARGIN );
 				lastItem = comments.view;
 			}
-			bottomButton.y = Math.ceil( MappingManager.getBottom( lastItem, this ) + MARGIN );
+			bottomButton.y = shareButton.y = Math.ceil( MappingManager.getBottom( lastItem, this ) + MARGIN );
 		}
 		
 		/**
@@ -117,6 +133,7 @@ package com.svyaznoy {
 			header.visible = value;
 			bottomButton.visible = value;
 			dynamicContentViewer.visible = value;
+			shareButton.visible = value;
 		}
 		
 		/**
@@ -126,6 +143,15 @@ package com.svyaznoy {
 		
 		private function onBackButtonClicked( event:MouseEvent ):void {
 			Dispatcher.getInstance().dispatchEvent( new NewsEvent( NewsEvent.NEWS_BACK_TO_LIST_CLICKED ) );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onSizeChanged( event:DynamicItemEvent ):void {
+			setPositions();
 		}
 		
 	}

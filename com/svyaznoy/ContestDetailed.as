@@ -20,6 +20,8 @@ package com.svyaznoy {
 	public class ContestDetailed extends Screen {
 		
 		private const TYPE_PHOTOS:String = "photos";
+		static public const DEFAULT_MESSAGE_WIDTH:int = 340;
+		static public const DEFAULT_MESSAGE_X:int = 175;
 		
 		private var worksListContainer:Sprite = new Sprite();
 		private var titleLabel:TextField;
@@ -125,7 +127,11 @@ package com.svyaznoy {
 			
 			if ( data.image_with_path ) {
 				previewIcon.loadByPath( data.image_with_path );
-			} else {
+				previewIcon.visible = true;
+				previewIcon.height = previewIcon.width;
+				messageLabel.width = DEFAULT_MESSAGE_WIDTH;
+				messageLabel.x = DEFAULT_MESSAGE_X;
+			} else if( previewIcon.height ) {
 				previewIcon.visible = false;
 				previewIcon.height = 0;
 				messageLabel.width += messageLabel.x;
