@@ -7,6 +7,7 @@ package com.svyaznoy {
 	import com.svyaznoy.events.ProviderEvent;
 	import com.svyaznoy.gui.Button;
 	import flash.display.DisplayObject;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -41,16 +42,11 @@ package com.svyaznoy {
 		 */
 		
 		public function showNews( id:int ):void {
-			var savedNewsData:Object = Helper.getInstance().getNewsDataByID( id );
-			
-			if ( this.id !== id && !savedNewsData ) {
+			if ( this.id !== id ) {
 				addPreloader();
 				provider.getNewsDetail( id );
 				setVisible( false );
 				this.id = id;
-			} else if ( savedNewsData && this.id !== id ) {
-				data = savedNewsData;
-				displayData();
 			}
 			
 			if ( comments ) {
@@ -75,8 +71,6 @@ package com.svyaznoy {
 		override protected function onData( event:ProviderEvent ):void {
 			super.onData( event );
 			Helper.getInstance().setNewsData( data );
-			shareButton.enabled = Boolean( data.image_with_path );
-			shareButton.alpha = int( shareButton.enabled );
 			displayData();
 		}
 		
@@ -97,7 +91,31 @@ package com.svyaznoy {
 		
 		private function onShareClicked( event:MouseEvent ):void {
 			var shareUtil:WallPostUtil = new WallPostUtil( Helper.getInstance().vkAPI );
-			shareUtil.post( data.content, [ header.getBitmap() ] );
+			var attachments:Array = [];
+			if ( header.getBitmap() ) attachments.push( header.getBitmap() );
+			shareUtil.post( data.content, attachments, "http://vk.com/app" + Helper.getInstance().getAppID() );
+			shareUtil.addEventListener( Event.COMPLETE, onPostShared );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onPostShared( event:Event ):void {
+			var loader:ProviderURLLoader = provider.confirmShare();
+			loader.addEventListener( ProviderEvent.ON_SHARE_CONFIRMED, onShareConfirmed );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onShareConfirmed( event:ProviderEvent ):void {
+			var loader:ProviderURLLoader = event.target as ProviderURLLoader;
+			loader.removeEventListener( ProviderEvent.ON_SHARE_CONFIRMED, onShareConfirmed );
+			AchievementsController.getInstance().checkNewAchiewements();
 		}
 		
 		/**

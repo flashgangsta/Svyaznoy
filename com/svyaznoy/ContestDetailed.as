@@ -194,9 +194,11 @@ package com.svyaznoy {
 		private function onWorkSelected( event:MouseEvent ):void {
 			var index:int = worksPreviews.indexOf( event.currentTarget );
 			var workData:Object = worksList[ index ];
+			
 			if( data.type === TYPE_PHOTOS ) {
 				var photoGallery:Photogallery = new Photogallery( true );
 				photoGallery.loadByDatasList( worksList );
+				photoGallery.selectPhotoByIndex( index );
 				PopupsController.getInstance().showPopup( photoGallery, true );
 			} else {
 				var storyGallery:StorysGallery = new StorysGallery( worksList, index );

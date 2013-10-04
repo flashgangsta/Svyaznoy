@@ -13,6 +13,7 @@ package com.svyaznoy {
 		private var avatar:AvatarContainer;
 		private var titleLabel:TextField;
 		private var messageLabel:TextField;
+		private var employeeLoader:ProviderURLLoader;
 		
 		/**
 		 * 
@@ -39,7 +40,29 @@ package com.svyaznoy {
 		}
 		
 		public function dispose():void {
+			if( employeeLoader ) {
+				employeeLoader.dispose();
+				employeeLoader.removeEventListener( ProviderEvent.ON_EMPLOYEE_DATA, onEmployeeData );
+				employeeLoader = null;
+			}
 			avatar.dispose();
+		}
+		
+		public function loadAuthorByEmployeeID( employee_id:int ):void {
+			employeeLoader = Provider.getInstance().getEmployeeByID( employee_id );
+			employeeLoader.addEventListener( ProviderEvent.ON_EMPLOYEE_DATA, onEmployeeData );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onEmployeeData( event:ProviderEvent ):void {
+			employeeLoader.removeEventListener( ProviderEvent.ON_EMPLOYEE_DATA, onEmployeeData );
+			employeeLoader = null;
+			loadAvatar( event.data.user.username );
+			title = event.data.full_title;
 		}
 		
 		/**
