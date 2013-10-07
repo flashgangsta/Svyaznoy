@@ -16,9 +16,9 @@ package com.svyaznoy {
 	 */
 	public class IconListItem extends Sprite {
 		
-		private var titleLabel:TextField;
-		private var signLabel:TextField;
-		private var imageArea:Sprite;
+		protected var titleLabel:TextField;
+		protected var signLabel:TextField;
+		protected var imageArea:Sprite;
 		private var prelaoder:MovieClip;
 		private var hit:Sprite;
 		private var loader:ContentLoader;
@@ -127,7 +127,7 @@ package com.svyaznoy {
 			MappingManager.setScaleOnlyReduce( bitmap, imageArea.width, imageArea.height );
 			MappingManager.setAlign( bitmap, imageArea.getBounds( this ) );
 			bitmap.mask = imageArea;
-			addChild( bitmap );
+			addChildAt( bitmap, 0 );
 			removeLoader();
 			dispatchEvent( new Event( Event.COMPLETE ) );
 		}

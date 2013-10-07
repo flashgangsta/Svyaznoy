@@ -6,6 +6,7 @@ package com.svyaznoy {
 	import com.svyaznoy.events.NewsEvent;
 	import com.svyaznoy.events.ProviderEvent;
 	import com.svyaznoy.gui.Button;
+	import com.svyaznoy.utils.ContentParser;
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -92,8 +93,10 @@ package com.svyaznoy {
 		private function onShareClicked( event:MouseEvent ):void {
 			var shareUtil:WallPostUtil = new WallPostUtil( Helper.getInstance().vkAPI );
 			var attachments:Array = [];
+			var message:String = String("" + data.content).replace( ContentParser.TEMPLATE_TAG, "" );
+			message = message.replace( / +/, " " );
 			if ( header.getBitmap() ) attachments.push( header.getBitmap() );
-			shareUtil.post( data.content, attachments, "http://vk.com/app" + Helper.getInstance().getAppID() );
+			shareUtil.post( message, attachments, "http://vk.com/app" + Helper.getInstance().getAppID() );
 			shareUtil.addEventListener( Event.COMPLETE, onPostShared );
 		}
 		

@@ -6,7 +6,7 @@ package com.svyaznoy.utils {
 	 */
 	public class ContentParser {
 		
-		static const TEMPLATE_TAG:RegExp =			/!\[(\w+)\]\(([^)]+)\s?\[?([^]\]*)?\]?\)/m; ///!\[(\w+)\]\(([\w:.\/@%\s]+)\s?\[?([\w:@.]*)?\]?\)/;
+		static public const TEMPLATE_TAG:RegExp =			/!\[(\w+)\]\(([^)]+)\s?\[?([^]\]*)?\]?\)/m; ///!\[(\w+)\]\(([\w:.\/@%\s]+)\s?\[?([\w:@.]*)?\]?\)/;
 		static const TEMPLATE_LINK:RegExp = 		/!\[(link)\]\(([^\[)]+)\s?\[?([^\]]*)?\]?\)/g; ///!\[(link)\]\(([\w:\/.@]+)\s?\[?([\w:@.]*)?\]?\)/;
 		static const TEMPLATE_BOLD_TEXT:RegExp = 	/\*{2}(.+?)\*{2}/sgm; //**Жирный текст**
 		

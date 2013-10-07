@@ -60,6 +60,7 @@ package com.svyaznoy.events {
 		static public const ON_COMPLETED_TEST_DATA:String = "onCompletedTestData";
 		static public const ON_SHARE_CONFIRMED:String = "onShareConfirmed";
 		static public const ON_BONUSES:String = "onBonuses";
+		static public const ON_LIKE_SENT:String = "onLikeSent";
 		
 		public var data:Object;
 		

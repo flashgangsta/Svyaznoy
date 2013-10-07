@@ -23,12 +23,12 @@ package com.svyaznoy {
 		 */
 		
 		public function fill( list:Vector.<Object> ):void {
-			var achievement:IconListItem;
+			var achievement:AchievementsListItem;
 			var data:Object;
 			
 			for ( var i:int = 0; i < list.length; i++ ) {
 				data = list[ i ];
-				achievement = new IconListItem( null, achievementsDatas.getAchievementNameByData( data ), achievementsDatas.getAchievementIconByData( data ) );
+				achievement = new AchievementsListItem( data.degree, null, achievementsDatas.getAchievementNameByData( data ), achievementsDatas.getAchievementIconByData( data ) );
 				achievement.y = Math.floor( i / COLOUMNS ) * ( achievement.height + MARGIN_V ) ;
 				achievement.x = ( i % 6 ) * ( achievement.width + MARGIN_H );
 				addChild( achievement );
