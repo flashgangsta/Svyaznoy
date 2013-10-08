@@ -92,6 +92,10 @@ package com.svyaznoy {
 			hit.width = value;
 		}
 		
+		override public function get height():Number {
+			return Math.max( MappingManager.getBottom( titleLabel, this ), MappingManager.getBottom( hit, this ), MappingManager.getBottom( signLabel, this ) ) ;
+		}
+		
 		/**
 		 * 
 		 * @param	data

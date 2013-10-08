@@ -22,6 +22,7 @@ package com.svyaznoy {
 		private var moreButton:Button;
 		private var iconsContainer:Sprite = new Sprite();
 		private var datasList:Array;
+		private var _height:int = 0;
 		
 		/**
 		 * 
@@ -61,11 +62,16 @@ package com.svyaznoy {
 				icon.buttonMode = true;
 				iconsContainer.addChild( icon );
 				iconsList.push( icon );
+				_height = Math.max( _height, icon.height );
 			}
 			
 			moreButton.y = MappingManager.getBottom( iconsContainer, this ) + MARGIN;
 			
 			//TODO: сделать дозагрузку лоттерей по нажатию кнопки
+		}
+		
+		override public function get height():Number {
+			return super.height;
 		}
 		
 		/**
