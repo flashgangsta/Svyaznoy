@@ -37,7 +37,7 @@ package com.svyaznoy {
 			messageLabel = getChildByName( "messageLabel_txt" ) as TextField;
 			previewIcon = getChildByName( "preview_mc" ) as AvatarContainer;
 			detailsButton = getChildByName( "detailsButton_mc" ) as Button;
-			
+
 			messageLabel.autoSize = TextFieldAutoSize.LEFT;
 			dateLabel.text = DateConverter.getFormattedDate( data.date );
 			if ( data.image_with_path ) previewIcon.loadByPath( data.image_with_path );

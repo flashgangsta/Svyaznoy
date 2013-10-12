@@ -9,7 +9,7 @@ package com.svyaznoy {
 	 * ...
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
 	 */
-	public dynamic class DeparturesPhotosButton extends Button {
+	public dynamic class DroppedListTitleButton extends Button {
 		
 		private var icon:Sprite;
 		private var iconGraphics:DisplayObject;
@@ -19,7 +19,7 @@ package com.svyaznoy {
 		 * 
 		 */
 		
-		public function DeparturesPhotosButton() {
+		public function DroppedListTitleButton() {
 			icon = label.getChildByName( "icon_mc" ) as Sprite;
 			iconGraphics = icon.getChildAt( 0 );
 			addEventListener( MouseEvent.CLICK, onClicked );

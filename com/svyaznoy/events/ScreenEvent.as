@@ -10,6 +10,7 @@ package com.svyaznoy.events {
 		static public const HEIGHT_UPDATED:String = "heightUpdated";
 		static public const RESET_SCROLL_NEEDED:String = "resetScrollNeeded";
 		static public const GO_BACK:String = "goBack";
+		static public const ON_OFFSET_LOADING_STARTED:String = "onOffsetLoadingStarted";
 		
 		public function ScreenEvent( type:String, bubbles:Boolean = false, cancelable:Boolean = false ) { 
 			super( type, bubbles, cancelable );
