@@ -10,7 +10,7 @@ package com.svyaznoy {
 		private const TITLE_LENGTH_NAME:String = "фотогалерей";
 		
 		public function DepartureGalleriesBar( datasList:Vector.<Object> ) {
-			super( ROW_COUNT, datasList, true, PreviewGallery, TITLE, TITLE_LENGTH_NAME );
+			super( ROW_COUNT, datasList, true, DepartureGalleryPreview, TITLE, TITLE_LENGTH_NAME );
 		}
 		
 	}

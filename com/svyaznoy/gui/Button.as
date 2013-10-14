@@ -14,7 +14,6 @@ package com.svyaznoy.gui {
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
 	 */
 	public class Button extends MovieClip {
-		
 		protected var label:Label;
 		protected var hit:Shape = new Shape();
 		private var labelMessage:String;
@@ -30,6 +29,8 @@ package com.svyaznoy.gui {
 				var child:DisplayObject = getChildAt( i );
 				if ( child is Label ) {
 					label = child as Label;
+					label.mouseEnabled = false;
+					label.mouseChildren = false;
 				} else if ( child is TextField ) {
 					TextField( child ).mouseEnabled = false;
 					TextField( child ).mouseWheelEnabled = false;
@@ -49,6 +50,12 @@ package com.svyaznoy.gui {
 				ButtonManager.addButton( this );
 			}
 		}
+		
+		/**
+		 * 
+		 * @param	child
+		 * @return
+		 */
 		
 		override public function addChild( child:DisplayObject ):DisplayObject {
 			super.addChild( child );
