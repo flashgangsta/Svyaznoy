@@ -39,6 +39,16 @@ package com.svyaznoy {
 			return data[ achievementData.type + "_" + achievementData.level + "_title" ];
 		}
 		
+		/**
+		 * 
+		 * @param	achievementData
+		 * @return
+		 */
+		
+		public function getAchievementCostByData( achievementData:Object ):int {
+			return int( data[ achievementData.type + "_" + achievementData.level + "_cost" ] );
+		}
+		
 	}
 
 }

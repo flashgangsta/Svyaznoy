@@ -96,7 +96,7 @@ package com.svyaznoy {
 			var message:String = String("" + data.content).replace( ContentParser.TEMPLATE_TAG, "" );
 			message = message.replace( / +/, " " );
 			if ( header.getBitmap() ) attachments.push( header.getBitmap() );
-			shareUtil.post( message, attachments, "http://vk.com/app" + Helper.getInstance().getAppID() );
+			shareUtil.post( message, attachments, Helper.getInstance().getAppURL() );
 			shareUtil.addEventListener( Event.COMPLETE, onPostShared );
 		}
 		

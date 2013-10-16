@@ -2,6 +2,7 @@ package com.svyaznoy {
 	import com.flashgangsta.managers.MappingManager;
 	import com.svyaznoy.events.NavigationEvent;
 	import com.svyaznoy.events.ProviderEvent;
+	import com.svyaznoy.gui.Button;
 	import flash.events.MouseEvent;
 	
 	/**
@@ -9,7 +10,7 @@ package com.svyaznoy {
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
 	 */
 	
-	public class Legend extends ScreenWithBottomButton {
+	public class Legend extends ScreenWithTopButton  {
 		
 		public function Legend() {
 			var helper:Helper = Helper.getInstance();
@@ -17,9 +18,9 @@ package com.svyaznoy {
 			provider.addEventListener( ProviderEvent.ON_LEGEND, onData );
 			
 			if ( !helper.isEmployeeMode ) {
-				removeChild( bottomButton );
+				removeChild( topButton );
 			} else {
-				bottomButton.addEventListener( MouseEvent.CLICK, onBottomButtonClicked )
+				topButton.addEventListener( MouseEvent.CLICK, onTopButtonClicked )
 			}
 		}
 		
@@ -31,6 +32,7 @@ package com.svyaznoy {
 		override protected function onData( event:ProviderEvent ):void {
 			super.onData( event );
 			provider.removeEventListener( ProviderEvent.ON_LEGEND, onData );
+			topButton.visible = true;
 		}
 		
 		/**
@@ -38,7 +40,7 @@ package com.svyaznoy {
 		 * @param	event
 		 */
 		
-		private function onBottomButtonClicked( event:MouseEvent ):void {
+		private function onTopButtonClicked( event:MouseEvent ):void {
 			Dispatcher.getInstance().dispatchEvent( new NavigationEvent( NavigationEvent.NAVIGATE_TO_THERMS_OF_MOTIVATION ) );
 		}
 		

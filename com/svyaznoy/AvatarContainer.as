@@ -17,6 +17,8 @@ package com.svyaznoy {
 		static public const PHOTO_50:String = "photo_50";
 		static public const PHOTO_100:String = "photo_100";
 		static public const PHOTO_200:String = "photo_200_orig";
+		static public const SCALE_MODE_FILL_AREA:String = "fillArea";
+		static public const SCALE_MODE_ONLY_REDUCE:String = "onlyReduce";
 		
 		private var loader:ContentLoader;
 		private var bitmap:Bitmap;
@@ -24,6 +26,7 @@ package com.svyaznoy {
 		private var preloader:PreloaderAnimation = new PreloaderAnimation();
 		private var helper:Helper = Helper.getInstance();
 		private var size:String;
+		private var mode:String;
 		
 		/**
 		 * 
@@ -87,6 +90,15 @@ package com.svyaznoy {
 			removeBitmap();
 		}
 		
+		public function setScaleMode( mode:String = SCALE_MODE_FILL_AREA ):void {
+			this.mode = mode;
+			
+		}
+		
+		public function getBitmap():Bitmap {
+			return bitmap
+		}
+		
 		/**
 		 * 
 		 */
@@ -126,10 +138,15 @@ package com.svyaznoy {
 		private function onLoaded( event:Event ):void {
 			bitmap = loader.getContent() as Bitmap;
 			bitmap.smoothing = true;
-			MappingManager.setScaleFillArea( bitmap, avatarArea.getBounds( this ) );
-			bitmap.x = MappingManager.getCentricPoint( avatarArea.width, bitmap.width );
-			//MappingManager.setScaleOnlyReduce( bitmap, avatarArea.width, avatarArea.height );
-			//MappingManager.setAlign( bitmap, avatarArea.getBounds( this ) );
+			
+			if( mode === SCALE_MODE_FILL_AREA ) {
+				MappingManager.setScaleFillArea( bitmap, avatarArea.getBounds( this ) );
+				bitmap.x = MappingManager.getCentricPoint( avatarArea.width, bitmap.width );
+			} else {
+				MappingManager.setScaleOnlyReduce( bitmap, avatarArea.width, avatarArea.height );
+				MappingManager.setAlign( bitmap, avatarArea.getBounds( this ) );
+			}
+			
 			bitmap.mask = avatarArea;
 			addChild( bitmap );
 			preloader.hide();
