@@ -118,7 +118,7 @@ package com.svyaznoy {
 		
 		private function onShareClicked( event:MouseEvent ):void {
 			var sharing:WallPostUtil = new WallPostUtil( Helper.getInstance().vkAPI, WallPostUtil.BITMAP_ENCODE_METHOD_PNG );
-			var message:String = "Я получил награду " + achievementLabel.text;
+			var message:String = "Я " + achievementLabel.text + " в приложении Связной";
 			sharing.post( message, [ avatar.getBitmap() ], Helper.getInstance().getAppURL() );
 			sharing.addEventListener( Event.COMPLETE, onPostShared );
 			shareButton.enabled = false;

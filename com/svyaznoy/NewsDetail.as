@@ -7,6 +7,8 @@ package com.svyaznoy {
 	import com.svyaznoy.events.ProviderEvent;
 	import com.svyaznoy.gui.Button;
 	import com.svyaznoy.utils.ContentParser;
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -94,8 +96,9 @@ package com.svyaznoy {
 			var shareUtil:WallPostUtil = new WallPostUtil( Helper.getInstance().vkAPI );
 			var attachments:Array = [];
 			var message:String = String("" + data.content).replace( ContentParser.TEMPLATE_TAG, "" );
+			var bitmapData:BitmapData = header.getBitmap() ? header.getBitmap().bitmapData : new LogoBitmapData();
 			message = message.replace( / +/, " " );
-			if ( header.getBitmap() ) attachments.push( header.getBitmap() );
+			attachments.push( bitmapData );
 			shareUtil.post( message, attachments, Helper.getInstance().getAppURL() );
 			shareUtil.addEventListener( Event.COMPLETE, onPostShared );
 		}

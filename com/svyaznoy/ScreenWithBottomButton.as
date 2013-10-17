@@ -54,6 +54,9 @@ package com.svyaznoy {
 		private function onSizeChanged( event:DynamicItemEvent ):void {
 			event.stopPropagation();
 			setPositions();
+			var item:* = dynamicContentViewer.getChildAt( dynamicContentViewer.numChildren - 1 );
+			trace( "item:", item, "y:", item.y, "height:", item.height );
+			trace( bottomButton.y );
 			dispatchHeighUpdated();
 		}
 		
