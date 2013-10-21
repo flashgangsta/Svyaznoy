@@ -1,9 +1,13 @@
 package com.svyaznoy {
 	import com.flashgangsta.managers.MappingManager;
 	import com.svyaznoy.events.ProviderEvent;
+	import com.svyaznoy.gui.Button;
 	import com.svyaznoy.modules.Voting;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.net.navigateToURL;
+	import flash.net.URLRequest;
 	
 	/**
 	 * ...
@@ -20,6 +24,7 @@ package com.svyaznoy {
 		private var helper:Helper = Helper.getInstance();
 		private var settings:SettingsData;
 		private var announcement:Announcement;
+		private var supportButton:Button;
 		
 		/**
 		 * 
@@ -27,6 +32,7 @@ package com.svyaznoy {
 		
 		public function RightMenu() {
 			video = getChildByName( "video_mc" ) as PreviewVideo;
+			supportButton = getChildByName( "supportButton_mc" ) as Button;
 			
 			var imageTemp:PreviewImage = getChildByName( "image_mc" ) as PreviewImage;
 			
@@ -42,6 +48,18 @@ package com.svyaznoy {
 			provider.addEventListener( ProviderEvent.ON_RANDOM_GALLERIES, onRandomGalleries );
 			provider.addEventListener( ProviderEvent.ON_RANDOM_VIDEOS, onRandomVideos );
 			provider.addEventListener( ProviderEvent.ON_RANDOM_SURVEYS, onSurveys );
+			
+			supportButton.addEventListener( MouseEvent.CLICK, onSupportClicked );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onSupportClicked( event:MouseEvent ):void {
+			var request:URLRequest = new URLRequest( "mailto:svyaznoyenergy@gmail.com" );
+			navigateToURL( request, "_blank" );
 		}
 		
 		/**

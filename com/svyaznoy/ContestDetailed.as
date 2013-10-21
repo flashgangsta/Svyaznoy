@@ -120,7 +120,7 @@ package com.svyaznoy {
 				worksListContainer.addChildAt( addWorkButton, 0 );
 			}
 			
-			titleLabel.text = "КОНКУРС: " + String( data.title ).toUpperCase();
+			titleLabel.text = String( data.title ).toUpperCase();
 			messageLabel.text = data.content;
 			awardIcon.value = data.points;
 			messageLabel.autoSize = TextFieldAutoSize.LEFT;

@@ -8,6 +8,7 @@ package com.svyaznoy {
 	import flash.net.navigateToURL;
 	import flash.net.URLRequest;
 	import flash.utils.Dictionary;
+	import flash.utils.setTimeout;
 	
 	/**
 	 * ...
@@ -26,6 +27,7 @@ package com.svyaznoy {
 		private var aboutButton:MainMenuButton;
 		private var contestsButton:MainMenuButton;
 		private var ratingsButton:MainMenuButton;
+		private var jobButton:MainMenuButton;
 		private var radioButton:MainMenuButton;
 		private var divider:Sprite;
 		
@@ -44,10 +46,11 @@ package com.svyaznoy {
 			aboutButton = getChildByName( "about_mc" ) as MainMenuButton;
 			contestsButton = getChildByName( "contests_mc" ) as MainMenuButton;
 			ratingsButton = getChildByName( "ratings_mc" ) as MainMenuButton;
+			jobButton = getChildByName( "job_mc" ) as MainMenuButton;
 			radioButton = getChildByName( "radio_mc" ) as MainMenuButton;
 			divider = getChildByName( "divider_mc" ) as Sprite;
 			
-			buttons.push( deaparturesButton, newsButton, legendButton, aboutButton, contestsButton, ratingsButton );
+			buttons.push( deaparturesButton, newsButton, legendButton, aboutButton, contestsButton, ratingsButton, jobButton, radioButton );
 			
 			eventTypes[ deaparturesButton ] = NavigationEvent.NAVIGATE_TO_DEPARTURES;
 			eventTypes[ newsButton ] = NavigationEvent.NAVIGATE_TO_NEWS;
@@ -57,7 +60,7 @@ package com.svyaznoy {
 			eventTypes[ ratingsButton ] = NavigationEvent.NAVIGATE_TO_RATINGS;
 			
 			ButtonManager.addButtonGroup( buttons, true, deaparturesButton, false, ButtonManager.STATE_PRESSED, onClick );
-			ButtonManager.addButton( radioButton, null, onRadioClicked );
+			ButtonManager.addButtonGroup( buttons, true, deaparturesButton, false, ButtonManager.STATE_PRESSED, onClick );
 		}
 		
 		/**
@@ -100,12 +103,10 @@ package com.svyaznoy {
 		
 		/**
 		 * 
-		 * @param	target
 		 */
 		
-		private function onRadioClicked( target:MovieClip ):void {
-			ButtonManager.setButtonState( radioButton, ButtonManager.STATE_NORMAL );
-			navigateToURL( new URLRequest( "http://svzn.fm/" ), "_blank" );
+		public function selectNews():void {
+			ButtonManager.setSelectionOnGroup( newsButton );
 		}
 		
 		/**
@@ -113,9 +114,42 @@ package com.svyaznoy {
 		 */
 		
 		private function onClick( target:MovieClip ):void {
-			if ( eventTypes[ target ] ) {
-				dispatcher.dispatchEvent( new NavigationEvent( eventTypes[ target ] ) );
+			var selected:MainMenuButton = ButtonManager.getSelectedButtonOfGroup( target ) as MainMenuButton;
+			switch( target ) {
+				case radioButton :
+					navigateToURL( new URLRequest( "http://svzn.fm/" ), "_blank" );
+					setSelectionToButtonAfterDelay( selected );
+					break;
+				case jobButton :
+					navigateToURL( new URLRequest( "http://job.svyaznoy.ru/" ), "_blank" );
+					setSelectionToButtonAfterDelay( selected );
+					break;
+				default :
+					if ( eventTypes[ target ] ) {
+						dispatcher.dispatchEvent( new NavigationEvent( eventTypes[ target ] ) );
+					}
 			}
+			
+		}
+		
+		/**
+		 * 
+		 * @param	button
+		 */
+		
+		private function setSelectionToButtonAfterDelay( button:MainMenuButton ):void {
+			if( button ) {
+				setTimeout( setSelectionToButtonImmediately, 1000 / stage.frameRate, button );
+			}
+		}
+		
+		/**
+		 * 
+		 * @param	button
+		 */
+		
+		private function setSelectionToButtonImmediately( button:MainMenuButton ):void {
+			ButtonManager.setSelectionOnGroup( button );
 		}
 		
 		

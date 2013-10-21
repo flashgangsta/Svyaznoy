@@ -2,6 +2,7 @@ package com.svyaznoy {
 	import com.flashgangsta.managers.MappingManager;
 	import com.flashgangsta.net.ContentLoader;
 	import flash.display.Bitmap;
+	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -22,6 +23,7 @@ package com.svyaznoy {
 		private var bitmap:Bitmap;
 		private var contentLoader:ContentLoader = new ContentLoader();
 		private var errors:Errors = Errors.getInstance();
+		private var background:DisplayObject;
 		
 		/**
 		 * 
@@ -31,6 +33,7 @@ package com.svyaznoy {
 			nameLabel = getChildByName( "nameLabel_txt" ) as TextField;
 			preloader = getChildByName( "preloader_mc" ) as MovieClip;
 			avatarArea = getChildByName( "avatarArea_mc" ) as Sprite;
+			background = getChildByName( "background_mc" );
 			
 			nameLabel.text = "";
 			avatarArea.visible = false;
@@ -47,6 +50,45 @@ package com.svyaznoy {
 			contentLoader = new ContentLoader();
 			loadVkUserData( data.user.username );
 			nameLabel.text = data.last_name + " " + data.first_name;
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function dispose():void {
+			if ( contentLoader ) {
+				contentLoader.close();
+				contentLoader = null;
+			}
+			
+			if ( bitmap ) {
+				bitmap.bitmapData.dispose();
+				removeChild( bitmap );
+				bitmap = null;
+			}
+			
+			if ( preloader ) {
+				preloader.stop();
+				removeChild( preloader );
+				preloader = null;
+			}
+		}
+		
+		override public function get width():Number {
+			return background.width;
+		}
+		
+		override public function set width(value:Number):void {
+			super.width = value;
+		}
+		
+		override public function get height():Number {
+			return background.height;
+		}
+		
+		override public function set height(value:Number):void {
+			super.height = value;
 		}
 		
 		/**

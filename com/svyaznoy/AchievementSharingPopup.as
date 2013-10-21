@@ -4,6 +4,8 @@ package com.svyaznoy {
 	import com.flashgangsta.managers.MappingManager;
 	import com.flashgangsta.utils.PopupsController;
 	import com.flashgangsta.vk.WallPostUtil;
+	import com.svyaznoy.events.ProviderEvent;
+	import com.svyaznoy.events.RatingEvent;
 	import com.svyaznoy.gui.Button;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -15,10 +17,12 @@ package com.svyaznoy {
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	
 	/**
 	 * ...
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
 	 */
+	
 	public class AchievementSharingPopup extends Popup {
 		
 		private var achievementsDatas:AchievementsData = Helper.getInstance().getSettings().achievements;
@@ -118,7 +122,7 @@ package com.svyaznoy {
 		
 		private function onShareClicked( event:MouseEvent ):void {
 			var sharing:WallPostUtil = new WallPostUtil( Helper.getInstance().vkAPI, WallPostUtil.BITMAP_ENCODE_METHOD_PNG );
-			var message:String = "Я " + achievementLabel.text + " в приложении Связной";
+			var message:String = "Я «" + achievementLabel.text + "» в приложении «ЭНЕРГИЯ СВЯЗНОГО» Все поездки здесь!";
 			sharing.post( message, [ avatar.getBitmap() ], Helper.getInstance().getAppURL() );
 			sharing.addEventListener( Event.COMPLETE, onPostShared );
 			shareButton.enabled = false;
@@ -132,7 +136,20 @@ package com.svyaznoy {
 		
 		private function onPostShared( event:Event ):void {
 			var sharing:WallPostUtil = event.target as WallPostUtil;
+			var loader:ProviderURLLoader = Provider.getInstance().confirmAchievementShare();
+			loader.addEventListener( ProviderEvent.ON_ACHIEVEMENT_SHARE_CONFIRMED, onShareConfirmed );
 			sharing.removeEventListener( Event.COMPLETE, onPostShared );
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		private function onShareConfirmed( event:ProviderEvent ):void {
+			var loader:ProviderURLLoader = event.target as ProviderURLLoader;
+			loader.removeEventListener( ProviderEvent.ON_ACHIEVEMENT_SHARE_CONFIRMED, onShareConfirmed );
+			Dispatcher.getInstance().dispatchEvent( new RatingEvent( RatingEvent.OWNER_RATING_CHANGED ) );
 		}
 		
 		/**

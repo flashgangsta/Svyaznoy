@@ -127,9 +127,8 @@ package com.svyaznoy {
 		
 		private function addPrelaoder():void {
 			preloader = new MiniPreloader();
-			trace( "#", background.getBounds( parent ) );
-			MappingManager.setAlign( preloader, background.getBounds( parent ) );
-			parent.addChild( preloader );
+			MappingManager.setAlign( preloader, background.getBounds( this ) );
+			addChild( preloader );
 		}
 		
 		/**
@@ -158,6 +157,7 @@ package com.svyaznoy {
 			bitmap = loader.getContent() as Bitmap;
 			bitmap.smoothing = true;
 			addChild( bitmap );
+			if ( preloader ) addChild( preloader );
 			removeLoader();
 			
 			if ( sizeExtractor ) {
@@ -179,7 +179,7 @@ package com.svyaznoy {
 		private function removePreloader():void {
 			if ( preloader ) {
 				preloader.stop();
-				preloader.parent.removeChild( preloader );
+				removeChild( preloader );
 				preloader = null;
 			}
 		}

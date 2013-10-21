@@ -44,6 +44,8 @@ package com.svyaznoy {
 			
 			if ( data.hasOwnProperty( "content" ) && data.content ) {
 				dynamicContentViewer.displayData( data.content );
+			} else {
+				//dispatchEvent( new DynamicItemEvent( DynamicItemEvent.SIZE_CHANGED ) );
 			}
 		}
 		
@@ -53,7 +55,6 @@ package com.svyaznoy {
 		 */
 		
 		private function onSizeChanged( event:DynamicItemEvent ):void {
-			//if ( !(this is ScreenWithBottomButton) && !(this is ScreenWithBottomButtonAndComments ) ) event.stopImmediatePropagation();
 			dynamicContentViewer.y = MappingManager.getBottom( header, this );
 			updatePositions( DynamicContentViewer.MARGIN, dynamicContentViewer );
 		}

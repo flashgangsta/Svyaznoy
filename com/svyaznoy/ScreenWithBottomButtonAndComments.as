@@ -10,12 +10,11 @@ package com.svyaznoy {
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
 	 */
 	
-	public class ScreenWithBottomButtonAndComments extends ScreenWithDynamicContent {
+	public class ScreenWithBottomButtonAndComments extends ScreenWithComments {
 		
 		public static const MARGIN:int = 15;
-		
 		protected var bottomButton:Button;
-		protected var comments:NewsComments;
+		
 		
 		/**
 		 * 
@@ -43,14 +42,14 @@ package com.svyaznoy {
 		 * 
 		 */
 		
-		private function setPositions():void {
+		override protected function setDisplayItemsAlignment():void {
 			var lastItem:DisplayObject = dynamicContentViewer;
 			if ( comments && contains( comments.view ) ) {
-				comments.view.y = Math.ceil( MappingManager.getBottom( dynamicContentViewer, this ) + MARGIN );
 				bottomButton.y = comments.bottom + MARGIN;
 			} else {
 				bottomButton.y = Math.ceil( MappingManager.getBottom( dynamicContentViewer, this ) + MARGIN );
 			}
+			super.setDisplayItemsAlignment();
 		}
 		
 		/**

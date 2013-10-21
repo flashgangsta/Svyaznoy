@@ -20,22 +20,24 @@ package com.svyaznoy {
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
 	 */
 	
-	public class NewsDetail extends ScreenWithBottomButtonAndComments {
+	public class NewsDetail extends ScreenWithComments {
 		
 		private const MARGIN:int = 10;
 		private var id:int;
 		private var shareButton:Button;
+		private var backButton:Button;
 		
 		/**
 		 * 
 		 */
 		
 		public function NewsDetail() {
-			bottomButton.addEventListener( MouseEvent.CLICK, onBackButtonClicked );
 			provider.addEventListener( ProviderEvent.ON_NEWS_DETAIL, onData );
 			shareButton = getChildByName( "shareButton_mc" ) as Button;
+			backButton = getChildByName( "backButton_mc" ) as Button;
 			setVisible( false );
 			shareButton.addEventListener( MouseEvent.CLICK, onShareClicked );
+			backButton.addEventListener( MouseEvent.CLICK, onBackButtonClicked );
 			addEventListener( DynamicItemEvent.SIZE_CHANGED, onSizeChanged );
 		}
 		
@@ -61,7 +63,8 @@ package com.svyaznoy {
 			if( Helper.getInstance().isEmployeeMode ) {
 				comments = new NewsComments( id );
 				comments.width = header.width;
-				comments.addEventListener( CommentsEvent.ON_COMMENTS_READY, onCommentsReady );
+				addChild( comments.view );
+				setDisplayItemsAlignment();
 			}
 			
 		}
@@ -84,7 +87,7 @@ package com.svyaznoy {
 		override protected function displayData():void {
 			super.displayData();
 			setVisible( true );
-			setPositions();
+			setDisplayItemsAlignment();
 		}
 		
 		/**
@@ -126,26 +129,12 @@ package com.svyaznoy {
 		
 		/**
 		 * 
-		 * @param	event
 		 */
 		
-		private function onCommentsReady( event:CommentsEvent ):void {
-			addChild( comments.view );
-			setPositions();
-			dispatchHeighUpdated();
-		}
-		
-		/**
-		 * 
-		 */
-		
-		private function setPositions():void {
-			var lastItem:DisplayObject = dynamicContentViewer;
-			if ( comments && contains( comments.view ) ) {
-				comments.view.y = Math.ceil( MappingManager.getBottom( lastItem, this ) + MARGIN );
-				lastItem = comments.view;
-			}
-			bottomButton.y = shareButton.y = Math.ceil( MappingManager.getBottom( lastItem, this ) + MARGIN );
+		override protected function setDisplayItemsAlignment():void {
+			dynamicContentViewer.y = MappingManager.getBottom( header, this );
+			backButton.y = shareButton.y = dynamicContentViewer.getBottom() + MARGIN;
+			comments.view.y = MappingManager.getBottom( backButton, this ) + MARGIN;
 		}
 		
 		/**
@@ -155,7 +144,7 @@ package com.svyaznoy {
 		
 		private function setVisible( value:Boolean ):void {
 			header.visible = value;
-			bottomButton.visible = value;
+			backButton.visible = value;
 			dynamicContentViewer.visible = value;
 			shareButton.visible = value;
 		}
@@ -175,7 +164,7 @@ package com.svyaznoy {
 		 */
 		
 		private function onSizeChanged( event:DynamicItemEvent ):void {
-			setPositions();
+			setDisplayItemsAlignment();
 		}
 		
 	}
